@@ -13,6 +13,36 @@ const categories: Category[] = [
         id: "3",
         name: 'Category3',
     },
+    {
+        id: "4",
+        name: 'Category4',
+    },
+    {
+        id: "5",
+        name: 'Category5',
+    },
+    {
+        id: "6",
+        name: 'Category6',
+    },
+    {
+        id: "7",
+        name: 'Category7',
+    },
+    {
+        id: "8",
+        name: 'Category8',
+    },
+    {
+        id: "9",
+        name: 'Category9',
+    },
+    {
+        id: "10",
+        name: 'Category10',
+    },
+  
+
 ];
 
 const products: Product[] = [
@@ -20,6 +50,7 @@ const products: Product[] = [
         id: "1",
         name: 'Sushi',
         categoryId: "1",
+        description: "Pan de batata, carne 150 gramos, queso cheddar, tocineta, cebolla caramelizada, bbq y salsa de la casa",
         price: 10,
         image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH68U2DRTD2tSrG6xfxbqcKCMWxGu9i5AejCungBf2E_8rYMYcGFigzOolNBRgoUQxcbQ&usqp=CAU',
     },
@@ -27,6 +58,7 @@ const products: Product[] = [
         id: "2",
         name: 'Pizza',
         categoryId: "1",
+        description: "Pan de batata, carne 150 gramos, queso cheddar, tocineta, cebolla caramelizada, bbq y salsa de la casa",
         price: 20,
         image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH68U2DRTD2tSrG6xfxbqcKCMWxGu9i5AejCungBf2E_8rYMYcGFigzOolNBRgoUQxcbQ&usqp=CAU',
     },
