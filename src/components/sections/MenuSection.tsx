@@ -29,7 +29,7 @@ function MenuSection({
       ) : (
         <>
           {categories.map((category) => (
-            <div key={category.id} id={category.name} className="py-12">
+            <div key={category.id} id={category.name} className="py-2">
               <h2 className="text-4xl font-bold my-8">{category.name}</h2>
               <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
                 {products

@@ -1,5 +1,6 @@
 import { Category, Product } from "@/types/types";
 import debounce from "just-debounce-it";
+import { Search } from "lucide-react";
 
 type MenuNavProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,15 +31,17 @@ function MenuNav({
 
   return (
     <section className="border-y p-4">
-      <div className="flex justify-between items-center flex-col md:flex-row ">
-        <form action="">
+      <div className="flex justify-between items-center flex-col md:flex-row">
+        <form action="" className="mr-6 flex justify-center items-center">
+          <Search />
           <input
             onChange={handleSearch}
             ref={inputRef}
             type="text"
-            placeholder="Pizza"
-            className="border p-2 rounded-lg"
+            placeholder="Buscar..."
+            className="border p-2 rounded-lg ml-2" 
           />
+          
         </form>
         <nav className="overflow-x-auto">
           <ul className="flex gap-4 p-4 w-3/4">

@@ -1,49 +1,48 @@
-import React from "react";
-import Counter from "./Counter";
+import React, { useState } from "react";
 import { Product } from "@/types/types";
+import ProductModal from "./ProductModal";
 
 type ProductCardProps = {
   product: Product;
   addToCart: (product: Product) => void;
   counter: number;
-  setCounter: React.Dispatch<React.SetStateAction<number>>
-}
+  setCounter: React.Dispatch<React.SetStateAction<number>>;
+};
 
 function ProductCard({ product, addToCart, counter, setCounter }: ProductCardProps) {
+  const [showModal, setShowModal] = useState(false);
+  const toggleShowModal = () => setShowModal(!showModal);
+
   return (
-    <div className="w-full max-w-md  mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">
-      <div className="max-w-md mx-auto">
-        <div
-          className="h-[236px]"
-          style={{
-            backgroundImage: `url(${product.image})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        ></div>
-        <div className="p-4 sm:p-6">
-          
-          <div className="flex flex-row justify-between">
-            <p className="font-bold text-gray-700 text-[22px] leading-7 mb-1">
-              {product.name}
-            </p>
-            <p className="text-[17px] font-bold text-[#0FB478]">
-              ${product.price}
-            </p>
-          </div>
-          <p className="text-[#7C7C80] font-[15px] mt-6">
-            {product.description}
-          </p>
-          <Counter setCounter={setCounter} counter={counter} />
-          <button
-            onClick={() => addToCart(product)}
-            className="block mt-10 w-full px-4 py-3 font-medium tracking-wide text-center capitalize transition-colors duration-300 transform bg-slate-500 rounded-[14px] hover:bg-slate-700 focus:outline-none focus:ring focus:ring-slate-900 focus:ring-opacity-20"
-          >
-            Añadir al carrito
-          </button>
-        </div>
+    <>
+    <div
+      onClick={() => setShowModal(true)}
+      className="relative flex flex-row md:space-x-5 space-y-3 md:space-y-0 rounded-xl shadow-lg p-3 w-full md:max-w-3xl mx-auto border border-white bg-white cursor-pointer "
+    >
+      <div className="w-full md:w-2/3 bg-white flex flex-col justify-between items-start space-y-2 p-3">
+        <h3 className="font-black text-gray-800 md:text-3xl text-xl text-start">
+          {product.name}
+        </h3>
+        <p className="md:text-lg text-gray-500 text-base text-start">
+          {product.description}
+        </p>
+        <p className="text-xl font-black text-gray-800 text-start">
+          ${product.price}
+        </p>
       </div>
+      <div className="w-full md:w-1/3 bg-white grid place-items-center ">
+        <img
+          src={product.image}
+          alt={`${product.name} de faster order`}
+          className="rounded-xl h-full w-full object-cover"
+        />
+      </div>
+      
     </div>
+    {showModal && (
+      <ProductModal product={product} addToCart={addToCart} counter={counter} setCounter={setCounter} toggleShowModal={toggleShowModal} />
+     )}
+     </>
   );
 }
 

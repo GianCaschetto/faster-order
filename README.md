@@ -1,4 +1,6 @@
-Lista de Tareas
+
+
+### Lista de Tareas
 [✅] Contador para agregar la cantidad del producto deseado
 [✅] Determinar el carrito
 [✅] Botón flotante para ver el carrito abajo a la derecha (sheet de shadcn)
@@ -10,6 +12,6 @@ Lista de Tareas
 [✅] Ordenar el código
 [✅] Sidebar animado smooth
 [✅] Back to Top
-[] Modal de cada producto
+[✅] Modal de cada producto
 [] Stepper Cart
 [] Definir rutas con React Router
