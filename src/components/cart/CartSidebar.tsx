@@ -1,5 +1,5 @@
 import { ShoppingCart, ShoppingCartItem } from "@/types/types";
-import { X } from "lucide-react";
+import CartStepperForm from "./forms/CartStepperForm";
 
 type SidebarProps = {
   showSideBar: boolean;
@@ -33,35 +33,15 @@ function Sidebar({ showSideBar, setShowSideBar, cart, setCart }: SidebarProps) {
       ></div>
       <aside
         className={`${
-          showSideBar ? "w-80" : "w-0"
+          showSideBar ? " w-[26rem]" : "w-0"
         } transition-all duration-300 bg-blue-600 min-h-screen fixed top-0 right-0`}
       >
-        <div className={`pt-3 ${!showSideBar && "hidden"}`}>
-          <button className="mb-14" onClick={() => setShowSideBar(false)}>
-            <X color="white" />
-          </button>
-          <ul>
-            {cart.items?.map((item) => (
-              <li
-                key={item.product.id}
-                className="flex justify-between items-center mt-4 text-white"
-              >
-                <span>
-                  <img src={item.product.image} alt="" className="w-28" />
-                </span>
-                <span>{item.product.name}</span>
-                <span>{item.quantity}</span>
-                <span>{item.product.price * item.quantity}</span>
-                {/* Delete button */}
-                <button
-                  onClick={() => deleteItem(item)}
-                  className="bg-red-500 text-white p-2 rounded-lg"
-                >
-                  <X />
-                </button>
-              </li>
-            ))}
-          </ul>
+        <div className={`${!showSideBar && "hidden"}`}>
+          <CartStepperForm
+            cart={cart}
+            deleteItem={deleteItem}
+            setShowSidebar={setShowSideBar}
+          />
         </div>
       </aside>
     </div>

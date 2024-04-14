@@ -27,3 +27,36 @@ export interface ShoppingCart {
     totalItems: number;
     totalPrice: number;
 }
+
+//Order Type delivery or pickup
+export type OrderType = "delivery" | "pickup";
+
+//Order Status
+export type OrderStatus = "pending" | "completed" | "cancelled" | "in-progress";
+
+//Order type
+export type Order = {
+    id: string;
+    customer: CustomerInfo;
+    orderType: OrderType;
+    items: ShoppingCartItem[];
+    subtotal: number;
+    status: OrderStatus;
+    delivertyPrice?: number;
+    paymentMethod: string;
+    createdAt: string;
+};
+
+//Customer Info type
+export type CustomerInfo = {
+    name: string;
+    phone: string;
+    address?: string;
+    neighborhood?: Neighborhood;
+};
+
+//Neightborhood type
+export type Neighborhood = {
+    name: string;
+    price: number;
+};

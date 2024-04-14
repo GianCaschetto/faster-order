@@ -30,8 +30,7 @@ function MenuNav({
   }, 500);
 
   return (
-    <section className="border-y p-4">
-      <div className="flex justify-between items-center flex-col md:flex-row">
+    <section className="border-y p-2 flex justify-between items-center md:flex-row flex-col ">
         <form action="" className="mr-6 flex justify-center items-center">
           <Search />
           <input
@@ -39,12 +38,11 @@ function MenuNav({
             ref={inputRef}
             type="text"
             placeholder="Buscar..."
-            className="border p-2 rounded-lg ml-2" 
+            className="border p-2 rounded-lg" 
           />
-          
         </form>
-        <nav className="overflow-x-auto">
-          <ul className="flex gap-4 p-4 w-3/4">
+        <nav className="overflow-x-auto md:max-w-4xl max-w-full">
+          <ul className="flex gap-4 p-4 w-3/4 max-w-full">
             {categories.map((category) => (
               <li key={category.id}>
                 <a
@@ -57,7 +55,7 @@ function MenuNav({
             ))}
           </ul>
         </nav>
-      </div>
+
     </section>
   );
 }
