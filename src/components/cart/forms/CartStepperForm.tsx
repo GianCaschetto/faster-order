@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CartContent from "../CartContent";
 import InfoForm from "./InfoForm";
 import PaymentForm from "./PaymentForm";
 import { ArrowLeft, X } from "lucide-react";
 import { Order, ShoppingCart, ShoppingCartItem } from "@/types/types";
 import OrderCreated from "../OrderCreated";
+import { signInAnonymous } from "@/services/firebase";
 
 type CartStepperFormProps = {
   cart: ShoppingCart;
@@ -67,17 +68,28 @@ function CartStepperForm({
     return order.paymentMethod !== "";
   }
 
+  useEffect(() => {
+    if (currentStep === 3) {
+      window.localStorage.setItem("order", JSON.stringify(order));
+    }
+  }
+  , [currentStep]);
+
+
   return (
-    <div className="min-h-screen md:max-w-6xl max-w-sm text-center p-4 mx-auto relative">
+    <div className="min-h-screen md:max-w-6xl max-w-sm text-center p-4 mx-auto">
       {/* Steps */}
       <div className="flex justify-center items-center space-x-4">
-        <button
-          onClick={() => setCurrentStep((prev) => prev - 1)}
-          disabled={currentStep === 0}
-          className={`bg-blue-500 text-white px-4 py-2 rounded-lg w-full border  `}
-        >
-          <ArrowLeft />
-        </button>
+        {currentStep >0 && (
+           <button
+           onClick={() => setCurrentStep((prev) => prev - 1)}
+           disabled={currentStep === 0}
+           className={`bg-blue-500 text-white px-4 py-2 rounded-lg border w-1/5 hover:bg-blue-700 cursor-pointer`}
+         >
+           <ArrowLeft />
+         </button>
+        ) }
+       
         {steps.slice(0, steps.length - 1).map((step, index) => (
           <div
             key={index}
@@ -85,20 +97,21 @@ function CartStepperForm({
               currentStep === index
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 text-gray-800"
-            } px-4 py-2 rounded-lg`}
+            } px-4 py-2 rounded-lg w-1/5`}
           >
             {step.label}
           </div>
         ))}
-        <button onClick={() => setShowSidebar(false)}>
+        <button onClick={() => setShowSidebar(false)} className="w-1/5 flex justify-center border py-2 hover:bg-red-500">
           <X color="white" />
         </button>
       </div>
       {/* Step content */}
-      <div className="mt-8">{steps[currentStep].component}</div>
+      <div className="h-5/6">{steps[currentStep].component}</div>
   
       {/* Nav control */}
-      {currentStep !== 3 && (<div className="absolute bottom-2 left-0 right-0 flex justify-between ">
+      {currentStep !== 3 && (
+      <div className="absolute bottom-0 left-0 right-0 flex justify-between ">
         <button
           type="button"
           onClick={() => {
@@ -110,10 +123,16 @@ function CartStepperForm({
               alert("Por favor llena todos los campos");
               return;
             } else if (currentStep === 2 && !checkStep2()) {
-              console.log("sadf")
               alert("Por favor selecciona un metodo de pago");
               return;
             }
+
+            //If the step 1 is completed, sign in anonymously
+            if (currentStep === 1 && checkStep1()) {
+            
+              signInAnonymous();
+            }
+
             setCurrentStep((prev) => prev + 1);
           }}
           

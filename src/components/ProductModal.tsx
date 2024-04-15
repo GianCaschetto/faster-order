@@ -33,7 +33,7 @@ function ProductModal({
         />
         <h2 className="text-2xl font-bold text-start my-2">{product.name}</h2>
         <div className="flex sm:flex-row flex-col justify-center items-center absolute bottom-0 left-0 right-0 p-8">
-          <div className="w-1/3">
+          <div className="w-full md:w-1/3">
             <Counter setCounter={setCounter} counter={counter} />
           </div>
           <button
@@ -41,7 +41,7 @@ function ProductModal({
               addToCart(product);
               toggleShowModal();
             }}
-            className="ml-4 bg-blue-600 text-white p-2 rounded-lg mt-2 w-2/3 hover:bg-blue-800"
+            className="md:ml-4 bg-blue-600 text-white p-2 rounded-lg mt-2 w-full hover:bg-blue-800"
           >
             Add to cart
           </button>
