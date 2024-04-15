@@ -8,18 +8,21 @@ type CartContentProps = {
 
 function CartContent({cart, deleteItem}: CartContentProps) {
   return (
-    <div>
-    {cart.items.length > 0 ? (
-      <ul>
-      {cart.items?.map((item: ShoppingCartItem) => (
+    <div className='h-full'>
+    {cart.items?.length > 0 ? (
+      <ul className='h-[750px] overflow-y-auto w-full'>
+      {cart.items?.map((item: ShoppingCartItem) => (   
           <li
-            key={item.product.id}
+            key={item.id}
             className="flex justify-between items-center mt-4 text-white p-2"
           >
             <span>
               <img src={item.product.image} alt="" className="w-28" />
             </span>
+            <div className='flex flex-col'>
             <span>{item.quantity} x {item.product.name}</span>
+            <span>{item.product.price * item.quantity}$</span>
+            </div>
             {/* Delete button */}
             <button
               onClick={() => deleteItem(item)}

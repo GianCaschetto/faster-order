@@ -11,7 +11,11 @@ import Sidebar from "@/components/cart/CartSidebar";
 function MenuPage() {
     const [cart, setCart] = useState<ShoppingCart>(() => {
         const cartLocalStorage = window.localStorage.getItem("cart");
-        return cartLocalStorage ? JSON.parse(cartLocalStorage) : {};
+        return cartLocalStorage ? JSON.parse(cartLocalStorage) : {
+          items: [],
+          totalItems: 0,
+          totalPrice: 0,
+        } as ShoppingCart;
       });
       const [counter, setCounter] = useState(1);
       const [showSideBar, setShowSideBar] = useState(false);

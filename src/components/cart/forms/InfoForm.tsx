@@ -10,9 +10,11 @@ type InfoFormProps = {
 
 function InfoForm({ order, setOrder }: InfoFormProps) {
   const [orderType, setOrderType] = useState<OrderType>("delivery");
-  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
-    name: "",
-    phone: "",
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>(() => {
+    const customerInfoStorage = window.localStorage.getItem("customerInfo");
+    return customerInfoStorage
+      ? JSON.parse(customerInfoStorage)
+      : ({} as CustomerInfo);
   });
   const [neighborhood, setNeighborhood] = useState<Neighborhood | null>({
     name: "",
@@ -23,96 +25,132 @@ function InfoForm({ order, setOrder }: InfoFormProps) {
   const phoneRef = useRef<any>(null);
   const addressRef = useRef<any>(null);
   const neighborhoodRef = useRef<any>(null);
-  
 
   const handleName = () => {
     setCustomerInfo({
       ...customerInfo,
       name: nameRef.current.value,
     });
-  }
+  };
 
   const handlePhone = () => {
+    //Regex para validar el número de teléfono
+    const phoneRegex = /^[0-9]{0,11}$/;
+    if (!phoneRegex.test(phoneRef.current.value)) {
+      return;
+    }
+
     setCustomerInfo({
       ...customerInfo,
       phone: phoneRef.current.value,
     });
-  }
+  };
 
   const handleAddress = () => {
     setCustomerInfo({
       ...customerInfo,
       address: addressRef.current.value,
     });
-  }
+  };
 
   const handleNeighborhood = () => {
-    const neighborhoodSelected = neighborhoods.find((neighborhood: Neighborhood) => neighborhood.name === neighborhoodRef.current.value);
-    setNeighborhood(neighborhoodSelected as Neighborhood)
+    const neighborhoodSelected = neighborhoods.find(
+      (neighborhood: Neighborhood) =>
+        neighborhood.name === neighborhoodRef.current.value
+    );
+    setNeighborhood(neighborhoodSelected as Neighborhood);
     setCustomerInfo({
       ...customerInfo,
       neighborhood: neighborhoodSelected,
     });
-  }
+  };
 
   useEffect(() => {
     setOrder({
-      ...order, 
+      ...order,
       customer: customerInfo,
       orderType,
       delivertyPrice: neighborhood?.price,
     });
   }, [orderType, customerInfo]);
 
+  useEffect(() => {
+    window.localStorage.setItem("customerInfo", JSON.stringify(customerInfo));
+  }, [customerInfo]);
+
   return (
-    <form action="">
-      <section>
-        <label>Tipo de orden</label>
-        <div className="flex justify-around">
-          <div
-            className="cursor-pointer"
-            onClick={() => setOrderType("delivery")}
-          >
-            Delivery
-          </div>
-          <div
-            className="cursor-pointer"
-            onClick={() => setOrderType("pickup")}
-          >
-            Pickup
-          </div>
-        </div>
-      </section>
-      <section>
-        <div>
-          {/* Informacion del cliente */}
-          <p>Información del cliente</p>
+    <form className="mt-6">
+      <h2 className="text-2xl font-bold">Información de contacto</h2>
+      <div className="flex justify-around">
+        <div onClick={() => setOrderType("delivery")}>Delivery</div>
+        <div onClick={() => setOrderType("pickup")}>Pickup</div>
+      </div>
+      <div className="flex flex-col">
+        <label htmlFor="name" className="text-left">
+          Nombre
+        </label>
+        <input
+          ref={nameRef}
+          type="text"
+          id="name"
+          name="name"
+          value={customerInfo.name}
+          onChange={handleName}
+          className="p-2 border border-gray-300 rounded-lg"
+        />
+      </div>
+      <div className="flex flex-col">
+        <label htmlFor="phone" className="text-left">
+          Teléfono
+        </label>
+        <input
+          ref={phoneRef}
+          type="text"
+          id="phone"
+          name="phone"
+          value={customerInfo.phone}
+          onChange={handlePhone}
+          className="p-2 border border-gray-300 rounded-lg"
+        />
+      </div>
+      {orderType === "delivery" && (
+        <>
           <div className="flex flex-col">
-            <label htmlFor="">Nombre</label>
-            <input required type="text" ref={nameRef} onChange={handleName} />
-            <label htmlFor="">Teléfono</label>
-            <input required type="text" ref={phoneRef} onChange={handlePhone}/>
+            <label htmlFor="address" className="text-left">
+              Dirección
+            </label>
+            <input
+              ref={addressRef}
+              type="text"
+              id="address"
+              name="address"
+              value={customerInfo.address}
+              onChange={handleAddress}
+              className="p-2 border border-gray-300 rounded-lg"
+            />
           </div>
-        </div>
-        {orderType === "delivery" && (
-          <div>
-            <p>Información de entrega</p>
-            <div className="flex flex-col">
-              <label htmlFor="">Dirección</label>
-              <input required type="text" ref={addressRef} onChange={handleAddress}/>
-              <label htmlFor="">Zona</label>
-              <select ref={neighborhoodRef} onChange={handleNeighborhood}>
-                <option value="">Selecciona una opción</option>
-                {neighborhoods.map((neighborhood) => (
-                  <option key={neighborhood.name} value={neighborhood.name}>
-                    {neighborhood.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="flex flex-col">
+            <label htmlFor="neighborhood" className="text-left">
+              Barrio
+            </label>
+            <select
+              ref={neighborhoodRef}
+              name="neighborhood"
+              id="neighborhood"
+              value={customerInfo.neighborhood?.name}
+              onChange={handleNeighborhood}
+              className="p-2 border border-gray-300 rounded-lg"
+            >
+              <option value="">Seleccione un barrio</option>
+              {neighborhoods.map((neighborhood) => (
+                <option key={neighborhood.name} value={neighborhood.name}>
+                  {neighborhood.name}
+                </option>
+              ))}
+            </select>
           </div>
-        )}
-      </section>
+        </>
+      )}
     </form>
   );
 }
