@@ -9,10 +9,7 @@ type PaymentProps = {
 
 function PaymentForm({ order, setOrder }: PaymentProps) {
   const [paymentMethodSelected, setPaymentMethodSelected] = useState<string>(
-    () => {
-      const paymentMethod = window.localStorage.getItem("paymentMethod");
-      return paymentMethod ?? "";
-    }
+    ""
   );
 
   useEffect(() => {
@@ -20,10 +17,6 @@ function PaymentForm({ order, setOrder }: PaymentProps) {
       ...order,
       paymentMethod: paymentMethodSelected,
     });
-  }, [paymentMethodSelected]);
-
-  useEffect(() => {
-    window.localStorage.setItem("paymentMethod", paymentMethodSelected);
   }, [paymentMethodSelected]);
 
   return (
@@ -48,9 +41,19 @@ function PaymentForm({ order, setOrder }: PaymentProps) {
         </section>
       </form>
       {/* Total */}
-      <p>Subtotal: {order.subtotal}</p>
-      <p>Gastos de envío: {order.delivertyPrice}</p>
-      <p>Total: {order.subtotal + (order.delivertyPrice ?? 0)}</p>
+      {order.orderType === "delivery" && (
+        <div>
+          <p>Subtotal: {order.subtotal}</p>
+          <p>Gastos de envío: {order.delivertyPrice}</p>
+          <p>Total: {order.subtotal + (order.delivertyPrice ?? 0)}</p>
+        </div>
+      )}
+
+      {order.orderType === "pickup" && (
+        <div>
+          <p>Total: {order.subtotal}</p>
+        </div>
+      )}
     </div>
   );
 }

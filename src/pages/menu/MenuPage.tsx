@@ -5,18 +5,17 @@ import MenuNav from "@/components/sections/MenuNav";
 import MenuSection from "@/components/sections/MenuSection";
 import BackToTop from "@/components/BackToTop";
 import CartBadge from "@/components/cart/CartBadge";
-import Sidebar from "@/components/cart/CartSidebar";
+import CartSidebar from "@/components/cart/CartSidebar";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 
 
 function MenuPage() {
     const [cart, setCart] = useState<ShoppingCart>(() => {
         const cartLocalStorage = window.localStorage.getItem("cart");
-        return cartLocalStorage ? JSON.parse(cartLocalStorage) : {
-          items: [],
-          totalItems: 0,
-          totalPrice: 0,
-        } as ShoppingCart;
+        return cartLocalStorage ? JSON.parse(cartLocalStorage) : {};
       });
+      //TODO: Hacer que no se buguee el contador
       const [counter, setCounter] = useState(1);
       const [showSideBar, setShowSideBar] = useState(false);
       const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
@@ -35,13 +34,12 @@ function MenuPage() {
             totalItems: 1,
             totalPrice: product.price * counter,
           };
-    
           setCart(newCart);
           window.localStorage.setItem("cart", JSON.stringify(newCart));
           return;
         }
         const newItems = [...cart.items, item];
-        const newCart: ShoppingCart = {
+        const newCart = {
           items: newItems,
           totalItems: newItems.length,
           totalPrice: newItems.reduce(
@@ -53,8 +51,11 @@ function MenuPage() {
         setShowSideBar(true);
         window.localStorage.setItem("cart", JSON.stringify(newCart));
       };
+
   return (
-    <main className="mt-16 ">
+    <div className="min-h-screen md:max-w-5xl max-w-sm  text-center p-4 mx-auto">
+      <Header />
+      <main className="mt-16 ">
         {/* Menu nav */}
         <MenuNav
           inputRef={inputRef}
@@ -80,13 +81,16 @@ function MenuPage() {
           setShowSideBar={setShowSideBar}
         />
         {/* Sidebar */}
-        <Sidebar
+        <CartSidebar
           showSideBar={showSideBar}
           setShowSideBar={setShowSideBar}
           cart={cart}
           setCart={setCart}
         />
       </main>
+      <Footer />
+    </div>
+    
   )
 }
 

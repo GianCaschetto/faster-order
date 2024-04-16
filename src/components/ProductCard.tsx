@@ -12,7 +12,7 @@ type ProductCardProps = {
 function ProductCard({ product, addToCart, counter, setCounter }: ProductCardProps) {
   const [showModal, setShowModal] = useState(false);
   const toggleShowModal = () => setShowModal(!showModal);
-
+  
   return (
     <>
     <div

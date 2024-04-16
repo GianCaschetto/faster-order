@@ -1,5 +1,6 @@
 import { ShoppingCart, ShoppingCartItem } from "@/types/types";
 import CartStepperForm from "./forms/CartStepperForm";
+import { useState } from "react";
 
 type SidebarProps = {
   showSideBar: boolean;
@@ -9,6 +10,8 @@ type SidebarProps = {
 };
 
 function Sidebar({ showSideBar, setShowSideBar, cart, setCart }: SidebarProps) {
+  const [currentStep, setCurrentStep] = useState(0);
+
   //Delete by item id from cart
   const deleteItem = (item: ShoppingCartItem) => {
     const newItems = cart.items.filter((cartItem) => item.id !== cartItem.id);
@@ -26,7 +29,9 @@ function Sidebar({ showSideBar, setShowSideBar, cart, setCart }: SidebarProps) {
   return (
     <div>
       <div
-        onClick={() => setShowSideBar(false)}
+        onClick={() => {setShowSideBar(false)
+          setCurrentStep(0)
+        }}
         className={`${
           !showSideBar && "hidden"
         } bg-gray-600/50 min-h-screen w-full fixed top-0 left-0 right-0 backdrop-blur-sm`}
@@ -39,8 +44,11 @@ function Sidebar({ showSideBar, setShowSideBar, cart, setCart }: SidebarProps) {
         <div className={`${!showSideBar && "hidden"}`}>
           <CartStepperForm
             cart={cart}
+            setCart={setCart}
             deleteItem={deleteItem}
             setShowSidebar={setShowSideBar}
+            currentStep={currentStep}
+            setCurrentStep={setCurrentStep}
           />
         </div>
       </aside>

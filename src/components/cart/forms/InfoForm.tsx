@@ -16,10 +16,7 @@ function InfoForm({ order, setOrder }: InfoFormProps) {
       ? JSON.parse(customerInfoStorage)
       : ({} as CustomerInfo);
   });
-  const [neighborhood, setNeighborhood] = useState<Neighborhood | null>({
-    name: "",
-    price: 0,
-  });
+
 
   const nameRef = useRef<any>(null);
   const phoneRef = useRef<any>(null);
@@ -39,7 +36,6 @@ function InfoForm({ order, setOrder }: InfoFormProps) {
     if (!phoneRegex.test(phoneRef.current.value)) {
       return;
     }
-
     setCustomerInfo({
       ...customerInfo,
       phone: phoneRef.current.value,
@@ -58,7 +54,6 @@ function InfoForm({ order, setOrder }: InfoFormProps) {
       (neighborhood: Neighborhood) =>
         neighborhood.name === neighborhoodRef.current.value
     );
-    setNeighborhood(neighborhoodSelected as Neighborhood);
     setCustomerInfo({
       ...customerInfo,
       neighborhood: neighborhoodSelected,
@@ -70,7 +65,7 @@ function InfoForm({ order, setOrder }: InfoFormProps) {
       ...order,
       customer: customerInfo,
       orderType,
-      delivertyPrice: neighborhood?.price,
+      delivertyPrice: orderType === "delivery" ? customerInfo.neighborhood?.price : 0,
     });
   }, [orderType, customerInfo]);
 
@@ -82,8 +77,8 @@ function InfoForm({ order, setOrder }: InfoFormProps) {
     <form className="mt-6">
       <h2 className="text-2xl font-bold">Información de contacto</h2>
       <div className="flex justify-around">
-        <div onClick={() => setOrderType("delivery")}>Delivery</div>
-        <div onClick={() => setOrderType("pickup")}>Pickup</div>
+        <div className="cursor-pointer" onClick={() => setOrderType("delivery")}>Delivery</div>
+        <div className="cursor-pointer" onClick={() => setOrderType("pickup")}>Pickup</div>
       </div>
       <div className="flex flex-col">
         <label htmlFor="name" className="text-left">

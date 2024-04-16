@@ -60,3 +60,10 @@ export type Neighborhood = {
     name: string;
     price: number;
 };
+
+//TasaBCV type
+export type TasaBCV = {
+    price: number;
+    price_old: number;
+    title: string;
+  };

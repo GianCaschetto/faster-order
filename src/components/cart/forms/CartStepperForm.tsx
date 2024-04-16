@@ -11,14 +11,19 @@ type CartStepperFormProps = {
   cart: ShoppingCart;
   deleteItem: (item: ShoppingCartItem) => void;
   setShowSidebar: (showSideBar: boolean) => void;
+  setCart: (cart: ShoppingCart) => void;
+  currentStep: number;
+  setCurrentStep: (currentStep: number) => void;
 };
 
 function CartStepperForm({
   cart,
+  setCart,
   deleteItem,
   setShowSidebar,
+  currentStep,
+  setCurrentStep,
 }: CartStepperFormProps) {
-  const [currentStep, setCurrentStep] = useState(0);
   const [order, setOrder] = useState<Order>({
     id: crypto.randomUUID(),
     customer: {
@@ -48,7 +53,7 @@ function CartStepperForm({
     },
     {
       component: <OrderCreated order={order} />,
-    }
+    },
   ];
 
   //Check field of step 1 and return true or false
@@ -66,30 +71,49 @@ function CartStepperForm({
 
   const checkStep2 = () => {
     return order.paymentMethod !== "";
-  }
+  };
 
   useEffect(() => {
-    if (currentStep === 3) {
-      window.localStorage.setItem("order", JSON.stringify(order));
+    switch (currentStep) {
+      case 1:
+        setOrder((prevOrder) => ({
+          ...prevOrder,
+          items: cart.items,
+          subtotal: cart.totalPrice,
+        }));
+        break;
+      case 2:
+        setOrder((prevOrder) => ({
+          ...prevOrder,
+          paymentMethod: prevOrder.paymentMethod,
+        }));
+        break;
+      case 3:
+        setCart({
+          items: [],
+          totalItems: 0,
+          totalPrice: 0,
+        });
+        break;
+      default:
+        break;
     }
-  }
-  , [currentStep]);
-
+  }, [cart.items, cart.totalPrice, setCart]);
 
   return (
-    <div className="min-h-screen md:max-w-6xl max-w-sm text-center p-4 mx-auto">
+    <div className="h-screen min-h-screen md:max-w-6xl max-w-sm text-center p-4 mx-auto">
       {/* Steps */}
       <div className="flex justify-center items-center space-x-4">
-        {currentStep >0 && (
-           <button
-           onClick={() => setCurrentStep((prev) => prev - 1)}
-           disabled={currentStep === 0}
-           className={`bg-blue-500 text-white px-4 py-2 rounded-lg border w-1/5 hover:bg-blue-700 cursor-pointer`}
-         >
-           <ArrowLeft />
-         </button>
-        ) }
-       
+        {currentStep > 0 && currentStep < 3 && (
+          <button
+            onClick={() => setCurrentStep(currentStep - 1)}
+            disabled={currentStep === 0}
+            className={`bg-blue-500 text-white px-4 py-2 rounded-lg border w-1/5 hover:bg-blue-700 cursor-pointer`}
+          >
+            <ArrowLeft />
+          </button>
+        )}
+
         {steps.slice(0, steps.length - 1).map((step, index) => (
           <div
             key={index}
@@ -102,46 +126,49 @@ function CartStepperForm({
             {step.label}
           </div>
         ))}
-        <button onClick={() => setShowSidebar(false)} className="w-1/5 flex justify-center border py-2 hover:bg-red-500">
+        <button
+          onClick={() => {
+            setShowSidebar(false);
+            setCurrentStep(0);
+          }}
+          className="w-1/5 flex justify-center border py-2 hover:bg-red-500"
+        >
           <X color="white" />
         </button>
       </div>
       {/* Step content */}
-      <div className="h-5/6">{steps[currentStep].component}</div>
-  
-      {/* Nav control */}
+      <div className="">{steps[currentStep].component}</div>
+
+      {/* Next Button */}
       {currentStep !== 3 && (
-      <div className="absolute bottom-0 left-0 right-0 flex justify-between ">
-        <button
-          type="button"
-          onClick={() => {
-            if (currentStep === 0 && cart.items.length === 0) {
-              alert("Por favor agrega productos al carrito");
-              setShowSidebar(false);
-              return;
-            } else if (currentStep === 1 && !checkStep1()) {
-              alert("Por favor llena todos los campos");
-              return;
-            } else if (currentStep === 2 && !checkStep2()) {
-              alert("Por favor selecciona un metodo de pago");
-              return;
-            }
+        <div className="absolute bottom-0 left-0 right-0">
+          <button
+            type="button"
+            onClick={() => {
+              if (currentStep === 0 && cart.items.length === 0) {
+                alert("Por favor agrega productos al carrito");
+                setShowSidebar(false);
+                return;
+              } else if (currentStep === 1 && !checkStep1()) {
+                alert("Por favor llena todos los campos");
+                return;
+              } else if (currentStep === 2 && !checkStep2()) {
+                alert("Por favor selecciona un metodo de pago");
+                return;
+              }
 
-            //If the step 1 is completed, sign in anonymously
-            if (currentStep === 1 && checkStep1()) {
-            
-              signInAnonymous();
-            }
-
-            setCurrentStep((prev) => prev + 1);
-          }}
-          
-          className={`bg-blue-500 text-white px-4 py-2 rounded-lg w-full border cursor-pointer`}
-        >
-          Siguiente
-        </button>
-      </div>)}
-    
+              //If the step 1 is completed, sign in anonymously
+              if (currentStep === 1 && checkStep1()) {
+                signInAnonymous();
+              }
+              setCurrentStep(currentStep + 1);
+            }}
+            className={`bg-blue-500 text-white px-4 py-2 rounded-lg w-full border cursor-pointer`}
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
     </div>
   );
 }

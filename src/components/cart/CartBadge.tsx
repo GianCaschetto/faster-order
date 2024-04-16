@@ -8,7 +8,6 @@ type CartBadgeProps = {
 }
 
 function CartBadge({ cart, showSideBar, setShowSideBar}: CartBadgeProps) {
-
   return (
     <div className="fixed bottom-4 right-4">
           <button
@@ -19,7 +18,7 @@ function CartBadge({ cart, showSideBar, setShowSideBar}: CartBadgeProps) {
             <ShoppingBag size={48} strokeWidth={2} />
             <span className="sr-only">Carrito</span>
             <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
-              {cart.totalItems}
+              {cart.totalItems ?? 0}
             </div>
           </button>
         </div>
