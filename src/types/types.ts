@@ -67,3 +67,10 @@ export type TasaBCV = {
     price_old: number;
     title: string;
   };
+
+//Schedule type
+export type Schedule = {
+    day: number;
+    open: number;
+    close: number;
+};

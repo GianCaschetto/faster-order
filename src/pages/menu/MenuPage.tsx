@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Product, ShoppingCart, ShoppingCartItem } from "@/types/types";
-import { categories, products } from "@/mock/data";
+import { categories, products, schedules } from "@/mock/data";
 import MenuNav from "@/components/sections/MenuNav";
 import MenuSection from "@/components/sections/MenuSection";
 import BackToTop from "@/components/BackToTop";
@@ -8,49 +8,75 @@ import CartBadge from "@/components/cart/CartBadge";
 import CartSidebar from "@/components/cart/CartSidebar";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
-
+import {  toast } from "react-toastify";
 
 function MenuPage() {
-    const [cart, setCart] = useState<ShoppingCart>(() => {
-        const cartLocalStorage = window.localStorage.getItem("cart");
-        return cartLocalStorage ? JSON.parse(cartLocalStorage) : {};
-      });
-      //TODO: Hacer que no se buguee el contador
-      const [counter, setCounter] = useState(1);
-      const [showSideBar, setShowSideBar] = useState(false);
-      const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const inputRef = useRef<any>(null);
-    
-      const addToCart = (product: Product) => {
-        const item: ShoppingCartItem = {
-          id: crypto.randomUUID(),
-          product,
-          quantity: counter,
+  const [cart, setCart] = useState<ShoppingCart>(() => {
+    const cartLocalStorage = window.localStorage.getItem("cart");
+    return cartLocalStorage
+      ? JSON.parse(cartLocalStorage)
+      : {
+          items: [],
+          totalItems: 0,
+          totalPrice: 0,
         };
-        if (!cart.items) {
-          const newCart: ShoppingCart = {
-            items: [item],
-            totalItems: 1,
-            totalPrice: product.price * counter,
-          };
-          setCart(newCart);
-          window.localStorage.setItem("cart", JSON.stringify(newCart));
-          return;
-        }
-        const newItems = [...cart.items, item];
-        const newCart = {
-          items: newItems,
-          totalItems: newItems.length,
-          totalPrice: newItems.reduce(
-            (acc, item) => acc + item.product.price * item.quantity,
-            0
-          ),
-        };
-        setCart(newCart);
-        setShowSideBar(true);
-        window.localStorage.setItem("cart", JSON.stringify(newCart));
+  });
+  const [isOpen, setIsOpen] = useState(false);
+  //TODO: Hacer que no se buguee el contador
+  const [counter, setCounter] = useState(1);
+  const [showSideBar, setShowSideBar] = useState(false);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const inputRef = useRef<any>(null);
+
+  const addToCart = (product: Product) => {
+    if(!isOpen) {
+      toast.error("Lo sentimos, estamos cerrados en este momento")
+      return;
+    }
+    const item: ShoppingCartItem = {
+      id: crypto.randomUUID(),
+      product,
+      quantity: counter,
+    };
+    if (!cart.items) {
+      const newCart: ShoppingCart = {
+        items: [item],
+        totalItems: 1,
+        totalPrice: product.price * counter,
       };
+      setCart(newCart);
+      window.localStorage.setItem("cart", JSON.stringify(newCart));
+      return;
+    }
+    const newItems = [...cart.items, item];
+    const newCart = {
+      items: newItems,
+      totalItems: newItems.length,
+      totalPrice: newItems.reduce(
+        (acc, item) => acc + item.product.price * item.quantity,
+        0
+      ),
+    };
+    setCart(newCart);
+    setShowSideBar(true);
+    window.localStorage.setItem("cart", JSON.stringify(newCart));
+  };
+
+  useEffect(() => {
+    const date = new Date();
+    const day = date.getDay();
+    const hour = date.getHours();
+    //const minutes = date.getMinutes();
+
+    const today = schedules.find((schedule) => schedule.day === day);
+
+    if (today) {
+      if (hour >= today.open && hour < today.close) {
+        setIsOpen(true);
+      }
+    }
+  }, []);
 
   return (
     <div className="min-h-screen md:max-w-5xl max-w-sm  text-center p-4 mx-auto">
@@ -90,8 +116,7 @@ function MenuPage() {
       </main>
       <Footer />
     </div>
-    
-  )
+  );
 }
 
-export default MenuPage
+export default MenuPage;

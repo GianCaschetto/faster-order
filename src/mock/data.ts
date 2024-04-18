@@ -1,4 +1,4 @@
-import { Category, Neighborhood, Product } from "@/types/types";
+import { Category, Neighborhood, Product, Schedule } from "@/types/types";
 
 const categories: Category[] = [
   {
@@ -108,4 +108,43 @@ const neighborhoods: Neighborhood[] = [
 ];
 
 const paymentMethods = ["efectivo", "zelle", "binance", "pago movil"];
-export { categories, products, neighborhoods, paymentMethods };
+
+const schedules: Schedule[] = [
+  {
+    day: 0,
+    open: 8,
+    close: 20,
+  },
+  {
+    day: 1,
+    open: 8,
+    close: 20,
+  },
+  {
+    day: 2,
+    open: 8,
+    close: 20,
+  },
+  {
+    day: 3,
+    open: 0,
+    close: 20,
+  },
+  {
+    day: 4,
+    open: 0,
+    close: 20,
+  },
+  {
+    day: 5,
+    open: 8,
+    close: 20,
+  },
+  {
+    day: 6,
+    open: 8,
+    close: 20,
+  },
+];
+
+export { categories, products, neighborhoods, paymentMethods, schedules };

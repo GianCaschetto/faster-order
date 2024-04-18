@@ -17,7 +17,6 @@ function InfoForm({ order, setOrder }: InfoFormProps) {
       : ({} as CustomerInfo);
   });
 
-
   const nameRef = useRef<any>(null);
   const phoneRef = useRef<any>(null);
   const addressRef = useRef<any>(null);

@@ -31,6 +31,14 @@ function Sidebar({ showSideBar, setShowSideBar, cart, setCart }: SidebarProps) {
       <div
         onClick={() => {setShowSideBar(false)
           setCurrentStep(0)
+          if(currentStep=== 3){
+            setCart({items: [], totalItems: 0, totalPrice: 0})
+            window.localStorage.setItem("cart", JSON.stringify({
+              items: [],
+              totalItems: 0,
+              totalPrice: 0,
+            }))
+          }
         }}
         className={`${
           !showSideBar && "hidden"

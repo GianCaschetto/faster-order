@@ -4,6 +4,7 @@ import ErrorPage from "@/pages/error/ErrorPage";
 import MenuPage from "@/pages/menu/MenuPage";
 import SignInPage from "@/pages/signin/SignInPage";
 import CartProvider from "@/contexts/CartContext";
+import CurrencyProvider from "@/contexts/CurrencyContext";
 
 const router = createBrowserRouter([
   {
@@ -14,9 +15,11 @@ const router = createBrowserRouter([
       {
         index: true,
         element: (
-          <CartProvider>
-            <MenuPage />
-          </CartProvider>
+          <CurrencyProvider>
+            <CartProvider>
+              <MenuPage />
+            </CartProvider>
+          </CurrencyProvider>
         ),
       },
       { path: routes.signIn, element: <SignInPage /> },

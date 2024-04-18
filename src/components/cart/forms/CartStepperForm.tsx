@@ -5,6 +5,8 @@ import PaymentForm from "./PaymentForm";
 import { ArrowLeft, X } from "lucide-react";
 import { Order, ShoppingCart, ShoppingCartItem } from "@/types/types";
 import OrderCreated from "../OrderCreated";
+import { toast } from "react-toastify";
+import confetti from "canvas-confetti";
 import { signInAnonymous } from "@/services/firebase";
 
 type CartStepperFormProps = {
@@ -31,13 +33,14 @@ function CartStepperForm({
       phone: "",
     },
     orderType: "delivery",
-    items: cart.items,
-    subtotal: cart.totalPrice,
+    items: [],
+    subtotal: 0,
     status: "pending",
     paymentMethod: "",
     createdAt: new Date().toISOString(),
   });
 
+  
   const steps = [
     {
       label: "Carrito",
@@ -55,7 +58,7 @@ function CartStepperForm({
       component: <OrderCreated order={order} />,
     },
   ];
-
+  
   //Check field of step 1 and return true or false
   const checkStep1 = () => {
     if (order.orderType === "pickup") {
@@ -68,37 +71,28 @@ function CartStepperForm({
       order.customer.neighborhood
     );
   };
-
+  
   const checkStep2 = () => {
     return order.paymentMethod !== "";
   };
-
+  
   useEffect(() => {
-    switch (currentStep) {
-      case 1:
-        setOrder((prevOrder) => ({
-          ...prevOrder,
-          items: cart.items,
-          subtotal: cart.totalPrice,
-        }));
-        break;
-      case 2:
-        setOrder((prevOrder) => ({
-          ...prevOrder,
-          paymentMethod: prevOrder.paymentMethod,
-        }));
-        break;
-      case 3:
-        setCart({
-          items: [],
-          totalItems: 0,
-          totalPrice: 0,
-        });
-        break;
-      default:
-        break;
+    setOrder({
+      ...order,
+      items: cart.items,
+      subtotal: cart.totalPrice,
+    });
+  }, [cart])
+
+  useEffect(()=> {
+    if(currentStep === 2){
+      signInAnonymous();
+    } else if(currentStep === 3) {
+      toast.success("Orden creada con exito");
+      confetti();
     }
-  }, [cart.items, cart.totalPrice, setCart]);
+  
+  }, [currentStep])
 
   return (
     <div className="h-screen min-h-screen md:max-w-6xl max-w-sm text-center p-4 mx-auto">
@@ -130,6 +124,19 @@ function CartStepperForm({
           onClick={() => {
             setShowSidebar(false);
             setCurrentStep(0);
+            if(currentStep=== 3){
+
+              setCart({
+                items: [],
+                totalItems: 0,
+                totalPrice: 0,
+              });
+              window.localStorage.setItem("cart", JSON.stringify({
+                items: [],
+                totalItems: 0,
+                totalPrice: 0,
+              }));
+            }
           }}
           className="w-1/5 flex justify-center border py-2 hover:bg-red-500"
         >
@@ -146,21 +153,19 @@ function CartStepperForm({
             type="button"
             onClick={() => {
               if (currentStep === 0 && cart.items.length === 0) {
-                alert("Por favor agrega productos al carrito");
+                toast.info("Agrega productos al carrito");
                 setShowSidebar(false);
                 return;
               } else if (currentStep === 1 && !checkStep1()) {
-                alert("Por favor llena todos los campos");
+                toast.error("Por favor completa los campos");
                 return;
               } else if (currentStep === 2 && !checkStep2()) {
-                alert("Por favor selecciona un metodo de pago");
+                toast.error("Por favor selecciona un metodo de pago");
                 return;
               }
-
-              //If the step 1 is completed, sign in anonymously
-              if (currentStep === 1 && checkStep1()) {
-                signInAnonymous();
-              }
+              
+              
+          
               setCurrentStep(currentStep + 1);
             }}
             className={`bg-blue-500 text-white px-4 py-2 rounded-lg w-full border cursor-pointer`}

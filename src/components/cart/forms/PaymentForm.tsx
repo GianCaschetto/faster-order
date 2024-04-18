@@ -8,9 +8,8 @@ type PaymentProps = {
 };
 
 function PaymentForm({ order, setOrder }: PaymentProps) {
-  const [paymentMethodSelected, setPaymentMethodSelected] = useState<string>(
-    ""
-  );
+  const [paymentMethodSelected, setPaymentMethodSelected] =
+    useState<string>("");
 
   useEffect(() => {
     setOrder({

@@ -1,12 +1,13 @@
-import { Order, TasaBCV } from "@/types/types";
-import { useEffect, useState } from "react";
+import { useCurrency } from "@/contexts/CurrencyContext";
+import { Order } from "@/types/types";
 
 type OrderCreatedProps = {
   order: Order;
 };
 
 function OrderCreated({ order }: OrderCreatedProps) {
-  const [tasaBCV, setTasaBCV] = useState<TasaBCV>({} as TasaBCV);
+  const { tasaBCV } = useCurrency();
+
   const msg = `
   ===== Orden =====
   Orden: ${order.id} 
@@ -40,12 +41,6 @@ function OrderCreated({ order }: OrderCreatedProps) {
     );
   };
 
-  useEffect(() => {
-    fetch("https://pydolarvenezuela-api.vercel.app/api/v1/dollar?page=bcv")
-      .then((response) => response.json())
-      .then((data) => setTasaBCV(data.monitors.usd));
-  }, []);
-
   return (
     <div className="text-start">
       {/* Show the order */}
@@ -73,7 +68,10 @@ function OrderCreated({ order }: OrderCreatedProps) {
       <p>Subtotal: {order.subtotal}</p>
       <p>Gastos de envío: {order.delivertyPrice}</p>
       <p>Total: {order.subtotal + (order.delivertyPrice ?? 0)}</p>
-      <p>Total en bs: {(order.subtotal + (order.delivertyPrice ?? 0)) * tasaBCV.price}</p>
+      <p>
+        Total en bs:{" "}
+        {(order.subtotal + (order.delivertyPrice ?? 0)) * tasaBCV.price}
+      </p>
 
       <div className="flex flex-col">
         <button onClick={sendWhatsapp}>Envia tu pedido por whatsapp</button>
