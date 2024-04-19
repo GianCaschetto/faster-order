@@ -29,6 +29,7 @@ function CartStepperForm({
   const [order, setOrder] = useState<Order>({
     id: crypto.randomUUID(),
     customer: {
+      uid: null,
       name: "",
       phone: "",
     },
@@ -86,7 +87,7 @@ function CartStepperForm({
 
   useEffect(()=> {
     if(currentStep === 2){
-      signInAnonymous();
+      signInAnonymous(order.customer);
     } else if(currentStep === 3) {
       toast.success("Orden creada con exito");
       confetti();

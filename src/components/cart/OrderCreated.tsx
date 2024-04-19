@@ -36,7 +36,7 @@ function OrderCreated({ order }: OrderCreatedProps) {
 
   const sendWhatsapp = () => {
     window.open(
-      `https://wa.me/${"584127690327"}?text=${formattedMsg}`,
+      `https://wa.me/${"584145960217"}?text=${formattedMsg}`,
       "_blank"
     );
   };

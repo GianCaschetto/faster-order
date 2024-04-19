@@ -1,7 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth, signInAnonymously, onAuthStateChanged  } from "firebase/auth";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
+import { CustomerInfo } from "@/types/types";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -19,24 +21,28 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
-const signInAnonymous = () => {
+const signInAnonymous = (data: CustomerInfo) => {
   signInAnonymously(auth)
     .then(() => {
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          console.log("User is signed in", user.uid);
+          setDoc(doc(db, "users", user.uid), {
+            uid: user.uid,
+            name: data.name,
+            phone: data.phone,
+          });
         } else {
-          console.log("User is signed out");
+          console.log("No user is signed in.");
         }
-      })
+      });
     })
     .catch((error) => {
       console.error(error.message);
-    })
+    });
 };
-
 
 export { auth, analytics, signInAnonymous };

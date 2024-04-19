@@ -133,7 +133,7 @@ const schedules: Schedule[] = [
   {
     day: 4,
     open: 0,
-    close: 20,
+    close: 23,
   },
   {
     day: 5,

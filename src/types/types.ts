@@ -49,6 +49,7 @@ export type Order = {
 
 //Customer Info type
 export type CustomerInfo = {
+    uid: string | null;
     name: string;
     phone: string;
     address?: string;
