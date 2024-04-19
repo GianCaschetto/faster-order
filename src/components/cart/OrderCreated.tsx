@@ -1,3 +1,4 @@
+
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { Order } from "@/types/types";
 
@@ -7,7 +8,6 @@ type OrderCreatedProps = {
 
 function OrderCreated({ order }: OrderCreatedProps) {
   const { tasaBCV } = useCurrency();
-
   const msg = `
   ===== Orden =====
   Orden: ${order.id} 
@@ -27,6 +27,7 @@ function OrderCreated({ order }: OrderCreatedProps) {
   Método de pago: ${order.paymentMethod}
 
   ===== Detalles del cliente =====
+  uid: ${order.customer.uid}
   Nombre: ${order.customer.name}
   Teléfono: ${order.customer.phone}
   Dirección: ${order.customer.address}

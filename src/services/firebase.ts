@@ -34,6 +34,8 @@ const signInAnonymous = (data: CustomerInfo) => {
             uid: user.uid,
             name: data.name,
             phone: data.phone,
+            address: data.address,
+            neighborhood: data.neighborhood,
           });
         } else {
           console.log("No user is signed in.");
@@ -45,4 +47,4 @@ const signInAnonymous = (data: CustomerInfo) => {
     });
 };
 
-export { auth, analytics, signInAnonymous };
+export { auth, analytics, db, signInAnonymous };

@@ -3,11 +3,12 @@ import CartContent from "../CartContent";
 import InfoForm from "./InfoForm";
 import PaymentForm from "./PaymentForm";
 import { ArrowLeft, X } from "lucide-react";
-import { Order, ShoppingCart, ShoppingCartItem } from "@/types/types";
+import { CustomerInfo, Order, ShoppingCart, ShoppingCartItem } from "@/types/types";
 import OrderCreated from "../OrderCreated";
 import { toast } from "react-toastify";
 import confetti from "canvas-confetti";
-import { signInAnonymous } from "@/services/firebase";
+import { auth, db, signInAnonymous } from "@/services/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 type CartStepperFormProps = {
   cart: ShoppingCart;
@@ -26,13 +27,10 @@ function CartStepperForm({
   currentStep,
   setCurrentStep,
 }: CartStepperFormProps) {
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({} as CustomerInfo);
   const [order, setOrder] = useState<Order>({
     id: crypto.randomUUID(),
-    customer: {
-      uid: null,
-      name: "",
-      phone: "",
-    },
+    customer: customerInfo ?? ({} as CustomerInfo),
     orderType: "delivery",
     items: [],
     subtotal: 0,
@@ -41,7 +39,6 @@ function CartStepperForm({
     createdAt: new Date().toISOString(),
   });
 
-  
   const steps = [
     {
       label: "Carrito",
@@ -49,7 +46,7 @@ function CartStepperForm({
     },
     {
       label: "Info",
-      component: <InfoForm order={order} setOrder={setOrder} />,
+      component: <InfoForm order={order} setOrder={setOrder} customerInfo={customerInfo} setCustomerInfo={setCustomerInfo} />,
     },
     {
       label: "Pago",
@@ -59,7 +56,7 @@ function CartStepperForm({
       component: <OrderCreated order={order} />,
     },
   ];
-  
+
   //Check field of step 1 and return true or false
   const checkStep1 = () => {
     if (order.orderType === "pickup") {
@@ -72,28 +69,47 @@ function CartStepperForm({
       order.customer.neighborhood
     );
   };
-  
+
   const checkStep2 = () => {
     return order.paymentMethod !== "";
   };
-  
+
+  useEffect(() => {
+    const fetchCustomerInfo = async () => {
+      const customerInfoRef = doc(db, "users", auth.currentUser?.uid ?? "");
+      const customerInfoSnap = await getDoc(customerInfoRef);    
+      if (customerInfoSnap.exists()) {
+        setCustomerInfo(customerInfoSnap.data() as CustomerInfo);
+      } else {
+        setCustomerInfo({} as CustomerInfo);
+      }
+    };
+    fetchCustomerInfo();
+  }, [auth.currentUser?.uid]);
+
   useEffect(() => {
     setOrder({
       ...order,
       items: cart.items,
       subtotal: cart.totalPrice,
     });
-  }, [cart])
+  }, [cart]);
 
-  useEffect(()=> {
-    if(currentStep === 2){
+  useEffect(() => {
+    if (currentStep === 2) {
       signInAnonymous(order.customer);
-    } else if(currentStep === 3) {
-      toast.success("Orden creada con exito");
-      confetti();
+    } else if (currentStep === 3) {
+      setDoc(doc(db, "orders", order.id), order).then(() => {
+        toast.success("Orden creada con exito");
+        confetti();
+         toast.success("Orden creada con exito");
+        confetti();
+      }).catch((error) => { 
+        toast.error("Error al crear la orden", error.message);
+      });
     }
-  
-  }, [currentStep])
+  }, [currentStep]);
+
 
   return (
     <div className="h-screen min-h-screen md:max-w-6xl max-w-sm text-center p-4 mx-auto">
@@ -125,18 +141,20 @@ function CartStepperForm({
           onClick={() => {
             setShowSidebar(false);
             setCurrentStep(0);
-            if(currentStep=== 3){
-
+            if (currentStep === 3) {
               setCart({
                 items: [],
                 totalItems: 0,
                 totalPrice: 0,
               });
-              window.localStorage.setItem("cart", JSON.stringify({
-                items: [],
-                totalItems: 0,
-                totalPrice: 0,
-              }));
+              window.localStorage.setItem(
+                "cart",
+                JSON.stringify({
+                  items: [],
+                  totalItems: 0,
+                  totalPrice: 0,
+                })
+              );
             }
           }}
           className="w-1/5 flex justify-center border py-2 hover:bg-red-500"
@@ -164,9 +182,7 @@ function CartStepperForm({
                 toast.error("Por favor selecciona un metodo de pago");
                 return;
               }
-              
-              
-          
+
               setCurrentStep(currentStep + 1);
             }}
             className={`bg-blue-500 text-white px-4 py-2 rounded-lg w-full border cursor-pointer`}

@@ -53,7 +53,7 @@ export type CustomerInfo = {
     name: string;
     phone: string;
     address?: string;
-    neighborhood?: Neighborhood;
+    neighborhood?: Neighborhood | null;
 };
 
 //Neightborhood type

@@ -6,22 +6,17 @@ import { neighborhoods } from "@/mock/data";
 type InfoFormProps = {
   order: Order;
   setOrder: (order: Order) => void;
+  customerInfo: CustomerInfo;
+  setCustomerInfo: (customerInfo: CustomerInfo) => void;
 };
 
-function InfoForm({ order, setOrder }: InfoFormProps) {
+function InfoForm({ customerInfo, order, setCustomerInfo, setOrder }: InfoFormProps) {
   const [orderType, setOrderType] = useState<OrderType>("delivery");
-  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>(() => {
-    const customerInfoStorage = window.localStorage.getItem("customerInfo");
-    return customerInfoStorage
-      ? JSON.parse(customerInfoStorage)
-      : ({} as CustomerInfo);
-  });
 
   const nameRef = useRef<any>(null);
   const phoneRef = useRef<any>(null);
   const addressRef = useRef<any>(null);
   const neighborhoodRef = useRef<any>(null);
-
   const handleName = () => {
     setCustomerInfo({
       ...customerInfo,
