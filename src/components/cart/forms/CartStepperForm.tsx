@@ -3,7 +3,12 @@ import CartContent from "../CartContent";
 import InfoForm from "./InfoForm";
 import PaymentForm from "./PaymentForm";
 import { ArrowLeft, X } from "lucide-react";
-import { CustomerInfo, Order, ShoppingCart, ShoppingCartItem } from "@/types/types";
+import {
+  CustomerInfo,
+  Order,
+  ShoppingCart,
+  ShoppingCartItem,
+} from "@/types/types";
 import OrderCreated from "../OrderCreated";
 import { toast } from "react-toastify";
 import confetti from "canvas-confetti";
@@ -27,7 +32,9 @@ function CartStepperForm({
   currentStep,
   setCurrentStep,
 }: CartStepperFormProps) {
-  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({} as CustomerInfo);
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>(
+    {} as CustomerInfo
+  );
   const [order, setOrder] = useState<Order>({
     id: crypto.randomUUID(),
     customer: customerInfo ?? ({} as CustomerInfo),
@@ -46,7 +53,14 @@ function CartStepperForm({
     },
     {
       label: "Info",
-      component: <InfoForm order={order} setOrder={setOrder} customerInfo={customerInfo} setCustomerInfo={setCustomerInfo} />,
+      component: (
+        <InfoForm
+          order={order}
+          setOrder={setOrder}
+          customerInfo={customerInfo}
+          setCustomerInfo={setCustomerInfo}
+        />
+      ),
     },
     {
       label: "Pago",
@@ -77,11 +91,16 @@ function CartStepperForm({
   useEffect(() => {
     const fetchCustomerInfo = async () => {
       const customerInfoRef = doc(db, "users", auth.currentUser?.uid ?? "");
-      const customerInfoSnap = await getDoc(customerInfoRef);    
+      const customerInfoSnap = await getDoc(customerInfoRef);
       if (customerInfoSnap.exists()) {
         setCustomerInfo(customerInfoSnap.data() as CustomerInfo);
       } else {
-        setCustomerInfo({} as CustomerInfo);
+        setCustomerInfo({
+          name: "",
+          phone: "",
+          address: null,
+          neighborhood: null,
+        } as CustomerInfo);
       }
     };
     fetchCustomerInfo();
@@ -99,17 +118,16 @@ function CartStepperForm({
     if (currentStep === 2) {
       signInAnonymous(order.customer);
     } else if (currentStep === 3) {
-      setDoc(doc(db, "orders", order.id), order).then(() => {
-        toast.success("Orden creada con exito");
-        confetti();
-         toast.success("Orden creada con exito");
-        confetti();
-      }).catch((error) => { 
-        toast.error("Error al crear la orden", error.message);
-      });
+      setDoc(doc(db, "orders", order.id), order)
+        .then(() => {
+          toast.success("Orden creada con exito");
+          confetti();
+        })
+        .catch((error) => {
+          toast.error("Error al crear la orden", error.message);
+        });
     }
   }, [currentStep]);
-
 
   return (
     <div className="h-screen min-h-screen md:max-w-6xl max-w-sm text-center p-4 mx-auto">

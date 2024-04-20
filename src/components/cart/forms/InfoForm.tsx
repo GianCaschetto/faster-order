@@ -113,7 +113,7 @@ function InfoForm({ customerInfo, order, setCustomerInfo, setOrder }: InfoFormPr
               type="text"
               id="address"
               name="address"
-              value={customerInfo.address}
+              value={customerInfo.address ?? ''}
               onChange={handleAddress}
               className="p-2 border border-gray-300 rounded-lg"
             />

@@ -16,13 +16,13 @@ function MenuSection({
         <>
           <div className="grid md:grid-cols-2 grid-cols-1 gap-4 pt-6">
             {filteredProducts.map((product: Product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                addToCart={addToCart}
-                counter={counter}
-                setCounter={setCounter}
-              />
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  addToCart={addToCart}
+                  counter={counter}
+                  setCounter={setCounter}
+                />
             ))}
           </div>
         </>

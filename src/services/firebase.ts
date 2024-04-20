@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { CustomerInfo } from "@/types/types";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -25,6 +25,19 @@ const db = getFirestore(app);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
+const admin = {
+  email: "admin@admin.com",
+  password: "admin123",
+  role: "admin",
+};
+
+const adminRef = doc(db, "admin", "admin");
+const adminSnap = await getDoc(adminRef);
+
+if (!adminSnap.exists()) {
+  setDoc(adminRef, admin);
+} 
+
 const signInAnonymous = (data: CustomerInfo) => {
   signInAnonymously(auth)
     .then(() => {
@@ -34,8 +47,8 @@ const signInAnonymous = (data: CustomerInfo) => {
             uid: user.uid,
             name: data.name,
             phone: data.phone,
-            address: data.address,
-            neighborhood: data.neighborhood,
+            address: data.address ?? "",
+            neighborhood: data.neighborhood ?? null,
           });
         } else {
           console.log("No user is signed in.");

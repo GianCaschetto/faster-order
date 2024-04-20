@@ -52,7 +52,7 @@ export type CustomerInfo = {
     uid: string | null;
     name: string;
     phone: string;
-    address?: string;
+    address?: string | null;
     neighborhood?: Neighborhood | null;
 };
 
