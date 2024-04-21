@@ -3,7 +3,6 @@ import { routes } from "./routes";
 import ErrorPage from "@/pages/error/ErrorPage";
 import MenuPage from "@/pages/menu/MenuPage";
 import SignInPage from "@/pages/admin/signin/SignInPage";
-import CartProvider from "@/contexts/CartContext";
 import CurrencyProvider from "@/contexts/CurrencyContext";
 
 const router = createBrowserRouter([
@@ -16,9 +15,7 @@ const router = createBrowserRouter([
         index: true,
         element: (
           <CurrencyProvider>
-            <CartProvider>
-              <MenuPage />
-            </CartProvider>
+            <MenuPage />
           </CurrencyProvider>
         ),
       },

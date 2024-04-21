@@ -62,10 +62,9 @@ function ProductModal({
                 {selectedExtras.some((extra) => extra.id === item.id) && (
                   <input
                     type="number"
-                    min={1}
                     value={
                       selectedExtras.find((extra) => extra.id === item.id)
-                        ?.qty || 1
+                        ?.qty || ""
                     }
                     onChange={(e) =>
                       handleExtraQuantityChange(item.id, Number(e.target.value))

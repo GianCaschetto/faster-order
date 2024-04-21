@@ -77,7 +77,7 @@ function OrderCreated({ order }: OrderCreatedProps) {
       <p>Gastos de envío: {order.delivertyPrice}</p>
       <p>Total: {order.subtotal + (order.delivertyPrice ?? 0)}</p>
       <p>
-        Total en bs:{" "}
+        Total en bs:
         {(order.subtotal + (order.delivertyPrice ?? 0)) * tasaBCV.price}
       </p>
 
