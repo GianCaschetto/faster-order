@@ -8,10 +8,29 @@ export type Category = {
 export type Product = {
     id: string;
     name: string;
-    description?: string;
     price: number;
     image: string;
     categoryId: string;
+    description?: string;
+    extras?: string[];
+};
+
+//Extras Product Type
+export type Extras = {
+    id: string;
+    available: boolean;
+    title: string;
+    items: Extra[];
+}
+
+//Extra type
+export type Extra = {
+    id: string;
+    name: string;
+    available: boolean;
+    qty: number;
+    price: number;
+    description?: string;
 };
 
 //ShoppingCartItem interface
@@ -19,6 +38,8 @@ export interface ShoppingCartItem {
     id: string;
     product: Product;
     quantity: number;
+    extras?: Extra[];
+    price: number;
 }
 
 //ShoppingCart interface

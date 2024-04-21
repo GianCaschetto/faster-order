@@ -1,4 +1,3 @@
-
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { Order } from "@/types/types";
 
@@ -7,6 +6,7 @@ type OrderCreatedProps = {
 };
 
 function OrderCreated({ order }: OrderCreatedProps) {
+
   const { tasaBCV } = useCurrency();
   const msg = `
   ===== Orden =====
@@ -14,9 +14,13 @@ function OrderCreated({ order }: OrderCreatedProps) {
   Contenido de la orden
   ${order.items.map(
     (item) =>
-      `${item.product.name} x ${item.quantity} = ${
-        item.product.price * item.quantity
-      } `
+      `
+    ${item.quantity} x ${item.product.name}
+      ${item.extras?.map(extra => {
+        return `Extra: ${extra.qty} x ${extra.name}`
+      })}
+    Precio: ${item.price}
+    `
   )}
   Subtotal: ${order.subtotal}
   Gastos de envío: ${order.delivertyPrice}
@@ -51,10 +55,13 @@ function OrderCreated({ order }: OrderCreatedProps) {
       <ul>
         {order.items.map((item) => (
           <li key={item.product.id}>
-            <p>
-              {item.product.name} x {item.quantity} ={" "}
-              {item.product.price * item.quantity}
-            </p>
+            {item.quantity} x {item.product.name}
+            {item.extras?.map((extra) => (
+              <p key={extra.id}>
+                {extra.qty} x {extra.name}: {extra.price}
+              </p>
+            ))}
+            <p>Precio del {item.product.name}: {item.price}</p>
           </li>
         ))}
       </ul>

@@ -23,7 +23,7 @@ function ProductCard({ product, addToCart, counter, setCounter }: ProductCardPro
         <h3 className="font-black text-gray-800 md:text-3xl text-xl text-start">
           {product.name}
         </h3>
-        <p className="md:text-lg text-gray-500 text-base text-start line-clamp-2 h-[50px]">
+        <p className="md:text-lg text-gray-500 text-base text-start line-clamp-2 h-[50px] md:h-[60px]">
           {product.description}
         </p>
         <p className="text-xl font-black text-gray-800 text-start">

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Product, ShoppingCart, ShoppingCartItem } from "@/types/types";
+import { Extra, Product, ShoppingCart, ShoppingCartItem } from "@/types/types";
 import { categories, products, schedules } from "@/mock/data";
 import MenuNav from "@/components/sections/MenuNav";
 import MenuSection from "@/components/sections/MenuSection";
@@ -8,7 +8,7 @@ import CartBadge from "@/components/cart/CartBadge";
 import CartSidebar from "@/components/cart/CartSidebar";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 function MenuPage() {
   const [cart, setCart] = useState<ShoppingCart>(() => {
@@ -29,21 +29,23 @@ function MenuPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const inputRef = useRef<any>(null);
 
-  const addToCart = (product: Product) => {
-    if(!isOpen) {
-      toast.error("Lo sentimos, estamos cerrados en este momento")
+  const addToCart = (product: Product, extras: Extra[]) => {
+    if (!isOpen) {
+      toast.error("Lo sentimos, estamos cerrados en este momento");
       return;
     }
     const item: ShoppingCartItem = {
       id: crypto.randomUUID(),
       product,
       quantity: counter,
+      extras,
+      price: (product.price + extras.reduce((acc, extra) => acc + extra.price * extra.qty, 0)) * counter,
     };
-    if (!cart.items) {
+    if (cart.items.length === 0) {
       const newCart: ShoppingCart = {
         items: [item],
         totalItems: 1,
-        totalPrice: product.price * counter,
+        totalPrice: item.price,
       };
       setCart(newCart);
       window.localStorage.setItem("cart", JSON.stringify(newCart));
@@ -53,10 +55,7 @@ function MenuPage() {
     const newCart = {
       items: newItems,
       totalItems: newItems.length,
-      totalPrice: newItems.reduce(
-        (acc, item) => acc + item.product.price * item.quantity,
-        0
-      ),
+      totalPrice: newItems.reduce((acc, item) => acc + item.price, 0),
     };
     setCart(newCart);
     setShowSideBar(true);

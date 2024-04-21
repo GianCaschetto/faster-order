@@ -1,4 +1,125 @@
-import { Category, Neighborhood, Product, Schedule } from "@/types/types";
+import {
+  Category,
+  Extras,
+  Neighborhood,
+  Product,
+  Schedule,
+} from "@/types/types";
+
+const extras: Extras[] = [
+  {
+    id: "1",
+    available: true,
+    title: "Extras",
+    items: [
+      {
+        id: "1",
+        name: "Carne",
+        available: true,
+        price: 2,
+        qty: 2,
+      },
+      {
+        id: "2",
+        name: "Queso",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "3",
+        name: "Tocineta",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "4",
+        name: "Cebolla",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "5",
+        name: "BBQ",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "6",
+        name: "Salsa de la casa",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+    ],
+  },
+  {
+    id: "2",
+    available: true,
+    title: "Extras dulces",
+    items: [
+      {
+        id: "7",
+        name: "Chocolate",
+        available: true,
+        price: 2,
+        qty: 2,
+      },
+      {
+        id: "8",
+        name: "Fresas",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "9",
+        name: "Crema",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "10",
+        name: "Caramelo",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "11",
+        name: "Nutella",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "12",
+        name: "Mermelada",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "13",
+        name: "Leche condensada",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "14",
+        name: "Galletas",
+        available: true,
+        price: 1,
+        qty: 1,
+      }
+    ],
+  }
+];
 
 const categories: Category[] = [
   {
@@ -50,6 +171,7 @@ const products: Product[] = [
     categoryId: "1",
     description:
       "Pan de batata, carne 150 gramos, queso cheddar, tocineta, cebolla caramelizada, bbq y salsa de la casa",
+    extras: ["1"],
     price: 10,
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH68U2DRTD2tSrG6xfxbqcKCMWxGu9i5AejCungBf2E_8rYMYcGFigzOolNBRgoUQxcbQ&usqp=CAU",
@@ -58,6 +180,7 @@ const products: Product[] = [
     id: "2",
     name: "Pizza",
     categoryId: "1",
+    extras: ["1"],
     description:
       "Pan de batata, carne 150 gramos, queso cheddar, tocineta, cebolla caramelizada, bbq y salsa de la casa",
     price: 20,
@@ -84,6 +207,7 @@ const products: Product[] = [
   {
     id: "5",
     name: "Helado",
+    extras: ["1", "2"],
     categoryId: "3",
     price: 50,
     image:
@@ -101,7 +225,7 @@ const products: Product[] = [
 
 const neighborhoods: Neighborhood[] = [
   { name: "Parral", price: 2 },
-  { name: "Trigal", price: 3},
+  { name: "Trigal", price: 3 },
   { name: "La Granja", price: 4 },
   { name: "La Isabelica", price: 5 },
   { name: "La Quizanda", price: 6 },
@@ -147,4 +271,11 @@ const schedules: Schedule[] = [
   },
 ];
 
-export { categories, products, neighborhoods, paymentMethods, schedules };
+export {
+  categories,
+  products,
+  neighborhoods,
+  paymentMethods,
+  schedules,
+  extras,
+};
