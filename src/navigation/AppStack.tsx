@@ -6,6 +6,7 @@ import SignInPage from "@/pages/admin/signin/SignInPage";
 import CurrencyProvider from "@/contexts/CurrencyContext";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminPanel from "@/pages/admin/AdminPanel";
+import AdminLayout from "@/layouts/AdminLayout";
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
   },
   {
     path: routes.adminPanel,
-    element: <Outlet />,
+    element: <AdminLayout />,
     errorElement: <ErrorPage />,
     children: [
       {
@@ -34,6 +35,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <AdminPanel />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: routes.products,
+        element: (
+          <ProtectedRoute>
+            <h1>Products</h1>
           </ProtectedRoute>
         ),
       },

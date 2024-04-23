@@ -1,13 +1,10 @@
-import { logOut } from '@/services/firebase'
-
 function AdminPanel() {
   return (
-    <div>
-      <button onClick={logOut}>
-        Sign Out
-      </button>
+    <div className="text-gray-900 h-screen w-full">
+      <h1 className="text-3xl font-semibold">Admin Panel</h1>
+      <p className="mt-4">Welcome to the admin panel</p>
     </div>
-  )
+  );
 }
 
-export default AdminPanel
+export default AdminPanel;
