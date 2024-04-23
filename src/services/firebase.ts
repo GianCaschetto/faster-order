@@ -1,7 +1,13 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
+import {
+  getAuth,
+  signInAnonymously,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { CustomerInfo } from "@/types/types";
 import { toast } from "react-toastify";
@@ -39,7 +45,7 @@ const signInAnonymous = (data: CustomerInfo) => {
             neighborhood: data.neighborhood ?? null,
           });
         } else {
-          toast.error("Error al iniciar sesión!")
+          toast.error("Error al iniciar sesión!");
           console.log("No user is signed in.");
         }
       });
@@ -49,4 +55,16 @@ const signInAnonymous = (data: CustomerInfo) => {
     });
 };
 
-export { auth, analytics, db, signInAnonymous };
+const signInAdmin = async ({ email, password }) => {
+  const user = await signInWithEmailAndPassword(auth, email, password);
+  if (!user) return null;
+  return user;
+};
+
+const logOut = () => {
+  signOut(auth).then(()=>{
+    toast.success("Sesión cerrada correctamente");
+  })
+}
+
+export { auth, analytics, db, signInAnonymous, signInAdmin, logOut };

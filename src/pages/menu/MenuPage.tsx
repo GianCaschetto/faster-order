@@ -9,8 +9,11 @@ import CartSidebar from "@/components/cart/CartSidebar";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import { toast } from "react-toastify";
+import { useAuth } from "@/contexts/AuthContext";
 
 function MenuPage() {
+  const {user} = useAuth()
+  console.log(user)
   const [cart, setCart] = useState<ShoppingCart>(() => {
     const cartLocalStorage = window.localStorage.getItem("cart");
     return cartLocalStorage
@@ -39,7 +42,10 @@ function MenuPage() {
       product,
       quantity: counter,
       extras,
-      price: (product.price + extras.reduce((acc, extra) => acc + extra.price * extra.qty, 0)) * counter,
+      price:
+        (product.price +
+          extras.reduce((acc, extra) => acc + extra.price * extra.qty, 0)) *
+        counter,
     };
     if (cart.items.length === 0) {
       const newCart: ShoppingCart = {
@@ -48,6 +54,7 @@ function MenuPage() {
         totalPrice: item.price,
       };
       setCart(newCart);
+      setShowSideBar(true);
       window.localStorage.setItem("cart", JSON.stringify(newCart));
       return;
     }

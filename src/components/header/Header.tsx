@@ -14,10 +14,10 @@ function Header() {
                 <a href="#">Home</a>
               </li>
               <li>
-                <a href="#">About</a>
+                <a href="/fo-admin">Signin</a>
               </li>
               <li>
-                <a href="#">Contact</a>
+                <a href="/admin-panel">Admin Panel</a>
               </li>
             </ul>
           </nav>

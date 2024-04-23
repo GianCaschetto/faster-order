@@ -6,8 +6,7 @@ type OrderCreatedProps = {
 };
 
 function OrderCreated({ order }: OrderCreatedProps) {
-
-  const { tasaBCV } = useCurrency();
+  const { tasaBCV } =  useCurrency();
   const msg = `
   ===== Orden =====
   Orden: ${order.id} 

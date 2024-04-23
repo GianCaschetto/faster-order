@@ -60,16 +60,14 @@ function ProductModal({
                 <p>{item.name}</p>
                 {/* Input para la cantidad del extra (se muestra solo si el checkbox está seleccionado) */}
                 {selectedExtras.some((extra) => extra.id === item.id) && (
-                  <input
-                    type="number"
-                    value={
-                      selectedExtras.find((extra) => extra.id === item.id)
-                        ?.qty || ""
-                    }
-                    onChange={(e) =>
-                      handleExtraQuantityChange(item.id, Number(e.target.value))
-                    }
-                  />
+                  //TODO: cambiar a un select con options del 1 al 5
+                 <select onChange={(e) => handleExtraQuantityChange(item.id, Number(e.target.value))}>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
                 )}
                 {/* Checkbox para seleccionar el extra */}
                 <input

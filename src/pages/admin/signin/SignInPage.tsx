@@ -1,4 +1,28 @@
+import { useAuth } from "@/contexts/AuthContext";
+import { routes } from "@/navigation/routes";
+import { signInAdmin } from "@/services/firebase";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 function SignInPage() {
+  const { adminUser } = useAuth();
+  console.log(adminUser)
+  const navigate = useNavigate();
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const { email, password } = Object.fromEntries(formData.entries());
+    signInAdmin({ email, password })
+      .then((user) => {
+        if (user) {
+          toast.success("Inicio de sesión exitoso!");
+          navigate(routes.adminPanel);
+        }
+      })
+      .catch(() => {
+        toast.error("Error al iniciar sesión!");
+      });
+  };
   return (
     <div className="bg-gray-100 flex justify-center items-center h-screen">
       <div className="w-1/2 h-screen hidden lg:block">
@@ -9,19 +33,21 @@ function SignInPage() {
         />
       </div>
       <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
-        <h1 className="text-2xl font-semibold mb-4">Login</h1>
-        <form action="#" method="POST">
+        <h1 className="text-2xl font-semibold mb-4 text-black">
+          Iniciar Sesión
+        </h1>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-600">Username</label>
+            <label className="block text-gray-600">Email</label>
             <input
-              type="text"
-              id="username"
-              name="username"
+              type="email"
+              id="email"
+              name="email"
               className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-600">Password</label>
+            <label className="block text-gray-600">Contraseña</label>
             <input
               type="password"
               id="password"
@@ -36,25 +62,20 @@ function SignInPage() {
               name="remember"
               className="text-blue-500"
             />
-            <label className="text-gray-600 ml-2">Remember Me</label>
+            <label className="text-gray-600 ml-2">Recuérdame</label>
           </div>
           <div className="mb-6 text-blue-500">
             <a href="#" className="hover:underline">
-              Forgot Password?
+              Olvidaste tu contraseña?
             </a>
           </div>
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
           >
-            Login
+            Iniciar sesión
           </button>
         </form>
-        <div className="mt-6 text-blue-500 text-center">
-          <a href="#" className="hover:underline">
-            Sign up Here
-          </a>
-        </div>
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import {
   Schedule,
 } from "@/types/types";
 
+// #region Extras
 const extras: Extras[] = [
   {
     id: "1",
@@ -121,6 +122,7 @@ const extras: Extras[] = [
   }
 ];
 
+// #region Categories
 const categories: Category[] = [
   {
     id: "1",
@@ -164,6 +166,7 @@ const categories: Category[] = [
   },
 ];
 
+// #region Products
 const products: Product[] = [
   {
     id: "1",
@@ -223,6 +226,7 @@ const products: Product[] = [
   },
 ];
 
+// #region Neighborhoods
 const neighborhoods: Neighborhood[] = [
   { name: "Parral", price: 2 },
   { name: "Trigal", price: 3 },
@@ -233,10 +237,11 @@ const neighborhoods: Neighborhood[] = [
 
 const paymentMethods = ["efectivo", "zelle", "binance", "pago movil"];
 
+//#region Schedules
 const schedules: Schedule[] = [
   {
     day: 0,
-    open: 8,
+    open: 0,
     close: 20,
   },
   {
@@ -266,7 +271,7 @@ const schedules: Schedule[] = [
   },
   {
     day: 6,
-    open: 8,
+    open: 0,
     close: 20,
   },
 ];
