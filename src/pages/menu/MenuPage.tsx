@@ -9,11 +9,8 @@ import CartSidebar from "@/components/cart/CartSidebar";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import { toast } from "react-toastify";
-import { useAuth } from "@/contexts/AuthContext";
 
 function MenuPage() {
-  const {user} = useAuth()
-  console.log(user)
   const [cart, setCart] = useState<ShoppingCart>(() => {
     const cartLocalStorage = window.localStorage.getItem("cart");
     return cartLocalStorage

@@ -18,6 +18,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(auth.currentUser);
   const [adminUser, setAdminUser] = useState<DocumentData | null>(null);
+  useEffect(() => {
+    const onSubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+
+    return onSubscribe;
+  }, [user]);
 
   useEffect(() => {
     const getAdminUser = async () => {
@@ -31,12 +38,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       }
     };
-    const onSubscribe = auth.onAuthStateChanged((user) => {
-      setUser(user);
-    });
     getAdminUser();
-    return onSubscribe;
-  }, [user, setUser]);
+  }, [user]);
 
   return (
     <AuthContext.Provider value={{ user, adminUser }}>

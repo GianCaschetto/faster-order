@@ -1,9 +1,16 @@
+import { routes } from "@/navigation/routes";
 import { logOut } from "@/services/firebase";
-import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 
 function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [isActive, setIsActive] = useState<string>("");
+  const location = useLocation();
+  useEffect(() => {
+    setIsActive(location.pathname);
+  }, [location]);
+
   return (
     <div>
       <nav className="bg-white border-b border-gray-200 fixed z-30 w-full">
@@ -16,7 +23,7 @@ function AdminLayout() {
                 onClick={() => setSidebarOpen(!sidebarOpen)}
                 aria-expanded="true"
                 aria-controls="sidebar"
-                className="lg:hidden mr-2 text-gray-600 hover:text-gray-900 cursor-pointer p-2 hover:bg-gray-100 focus:bg-gray-100 focus:ring-2 focus:ring-gray-100 rounded"
+                className="md:hidden mr-2 text-gray-600 hover:text-gray-900 cursor-pointer p-2 hover:bg-gray-100 focus:bg-gray-100 focus:ring-2 focus:ring-gray-100 rounded"
               >
                 {sidebarOpen ? (
                   <svg
@@ -200,10 +207,11 @@ function AdminLayout() {
                   </li>
                   <li>
                     <NavLink
-                      to="/admin-panel"
-                      className={({ isActive }) =>
-                        `text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${isActive && "bg-gray-100" }`
-                      }                    >
+                      to={routes.adminPanel}
+                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                        isActive === routes.adminPanel ? "bg-gray-100" : ""
+                      }`}
+                    >
                       <svg
                         className="w-6 h-6 text-gray-500 group-hover:text-gray-900 transition duration-75"
                         fill="currentColor"
@@ -215,53 +223,14 @@ function AdminLayout() {
                       <span className="ml-3">Dashboard</span>
                     </NavLink>
                   </li>
+                 
+                 
                   <li>
-                    <a
-                      href="#"
-                      target="_blank"
-                      className="text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "
-                    >
-                      <svg
-                        className="w-6 h-6 text-gray-500 flex-shrink-0 group-hover:text-gray-900 transition duration-75"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
-                      </svg>
-                      <span className="ml-3 flex-1 whitespace-nowrap">
-                        Kanban
-                      </span>
-                      <span className="bg-gray-200 text-gray-800 ml-3 text-sm font-medium inline-flex items-center justify-center px-2 rounded-full">
-                        Pro
-                      </span>
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      target="_blank"
-                      className="text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "
-                    >
-                      <svg
-                        className="w-6 h-6 text-gray-500 flex-shrink-0 group-hover:text-gray-900 transition duration-75"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z"></path>
-                        <path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path>
-                      </svg>
-                      <span className="ml-3 flex-1 whitespace-nowrap">
-                        Inbox
-                      </span>
-                      <span className="bg-gray-200 text-gray-800 ml-3 text-sm font-medium inline-flex items-center justify-center px-2 rounded-full">
-                        Pro
-                      </span>
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "
+                    <NavLink
+                      to={routes.company}
+                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                        isActive === routes.company ? "bg-gray-100" : ""
+                      }`}
                     >
                       <svg
                         className="w-6 h-6 text-gray-500 flex-shrink-0 group-hover:text-gray-900 transition duration-75"
@@ -275,17 +244,16 @@ function AdminLayout() {
                         ></path>
                       </svg>
                       <span className="ml-3 flex-1 whitespace-nowrap">
-                        Users
+                        Empresa
                       </span>
-                    </a>
+                    </NavLink>
                   </li>
                   <li>
                     <NavLink
-                      to="/admin-panel/products"
-                    //   className="text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group"
-                    className={({ isActive }) =>
-                        `text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${isActive && "bg-gray-100" }`
-                      }
+                      to={routes.products}
+                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                        isActive=== routes.products && "bg-gray-100"
+                      }`}
                     >
                       <svg
                         className="w-6 h-6 text-gray-500 flex-shrink-0 group-hover:text-gray-900 transition duration-75"
@@ -303,30 +271,27 @@ function AdminLayout() {
                       </span>
                     </NavLink>
                   </li>
-                  
                 </ul>
                 <div className="space-y-2 pt-2">
-            
-                    <button
-                      onClick={logOut}
-                      className="text-start w-full  text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "
+                  <button
+                    onClick={logOut}
+                    className="text-start w-full  text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "
+                  >
+                    <svg
+                      className="w-6 h-6 text-gray-500 flex-shrink-0 group-hover:text-gray-900 transition duration-75"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
                     >
-                      <svg
-                        className="w-6 h-6 text-gray-500 flex-shrink-0 group-hover:text-gray-900 transition duration-75"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
-                          clip-rule="evenodd"
-                        ></path>
-                      </svg>
-                      <span className="ml-3 flex-1 whitespace-nowrap">
-                        Cerrar sesión
-                      </span>
-                    </button>
-       
+                      <path
+                        fill-rule="evenodd"
+                        d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                    <span className="ml-3 flex-1 whitespace-nowrap">
+                      Cerrar sesión
+                    </span>
+                  </button>
                 </div>
               </div>
             </div>

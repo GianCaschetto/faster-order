@@ -1,12 +1,9 @@
-import { useAuth } from "@/contexts/AuthContext";
 import { routes } from "@/navigation/routes";
 import { signInAdmin } from "@/services/firebase";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function SignInPage() {
-  const { adminUser } = useAuth();
-  console.log(adminUser)
   const navigate = useNavigate();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

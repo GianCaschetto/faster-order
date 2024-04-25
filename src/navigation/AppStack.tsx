@@ -7,6 +7,11 @@ import CurrencyProvider from "@/contexts/CurrencyContext";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminPanel from "@/pages/admin/AdminPanel";
 import AdminLayout from "@/layouts/AdminLayout";
+import CompanyPage from "@/pages/admin/company/CompanyPage";
+import ProductsPage from "@/pages/admin/products/ProductsPage";
+import { AdminProvider } from "@/contexts/AdminContext";
+import ProductsRegister from "@/pages/admin/products/ProductsRegister";
+import ProductEdit from "@/pages/admin/products/ProductEdit";
 
 const router = createBrowserRouter([
   {
@@ -27,7 +32,12 @@ const router = createBrowserRouter([
   },
   {
     path: routes.adminPanel,
-    element: <AdminLayout />,
+
+    element: (
+      <AdminProvider>
+        <AdminLayout />
+      </AdminProvider>
+    ),
     errorElement: <ErrorPage />,
     children: [
       {
@@ -42,10 +52,34 @@ const router = createBrowserRouter([
         path: routes.products,
         element: (
           <ProtectedRoute>
-            <h1>Products</h1>
+            <ProductsPage />
           </ProtectedRoute>
         ),
       },
+      {
+        path: routes.company,
+        element: (
+          <ProtectedRoute>
+            <CompanyPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: routes.productsRegister,
+        element: (
+          <ProtectedRoute>
+            <ProductsRegister />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: routes.productsEdit,
+        element: (
+          <ProtectedRoute>
+            <ProductEdit />
+          </ProtectedRoute>
+        ),
+      }
     ],
   },
 ]);

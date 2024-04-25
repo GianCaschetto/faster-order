@@ -96,3 +96,16 @@ export type Schedule = {
     open: number;
     close: number;
 };
+
+//AdminData type
+export type AdminData = Partial<{
+    companyName: string;
+    whatsapp: string;
+    email: string;
+    categories: Category[];
+    products: Product[];
+    address: string;
+    neighborhood: Neighborhood;
+    deliveryPrice: number;
+    schedule: Schedule[];
+}>;

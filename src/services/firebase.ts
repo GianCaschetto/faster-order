@@ -9,8 +9,9 @@ import {
   signOut,
 } from "firebase/auth";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
-import { CustomerInfo } from "@/types/types";
+import { AdminData, CustomerInfo } from "@/types/types";
 import { toast } from "react-toastify";
+import { getStorage } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -31,6 +32,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
+const storage = getStorage(app);
 
 const signInAnonymous = (data: CustomerInfo) => {
   signInAnonymously(auth)
@@ -62,9 +64,30 @@ const signInAdmin = async ({ email, password }) => {
 };
 
 const logOut = () => {
-  signOut(auth).then(()=>{
+  signOut(auth).then(() => {
     toast.success("Sesión cerrada correctamente");
-  })
-}
+  });
+};
 
-export { auth, analytics, db, signInAnonymous, signInAdmin, logOut };
+const saveAdminData = (data: AdminData) => {
+  const adminDataRef = doc(db, "admin", "data");
+  setDoc(adminDataRef, data, { merge: true })
+    .then(() => {
+      toast.success("Datos guardados correctamente");
+    })
+    .catch((error) => {
+      toast.error("Error al guardar los datos");
+      console.error(error);
+    });
+};
+
+export {
+  auth,
+  analytics,
+  db,
+  storage,
+  signInAnonymous,
+  signInAdmin,
+  logOut,
+  saveAdminData,
+};
