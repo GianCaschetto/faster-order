@@ -109,3 +109,13 @@ export type AdminData = Partial<{
     deliveryPrice: number;
     schedule: Schedule[];
 }>;
+
+export type ValidMimeTypes = {
+    "image/png": [".png"];
+    "image/jpeg": [".jpg", ".jpeg"];
+    "image/gif": [".gif"];
+    "image/svg+xml": [".svg"];
+    "image/webp": [".webp"];
+    "video/*": [".mp4"];
+    "application/pdf": [".pdf"];
+  };

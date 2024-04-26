@@ -68,7 +68,7 @@ function ProductsPage() {
             <tr key={product.id} className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
               <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
                 <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">
-                  Company name
+                  Imagen
                 </span>
                 <img
                   src={product.image}
@@ -78,19 +78,19 @@ function ProductsPage() {
               </td>
               <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static">
                 <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">
-                  Country
+                  Nombre
                 </span>
                 {product.name}
               </td>
               <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static">
                 <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">
-                  Status
+                  Precio
                 </span>
                 {product.price}
               </td>
               <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static">
                 <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">
-                  Status
+                  Categoría
                 </span>
                 {
                   adminData?.categories?.find(
@@ -100,7 +100,7 @@ function ProductsPage() {
               </td>
               <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static">
                 <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">
-                  Actions
+                  Acciones
                 </span>
                 <button
                   onClick={() => navigate(`/admin-panel/products/edit-product/${product.id}`)}

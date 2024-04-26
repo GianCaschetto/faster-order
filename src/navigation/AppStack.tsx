@@ -12,6 +12,8 @@ import ProductsPage from "@/pages/admin/products/ProductsPage";
 import { AdminProvider } from "@/contexts/AdminContext";
 import ProductsRegister from "@/pages/admin/products/ProductsRegister";
 import ProductEdit from "@/pages/admin/products/ProductEdit";
+import MediaPage from "@/pages/admin/media/MediaPage";
+import MediaProvider from "@/contexts/MediaContext";
 
 const router = createBrowserRouter([
   {
@@ -35,7 +37,9 @@ const router = createBrowserRouter([
 
     element: (
       <AdminProvider>
-        <AdminLayout />
+        <MediaProvider>
+          <AdminLayout />
+        </MediaProvider>
       </AdminProvider>
     ),
     errorElement: <ErrorPage />,
@@ -79,7 +83,15 @@ const router = createBrowserRouter([
             <ProductEdit />
           </ProtectedRoute>
         ),
-      }
+      },
+      {
+        path: routes.media,
+        element: (
+          <ProtectedRoute>
+            <MediaPage />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);
