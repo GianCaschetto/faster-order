@@ -8,9 +8,10 @@ type ProtectedRouteProps = { children: React.ReactNode };
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const navigate = useNavigate();
   const { adminUser } = useAuth();
+  console.log(adminUser)
   useEffect(() => {
     if(!adminUser) navigate(routes.home);
-  }, [adminUser, navigate]);
+  }, [navigate]);
 
   return <>{children}</>;
 }

@@ -1,57 +1,53 @@
 import { useAdmin } from "@/contexts/AdminContext";
-import { saveAdminData, storage } from "@/services/firebase";
+import { saveAdminData } from "@/services/firebase";
 import { Product } from "@/types/types";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import MediaModal from "../media/MediaModal";
 
 function ProductsRegister() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [imageSelected, setImageSelected] = useState<string | null>(null);
   const { adminData } = useAdmin();
   const navigate = useNavigate();
   if (!adminData) return;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const data = Object.fromEntries(formData.entries());
-    const { productName, price, categoryId, description, photo } = data;
+    const { productName, price, categoryId, description } = data;
     if (
       !productName ||
       !price ||
       !categoryId ||
       !description ||
-      !photo["name"]
+      !imageSelected
     ) {
       toast.error("Todos los campos son obligatorios");
       return;
     }
-    const photoRef = ref(storage, `products/${data.photo["name"]}`);
-    uploadBytes(photoRef, data.photo as File)
-      .then(() => {
-        return getDownloadURL(photoRef);
-      })
-      .then((url) => {
-        const newProduct: Product = {
-          id: crypto.randomUUID(),
-          name: productName as string,
-          categoryId: categoryId as string,
-          description: description as string,
-          image: url,
-          price: parseFloat(price as string),
-        };
-        if (adminData.products) {
-          saveAdminData({
-            ...adminData,
-            products: [...adminData.products, newProduct],
-          });
-          navigate("/admin-panel/products");
-          return;
-        } else {
-          saveAdminData({ ...adminData, products: [newProduct] });
-          navigate("/admin-panel/products");
-          return;
-        }
+    const newProduct: Product = {
+      id: crypto.randomUUID(),
+      name: productName as string,
+      categoryId: categoryId as string,
+      description: description as string,
+      image: imageSelected,
+      price: parseFloat(price as string),
+    };
+    if (adminData.products) {
+      saveAdminData({
+        ...adminData,
+        products: [...adminData.products, newProduct],
       });
+      navigate("/admin-panel/products");
+      return;
+    } else {
+      saveAdminData({ ...adminData, products: [newProduct] });
+      navigate("/admin-panel/products");
+      return;
+    }
   };
   return (
     <div className="flex items-center justify-center p-12">
@@ -136,12 +132,25 @@ function ProductsRegister() {
             >
               Foto
             </label>
-            <input
-              type="file"
-              name="photo"
-              id="photo"
-              accept="image/*"
-              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+            {imageSelected && (
+              <img
+                src={imageSelected}
+                alt="product"
+                className="w-full h-32 object-cover rounded-md"
+              />
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                setIsOpen(true);
+              }}
+            >
+              Elegir
+            </button>
+            <MediaModal
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+              setImageSelected={setImageSelected}
             />
           </div>
           <div>

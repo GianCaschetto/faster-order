@@ -1,14 +1,16 @@
 import { useAdmin } from "@/contexts/AdminContext";
-import { db, storage } from "@/services/firebase";
+import { db } from "@/services/firebase";
 import { Product } from "@/types/types";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import MediaModal from "../media/MediaModal";
 
 function ProductEdit() {
   const [productData, setProductData] = useState<Product>({} as Product);
+  const [isOpen, setIsOpen] = useState(false);
+  const [imageSelected, setImageSelected] = useState<string | null>(null);
   const navigate = useNavigate();
   const { adminData } = useAdmin();
   const { id } = useParams();
@@ -30,77 +32,66 @@ function ProductEdit() {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const data = Object.fromEntries(formData.entries());
-    const { productName, price, categoryId, description, photo } = data;
-    if (
-      !productName ||
-      !price ||
-      !categoryId ||
-      !description
-    ) {
+    const { productName, price, categoryId, description } = data;
+    if (!productName || !price || !categoryId || !description) {
       toast.error("Todos los campos son obligatorios");
       return;
     }
-    if(!photo) {
-        const updatedProduct: Product = {
-            id: productData.id,
-            name: productName as string,
-            categoryId: categoryId as string,
-            description: description as string,
-            image: productData.image,
-            price: parseFloat(price as string),
-        };
-        const adminDataRef = doc(db, "admin", "data");
-        setDoc(
-            adminDataRef,
-            {
-            products: adminData?.products?.map((product) =>
-                product.id === productData?.id ? updatedProduct : product
-            ),
-            },
-            { merge: true }
-        )
-            .then(() => {
-            console.log("Producto actualizado correctamente");
-            navigate("/admin-panel/products");
-            })
-            .catch((error) => {
-            console.error("Error al actualizar el producto");
-            console.error(error);
-            });
-        return;
-        }
-    const photoRef = ref(storage, `products/${data.photo["name"]}`);
-    uploadBytes(photoRef, data.photo as File)
+    if (!imageSelected) {
+      const updatedProduct: Product = {
+        id: productData.id,
+        name: productName as string,
+        categoryId: categoryId as string,
+        description: description as string,
+        image: productData.image,
+        price: parseFloat(price as string),
+      };
+      const adminDataRef = doc(db, "admin", "data");
+      setDoc(
+        adminDataRef,
+        {
+          products: adminData?.products?.map((product) =>
+            product.id === productData?.id ? updatedProduct : product
+          ),
+        },
+        { merge: true }
+      )
+        .then(() => {
+          console.log("Producto actualizado correctamente");
+          navigate("/admin-panel/products");
+        })
+        .catch((error) => {
+          console.error("Error al actualizar el producto");
+          console.error(error);
+        });
+      return;
+    }
+
+    const updatedProduct: Product = {
+      id: productData.id,
+      name: productName as string,
+      categoryId: categoryId as string,
+      description: description as string,
+      image: imageSelected,
+      price: parseFloat(price as string),
+    };
+    const adminDataRef = doc(db, "admin", "data");
+    setDoc(
+      adminDataRef,
+      {
+        products: adminData?.products?.map((product) =>
+          product.id === productData?.id ? updatedProduct : product
+        ),
+      },
+      { merge: true }
+    )
       .then(() => {
-        return getDownloadURL(photoRef);
+        console.log("Producto actualizado correctamente");
+        navigate("/admin-panel/products");
       })
-      .then((url) => {
-        const updatedProduct: Product = {
-          id: productData.id,
-          name: productName as string,
-          categoryId: categoryId as string,
-          description: description as string,
-          image: url,
-          price: parseFloat(price as string),
-        };
-        const adminDataRef = doc(db, "admin", "data");
-        setDoc(
-          adminDataRef,
-          {
-            products: adminData?.products?.map((product) =>
-              product.id === productData?.id ? updatedProduct : product
-            ),
-          },
-          { merge: true }
-        )
-          .then(() => {
-            console.log("Producto actualizado correctamente");
-            navigate("/admin-panel/products");
-          })
-          .catch((error) => {
-            console.error("Error al actualizar el producto");
-            console.error(error);
-          });
+      .catch((error) => {
+        console.error("Error al actualizar el producto");
+        console.error(error);
       });
   };
 
@@ -194,17 +185,28 @@ function ProductEdit() {
               className="mb-3 block text-base font-medium text-[#07074D]"
             >
               Foto
-              <img
-                src={productData?.image}
-                alt=""
-                className="w-32 h-32 object-cover"
-              />
             </label>
-            <input
-              type="file"
-              name="photo"
-              id="photo"
-              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+            <div className="w-3/4">
+              {productData.image && (
+                <img
+                  src={imageSelected ? imageSelected : productData.image}
+                  alt="product"
+                  className="max-w-36 h-auto object-cover rounded-md"
+                />
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setIsOpen(true);
+              }}
+            >
+              Elegir
+            </button>
+            <MediaModal
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+              setImageSelected={setImageSelected}
             />
           </div>
           <div>
