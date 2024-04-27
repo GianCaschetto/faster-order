@@ -24,9 +24,11 @@ const router = createBrowserRouter([
       {
         index: true,
         element: (
-          <CurrencyProvider>
-            <MenuPage />
-          </CurrencyProvider>
+          <AdminProvider>
+            <CurrencyProvider>
+              <MenuPage />
+            </CurrencyProvider>
+          </AdminProvider>
         ),
       },
       { path: routes.signIn, element: <SignInPage /> },

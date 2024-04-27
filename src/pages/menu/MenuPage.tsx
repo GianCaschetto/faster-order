@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Extra, Product, ShoppingCart, ShoppingCartItem } from "@/types/types";
-import { categories, products, schedules } from "@/mock/data";
+import {  schedules } from "@/mock/data";
 import MenuNav from "@/components/sections/MenuNav";
 import MenuSection from "@/components/sections/MenuSection";
 import BackToTop from "@/components/BackToTop";
@@ -9,11 +9,13 @@ import CartSidebar from "@/components/cart/CartSidebar";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import { toast } from "react-toastify";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAdmin } from "@/contexts/AdminContext";
 
 function MenuPage() {
-  const { adminUser } = useAuth();
-  console.log(adminUser)
+  const {adminData} = useAdmin();
+  const products = useMemo(() => adminData?.products ?? [], [adminData]);
+  const categories = useMemo(() => adminData?.categories ?? [], [adminData]);
+
   const [cart, setCart] = useState<ShoppingCart>(() => {
     const cartLocalStorage = window.localStorage.getItem("cart");
     return cartLocalStorage

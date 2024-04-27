@@ -5,23 +5,29 @@ import { Category } from "@/types/types";
 import { toast } from "react-toastify";
 
 function CompanyPage() {
-  const {adminData: admin} = useAdmin();
+  const { adminData: admin } = useAdmin();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const data = Object.fromEntries(formData.entries());
     const { companyName, whatsapp, email, categories } = data;
-    if(!companyName || !whatsapp || !categories || !email){
+    if (!companyName || !whatsapp || !categories || !email) {
       toast.error("Todos los campos son obligatorios");
       return;
     }
-    const categoriesFormatted: Category[] = categories.toString().split(",").map((cat) => {
-      return {
-        id: crypto.randomUUID(),
-        name: cat,
-      }
-    })
-    saveAdminData({...data, categories: categoriesFormatted});
+    const categoriesFormatted: Category[] = categories
+      .toString()
+      .split(",")
+      .filter((cat: string) => cat.trim() !== "")
+      .map((cat) => {
+        return {
+          id:
+            admin?.categories?.find((c) => c.name === cat.trim())?.id ??
+            crypto.randomUUID(),
+          name: cat.trim(),
+        };
+      });
+    saveAdminData({ ...data, categories: categoriesFormatted });
   };
   return (
     <div className="flex items-center justify-center p-12">
@@ -94,13 +100,25 @@ function CompanyPage() {
             <input
               type="text"
               name="categories"
-              defaultValue={admin?.categories?.map((cat) => cat.name).join(", ") ?? ""}
+              defaultValue={
+                admin?.categories?.map((cat) => cat.name).join(", ") ?? ""
+              }
               id="categories"
               placeholder="Hamburguesas, Pizzas, Bebidas, Postres"
               min="0"
               className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
             />
-            <span>Enumere todas las categorías del menú separadas por coma (,). Como: cat1, cat2, cat3, cat4.</span>
+            <span>
+              Enumere todas las categorías del menú separadas por coma (,).
+              Como: cat1, cat2, cat3, cat4.
+            </span>
+            <br />
+            {admin?.categories && (
+              <span className="text-red-500">
+                Si edita las categorías, debe editar cada producto para
+                asignarle la nueva categoría
+              </span>
+            )}
           </div>
 
           <div>

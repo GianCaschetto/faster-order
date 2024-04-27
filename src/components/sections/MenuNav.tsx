@@ -42,7 +42,7 @@ function MenuNav({
           />
         </form>
         <nav className="overflow-x-auto md:max-w-4xl max-w-full">
-          <ul className="flex gap-4 p-4 w-3/4 max-w-full">
+          <ul className="flex gap-4 p-4 w-3/4 max-w-full items-start">
             {categories.map((category) => (
               <li key={category.id}>
                 <a

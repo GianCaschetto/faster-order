@@ -106,7 +106,6 @@ export type AdminData = Partial<{
     products: Product[];
     address: string;
     neighborhood: Neighborhood;
-    deliveryPrice: number;
     schedule: Schedule[];
 }>;
 
