@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Extra, Product, ShoppingCart, ShoppingCartItem } from "@/types/types";
-import {  schedules } from "@/mock/data";
 import MenuNav from "@/components/sections/MenuNav";
 import MenuSection from "@/components/sections/MenuSection";
 import BackToTop from "@/components/BackToTop";
@@ -12,9 +11,15 @@ import { toast } from "react-toastify";
 import { useAdmin } from "@/contexts/AdminContext";
 
 function MenuPage() {
-  const {adminData} = useAdmin();
-  const products = useMemo(() => adminData?.products ?? [], [adminData]);
-  const categories = useMemo(() => adminData?.categories ?? [], [adminData]);
+  const { adminData } = useAdmin();
+  const products = useMemo(
+    () => adminData?.products ?? [],
+    [adminData?.products]
+  );
+  const categories = useMemo(
+    () => adminData?.categories ?? [],
+    [adminData?.categories]
+  );
 
   const [cart, setCart] = useState<ShoppingCart>(() => {
     const cartLocalStorage = window.localStorage.getItem("cart");
@@ -27,14 +32,13 @@ function MenuPage() {
         };
   });
   const [isOpen, setIsOpen] = useState(false);
-  //TODO: Hacer que no se buguee el contador
-  const [counter, setCounter] = useState(1);
+
   const [showSideBar, setShowSideBar] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const inputRef = useRef<any>(null);
 
-  const addToCart = (product: Product, extras: Extra[]) => {
+  const addToCart = (product: Product, extras: Extra[], counter: number) => {
     if (!isOpen) {
       toast.error("Lo sentimos, estamos cerrados en este momento");
       return;
@@ -72,19 +76,25 @@ function MenuPage() {
   };
 
   useEffect(() => {
-    const date = new Date();
-    const day = date.getDay();
-    const hour = date.getHours();
-    //const minutes = date.getMinutes();
+    const today = new Date();
+    const day = today.getDay();
+    const hour = today.getHours();
+    const minutes = today.getMinutes();
 
-    const today = schedules.find((schedule) => schedule.day === day);
+    const currentHour = `${hour}:${minutes}`;
+    const currentSchedule = adminData?.schedules?.find(
+      (schedule) => schedule.day === day.toString()
+    );
 
-    if (today) {
-      if (hour >= today.open && hour < today.close) {
+    if (currentSchedule) {
+      if (
+        currentHour >= currentSchedule.open &&
+        currentHour <= currentSchedule.close
+      ) {
         setIsOpen(true);
       }
     }
-  }, []);
+  }, [adminData?.schedules]);
 
   return (
     <div className="min-h-screen md:max-w-5xl max-w-sm  text-center p-4 mx-auto">
@@ -101,9 +111,7 @@ function MenuPage() {
         <MenuSection
           categories={categories}
           products={products}
-          counter={counter}
           addToCart={addToCart}
-          setCounter={setCounter}
           filteredProducts={filteredProducts}
           inputRef={inputRef}
         />

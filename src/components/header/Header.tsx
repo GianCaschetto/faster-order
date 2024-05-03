@@ -1,10 +1,14 @@
+import { useAdmin } from "@/contexts/AdminContext"
+import { logOut } from "@/services/firebase"
 
 function Header() {
+  const {adminData} = useAdmin()
   return (
     <header>
         <div className="flex justify-between items-center">
           <img
-            src="src\assets\narutoChiquito.jpg"
+          
+            src={adminData?.logo ?? "https://via.placeholder.com/150"}
             alt=""
             className="h-24 object-cover"
           />
@@ -18,6 +22,9 @@ function Header() {
               </li>
               <li>
                 <a href="/admin-panel">Admin Panel</a>
+              </li>
+              <li>
+                <button onClick={logOut} >Cerrar sesion</button>
               </li>
             </ul>
           </nav>

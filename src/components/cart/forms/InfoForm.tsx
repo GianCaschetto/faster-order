@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useAdmin } from "@/contexts/AdminContext";
 import { CustomerInfo, Neighborhood, Order, OrderType } from "@/types/types";
-import { useEffect, useRef, useState } from "react";
-import { neighborhoods } from "@/mock/data";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type InfoFormProps = {
   order: Order;
@@ -11,6 +11,8 @@ type InfoFormProps = {
 };
 
 function InfoForm({ customerInfo, order, setCustomerInfo, setOrder }: InfoFormProps) {
+  const {adminData} = useAdmin();
+  const neighborhoods = useMemo(() => adminData?.neighborhoods ?? [], [adminData?.neighborhoods]);
   const [orderType, setOrderType] = useState<OrderType>("delivery");
 
   const nameRef = useRef<any>(null);
@@ -44,7 +46,7 @@ function InfoForm({ customerInfo, order, setCustomerInfo, setOrder }: InfoFormPr
   };
 
   const handleNeighborhood = () => {
-    const neighborhoodSelected = neighborhoods.find(
+    const neighborhoodSelected = neighborhoods?.find(
       (neighborhood: Neighborhood) =>
         neighborhood.name === neighborhoodRef.current.value
     );
@@ -131,7 +133,7 @@ function InfoForm({ customerInfo, order, setCustomerInfo, setOrder }: InfoFormPr
               className="p-2 border border-gray-300 rounded-lg"
             >
               <option value="">Seleccione un barrio</option>
-              {neighborhoods.map((neighborhood) => (
+              {neighborhoods?.map((neighborhood) => (
                 <option key={neighborhood.name} value={neighborhood.name}>
                   {neighborhood.name}
                 </option>

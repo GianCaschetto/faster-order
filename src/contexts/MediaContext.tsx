@@ -42,7 +42,7 @@ const MediaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         setMediaList(mediaList);
       });
       console.log(mediaList)
-  }, [listAll, setMediaList]);
+  }, []);
   return (
     <MediaContext.Provider value={{ mediaList }}>
       {children}

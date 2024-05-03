@@ -5,8 +5,6 @@ function MenuSection({
   categories,
   products,
   addToCart,
-  counter,
-  setCounter,
   filteredProducts,
   inputRef,
 }) {
@@ -20,8 +18,6 @@ function MenuSection({
                   key={product.id}
                   product={product}
                   addToCart={addToCart}
-                  counter={counter}
-                  setCounter={setCounter}
                 />
             ))}
           </div>
@@ -39,8 +35,6 @@ function MenuSection({
                       key={product.id}
                       product={product}
                       addToCart={addToCart}
-                      counter={counter}
-                      setCounter={setCounter}
                     />
                   ))}
               </div>

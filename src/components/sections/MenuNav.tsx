@@ -1,6 +1,7 @@
 import { Category, Product } from "@/types/types";
 import debounce from "just-debounce-it";
 import { Search } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 type MenuNavProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,12 +46,12 @@ function MenuNav({
           <ul className="flex gap-4 p-4 w-3/4 max-w-full items-start">
             {categories.map((category) => (
               <li key={category.id}>
-                <a
-                  href={`#${category.name}`}
+                <NavLink
+                  to={`#${category.name}`}
                   className="p-2 bg-blue-500 rounded-xl hover:bg-blue-700"
                 >
                   {category.name}
-                </a>
+                </NavLink>
               </li>
             ))}
           </ul>

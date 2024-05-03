@@ -3,17 +3,16 @@ import { routes } from "./routes";
 import ErrorPage from "@/pages/error/ErrorPage";
 import MenuPage from "@/pages/menu/MenuPage";
 import SignInPage from "@/pages/admin/signin/SignInPage";
-import CurrencyProvider from "@/contexts/CurrencyContext";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminPanel from "@/pages/admin/AdminPanel";
 import AdminLayout from "@/layouts/AdminLayout";
 import CompanyPage from "@/pages/admin/company/CompanyPage";
 import ProductsPage from "@/pages/admin/products/ProductsPage";
-import { AdminProvider } from "@/contexts/AdminContext";
 import ProductsRegister from "@/pages/admin/products/ProductsRegister";
 import ProductEdit from "@/pages/admin/products/ProductEdit";
 import MediaPage from "@/pages/admin/media/MediaPage";
-import MediaProvider from "@/contexts/MediaContext";
+import NeighborhoodsPage from "@/pages/admin/Neightborhoods/NeighborhoodsPage";
+import SchedulesPage from "@/pages/admin/Schedules/SchedulesPage";
 
 const router = createBrowserRouter([
   {
@@ -23,76 +22,51 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <AdminProvider>
-            <CurrencyProvider>
-              <MenuPage />
-            </CurrencyProvider>
-          </AdminProvider>
-        ),
+        element: <MenuPage />,
       },
       { path: routes.signIn, element: <SignInPage /> },
     ],
   },
   {
     path: routes.adminPanel,
-
     element: (
-      <AdminProvider>
-        <MediaProvider>
-          <AdminLayout />
-        </MediaProvider>
-      </AdminProvider>
+      <ProtectedRoute>
+        <AdminLayout />
+      </ProtectedRoute>
     ),
     errorElement: <ErrorPage />,
     children: [
       {
         index: true,
-        element: (
-          <ProtectedRoute>
-            <AdminPanel />
-          </ProtectedRoute>
-        ),
+        element: <AdminPanel />,
       },
       {
         path: routes.products,
-        element: (
-          <ProtectedRoute>
-            <ProductsPage />
-          </ProtectedRoute>
-        ),
+        element: <ProductsPage />,
       },
       {
         path: routes.company,
-        element: (
-          <ProtectedRoute>
-            <CompanyPage />
-          </ProtectedRoute>
-        ),
+        element: <CompanyPage />,
       },
       {
         path: routes.productsRegister,
-        element: (
-          <ProtectedRoute>
-            <ProductsRegister />
-          </ProtectedRoute>
-        ),
+        element: <ProductsRegister />,
       },
       {
         path: routes.productsEdit,
-        element: (
-          <ProtectedRoute>
-            <ProductEdit />
-          </ProtectedRoute>
-        ),
+        element: <ProductEdit />,
       },
       {
         path: routes.media,
-        element: (
-          <ProtectedRoute>
-            <MediaPage />
-          </ProtectedRoute>
-        ),
+        element: <MediaPage />,
+      },
+      {
+        path: routes.neighborhoods,
+        element: <NeighborhoodsPage />,
+      },
+      {
+        path: routes.schedule,
+        element: <SchedulesPage />,
       },
     ],
   },

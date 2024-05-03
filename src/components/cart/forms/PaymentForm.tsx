@@ -1,6 +1,6 @@
+import { useAdmin } from "@/contexts/AdminContext";
 import { Order } from "@/types/types";
 import { useEffect, useState } from "react";
-import { paymentMethods } from "@/mock/data";
 
 type PaymentProps = {
   order: Order;
@@ -8,6 +8,8 @@ type PaymentProps = {
 };
 
 function PaymentForm({ order, setOrder }: PaymentProps) {
+  const { adminData } = useAdmin();
+  const [paymentMethods, setPaymentMethods] = useState<string[]>([]);
   const [paymentMethodSelected, setPaymentMethodSelected] =
     useState<string>("");
 
@@ -17,6 +19,13 @@ function PaymentForm({ order, setOrder }: PaymentProps) {
       paymentMethod: paymentMethodSelected,
     });
   }, [paymentMethodSelected]);
+
+  useEffect(() => {
+    if(adminData?.paymentMethods){
+      setPaymentMethods(adminData.paymentMethods);
+    }
+  }, [adminData?.paymentMethods]);
+
 
   return (
     <div>

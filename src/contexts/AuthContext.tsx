@@ -5,44 +5,61 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 type AuthContextType = {
   user: User | null;
-  adminUser: DocumentData | null;
+  userProfile: DocumentData | null;
+  loadingUserProfile: boolean;
 };
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  adminUser: null,
+  userProfile: null,
+  loadingUserProfile: false,
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(auth.currentUser);
-  const [adminUser, setAdminUser] = useState<DocumentData | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<DocumentData | null>(null);
+  const [loadingUserProfile, setLoadingUserProfile] = useState<boolean>(true);
+  const [authInitialized, setAuthInitialized] = useState<boolean>(false);
+
   useEffect(() => {
-    const onSubscribe = auth.onAuthStateChanged((user) => {
-      setUser(user);
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      setUser(authUser);
+      setAuthInitialized(true);
     });
 
-    return onSubscribe;
-  }, [user]);
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
-    const getAdminUser = async () => {
-      if (!user) {
-        return;
-      } else {
-        const adminRef = doc(db, "users", user.uid);
-        const adminSnap = await getDoc(adminRef);
-        if (adminSnap.data()?.roles.admin) {
-          setAdminUser(adminSnap.data() ?? null);
-        }
+    if (authInitialized) {
+      if (user) {
+        const getUserProfile = async () => {
+          try {
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+            setUserProfile(docSnap.data() as DocumentData);
+          } catch (error) {
+            console.error("Error getting document:", error);
+          } finally {
+            setLoadingUserProfile(false);
+          }
+        };
+        getUserProfile();
       }
-    };
-    getAdminUser();
-  }, [user]);
+    } else {
+      setUserProfile(null);
+      setLoadingUserProfile(false);
+    }
+  }, [user, authInitialized]);
+
+  if (!authInitialized || loadingUserProfile) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <AuthContext.Provider value={{ user, adminUser }}>
+    <AuthContext.Provider value={{ user, userProfile, loadingUserProfile }}>
       {children}
     </AuthContext.Provider>
   );

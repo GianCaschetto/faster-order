@@ -6,18 +6,14 @@ import { X } from "lucide-react";
 import { extras } from "@/mock/data";
 
 type ProductModalProps = {
-  counter: number;
   product: Product;
-  addToCart: (product: Product, extras: Extra[]) => void;
-  setCounter: React.Dispatch<React.SetStateAction<number>>;
+  addToCart: (product: Product, extras: Extra[], counter: number) => void;
   toggleShowModal: () => void;
 };
 
 function ProductModal({
-  counter,
   product,
   addToCart,
-  setCounter,
   toggleShowModal,
 }: ProductModalProps) {
   const productExtras = extras.filter((extra) =>
@@ -25,7 +21,7 @@ function ProductModal({
   );
   // Estado para rastrear los extras seleccionados y su cantidad
   const [selectedExtras, setSelectedExtras] = useState<Extra[]>([]);
-
+  const [counter, setCounter] = useState<number>(1);
   // Manejar cambios en la cantidad de extras
   const handleExtraQuantityChange = (id: string, quantity: number) => {
     const updatedSelectedExtras = selectedExtras.map((extra) =>
@@ -45,7 +41,7 @@ function ProductModal({
         <img
           src={product.image}
           alt={product.name}
-          className="w-full rounded-lg"
+          className="max-w-64 h-auto object-cover rounded-lg mx-auto"
         />
         <h2 className="text-2xl font-bold text-start my-2">{product.name}</h2>
         <p className="text-sm text-start">{product.description}</p>
@@ -60,7 +56,6 @@ function ProductModal({
                 <p>{item.name}</p>
                 {/* Input para la cantidad del extra (se muestra solo si el checkbox está seleccionado) */}
                 {selectedExtras.some((extra) => extra.id === item.id) && (
-                  //TODO: cambiar a un select con options del 1 al 5
                  <select onChange={(e) => handleExtraQuantityChange(item.id, Number(e.target.value))}>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -102,7 +97,7 @@ function ProductModal({
           </div>
           <button
             onClick={() => {
-              addToCart(product, selectedExtras);
+              addToCart(product, selectedExtras, counter);
               toggleShowModal();
             }}
             className="md:ml-4 bg-blue-600 text-white p-2 rounded-lg mt-2 w-full hover:bg-blue-800"

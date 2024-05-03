@@ -79,6 +79,7 @@ export type CustomerInfo = {
 
 //Neightborhood type
 export type Neighborhood = {
+    id: string;
     name: string;
     price: number;
 };
@@ -92,21 +93,24 @@ export type TasaBCV = {
 
 //Schedule type
 export type Schedule = {
-    day: number;
-    open: number;
-    close: number;
+    day: string;
+    open: string;
+    close: string;
 };
 
 //AdminData type
 export type AdminData = Partial<{
     companyName: string;
+    icon: string;
+    logo: string;
     whatsapp: string;
     email: string;
     categories: Category[];
     products: Product[];
     address: string;
-    neighborhood: Neighborhood;
-    schedule: Schedule[];
+    neighborhoods: Neighborhood[];
+    schedules: Schedule[];
+    paymentMethods: string[];
 }>;
 
 export type ValidMimeTypes = {

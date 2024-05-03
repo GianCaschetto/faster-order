@@ -5,11 +5,9 @@ import ProductModal from "./ProductModal";
 type ProductCardProps = {
   product: Product;
   addToCart: (product: Product) => void;
-  counter: number;
-  setCounter: React.Dispatch<React.SetStateAction<number>>;
 };
 
-function ProductCard({ product, addToCart, counter, setCounter }: ProductCardProps) {
+function ProductCard({ product, addToCart }: ProductCardProps) {
   const [showModal, setShowModal] = useState(false);
   const toggleShowModal = () => setShowModal(!showModal);
   
@@ -40,7 +38,7 @@ function ProductCard({ product, addToCart, counter, setCounter }: ProductCardPro
       
     </article>
     {showModal && (
-      <ProductModal product={product} addToCart={addToCart} counter={counter} setCounter={setCounter} toggleShowModal={toggleShowModal} />
+      <ProductModal product={product} addToCart={addToCart} toggleShowModal={toggleShowModal} />
      )}
      </>
   );

@@ -1,3 +1,4 @@
+import { useAdmin } from "@/contexts/AdminContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { Order } from "@/types/types";
 
@@ -6,6 +7,7 @@ type OrderCreatedProps = {
 };
 
 function OrderCreated({ order }: OrderCreatedProps) {
+  const {adminData} = useAdmin();
   const { tasaBCV } =  useCurrency();
   const msg = `
   ===== Orden =====
@@ -40,7 +42,7 @@ function OrderCreated({ order }: OrderCreatedProps) {
 
   const sendWhatsapp = () => {
     window.open(
-      `https://wa.me/${"584145960217"}?text=${formattedMsg}`,
+      `https://wa.me/+58${adminData?.whatsapp}?text=${formattedMsg}`,
       "_blank"
     );
   };

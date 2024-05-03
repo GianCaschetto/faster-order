@@ -4,10 +4,11 @@ type CounterProps = {
 };
 
 function Counter({ setCounter, counter }: CounterProps) {
-
   const isDisabled = counter == 1;
+
   return (
     <div className="flex justify-center items-center w-full">
+
       <button
         disabled={isDisabled}
         onClick={() => setCounter(counter - 1)}

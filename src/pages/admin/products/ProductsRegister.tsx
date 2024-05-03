@@ -22,7 +22,6 @@ function ProductsRegister() {
       !productName ||
       !price ||
       !categoryId ||
-      !description ||
       !imageSelected
     ) {
       toast.error("Todos los campos son obligatorios");

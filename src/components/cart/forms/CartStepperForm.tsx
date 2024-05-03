@@ -90,7 +90,7 @@ function CartStepperForm({
 
   useEffect(() => {
     const fetchCustomerInfo = async () => {
-      const customerInfoRef = doc(db, "users", auth.currentUser?.uid ?? "");
+      const customerInfoRef = doc(db, `users/${auth.currentUser?.uid}`);
       const customerInfoSnap = await getDoc(customerInfoRef);
       if (customerInfoSnap.exists()) {
         setCustomerInfo(customerInfoSnap.data() as CustomerInfo);

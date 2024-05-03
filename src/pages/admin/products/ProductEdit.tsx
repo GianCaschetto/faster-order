@@ -33,7 +33,7 @@ function ProductEdit() {
     const formData = new FormData(e.target as HTMLFormElement);
     const data = Object.fromEntries(formData.entries());
     const { productName, price, categoryId, description } = data;
-    if (!productName || !price || !categoryId || !description) {
+    if (!productName || !price || !categoryId) {
       toast.error("Todos los campos son obligatorios");
       return;
     }

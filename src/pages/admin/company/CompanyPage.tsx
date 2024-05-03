@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { saveAdminData } from "@/services/firebase";
 import { Category } from "@/types/types";
 import { toast } from "react-toastify";
+import MediaModal from "../media/MediaModal";
 
 function CompanyPage() {
+  const [isOpenLogo, setIsOpenLogo] = useState(false);
+  const [isOpenIcon, setIsOpenIcon] = useState(false);
+  const [logoSelected, setLogoSelected] = useState<string | null>(null);
+  const [iconSelected, setIconSelected] = useState<string | null>(null);
+
   const { adminData: admin } = useAdmin();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const data = Object.fromEntries(formData.entries());
-    const { companyName, whatsapp, email, categories } = data;
-    if (!companyName || !whatsapp || !categories || !email) {
+    const { companyName, whatsapp, email, categories, payments } = data;
+    if (!companyName || !whatsapp || !categories || !email || !payments) {
       toast.error("Todos los campos son obligatorios");
       return;
     }
@@ -27,7 +33,18 @@ function CompanyPage() {
           name: cat.trim(),
         };
       });
-    saveAdminData({ ...data, categories: categoriesFormatted });
+
+    const paymentMethods: string[] = payments
+      .toString()
+      .split(",")
+      .filter((payment: string) => payment.trim() !== "");
+    saveAdminData({
+      ...data,
+      logo: logoSelected ?? admin?.logo,
+      icon: iconSelected ?? admin?.icon,
+      categories: categoriesFormatted,
+      paymentMethods: paymentMethods,
+    });
   };
   return (
     <div className="flex items-center justify-center p-12">
@@ -74,6 +91,62 @@ function CompanyPage() {
           </div>
           <div className="mb-5">
             <label
+              htmlFor="photo"
+              className="mb-3 block text-base font-medium text-[#07074D]"
+            >
+              Logo de la empresa
+            </label>
+            {logoSelected || admin?.logo && (
+              <img
+                src={logoSelected ?? admin?.logo}
+                alt="logo de la empresa"
+                className="w-auto h-32 object-cover rounded-md"
+              />
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                setIsOpenLogo(true);
+              }}
+            >
+              Elegir
+            </button>
+            <MediaModal
+              isOpen={isOpenLogo}
+              onClose={() => setIsOpenLogo(false)}
+              setImageSelected={setLogoSelected}
+            />
+          </div>
+          <div className="mb-5">
+            <label
+              htmlFor="photo"
+              className="mb-3 block text-base font-medium text-[#07074D]"
+            >
+              Icono del sitio web
+            </label>
+            {iconSelected || admin?.icon && (
+              <img
+                src={iconSelected ?? admin?.icon}
+                alt="icono delsitio web de la empresa"
+                className="w-auto h-32 object-cover rounded-md"
+              />
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                setIsOpenIcon(true);
+              }}
+            >
+              Elegir
+            </button>
+            <MediaModal
+              isOpen={isOpenIcon}
+              onClose={() => setIsOpenIcon(false)}
+              setImageSelected={setIconSelected}
+            />
+          </div>
+          <div className="mb-5">
+            <label
               htmlFor="email"
               className="mb-3 block text-base font-medium text-[#07074D]"
             >
@@ -97,15 +170,13 @@ function CompanyPage() {
             >
               Categorías del menú
             </label>
-            <input
-              type="text"
+            <textarea
               name="categories"
               defaultValue={
                 admin?.categories?.map((cat) => cat.name).join(", ") ?? ""
               }
               id="categories"
               placeholder="Hamburguesas, Pizzas, Bebidas, Postres"
-              min="0"
               className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
             />
             <span>
@@ -119,6 +190,30 @@ function CompanyPage() {
                 asignarle la nueva categoría
               </span>
             )}
+          </div>
+
+          <div className="mb-5">
+            <label
+              htmlFor="payments"
+              className="mb-3 block text-base font-medium text-[#07074D]"
+            >
+              Métodos de pago
+            </label>
+            <textarea
+              name="payments"
+              defaultValue={
+                admin?.paymentMethods?.map((payment) => payment).join(", ") ??
+                ""
+              }
+              id="payments"
+              placeholder="Pago móvil, Zelle, Transferencia, Efectivo"
+              className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+            />
+            <span>
+              Enumere todos los métodos de pago separados por coma (,). Como:
+              Pago móvil, Zelle, Transferencia, Efectivo.
+            </span>
+            <br />
           </div>
 
           <div>
