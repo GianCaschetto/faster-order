@@ -27,7 +27,7 @@ function OrderCreated({ order }: OrderCreatedProps) {
   Gastos de envío: ${order.delivertyPrice}
   Total: ${order.subtotal + (order.delivertyPrice ?? 0)}
 
-  Total en bs: ${(order.subtotal + (order.delivertyPrice ?? 0)) * tasaBCV.price}
+  Total en bs: ${((order.subtotal + (order.delivertyPrice ?? 0)) * tasaBCV.price).toFixed(2)}
 
   Método de pago: ${order.paymentMethod}
 

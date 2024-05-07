@@ -1,5 +1,4 @@
 import { useMedia } from "@/contexts/MediaContext";
-import React from "react";
 
 function MediaModal({ isOpen, onClose, setImageSelected }) {
   const { mediaList } = useMedia();

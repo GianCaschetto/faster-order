@@ -1,3 +1,4 @@
+import Loader from "@/components/Loader";
 import { auth, db } from "@/services/firebase";
 import { User } from "firebase/auth";
 import { DocumentData, doc, getDoc } from "firebase/firestore";
@@ -55,7 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [user, authInitialized]);
 
   if (!authInitialized || loadingUserProfile) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (

@@ -9,4 +9,6 @@ export const routes = {
   neighborhoods: "/admin-panel/neighborhoods",
   media: "/admin-panel/media",
   schedule: "/admin-panel/schedule",
+  shippingMessage: "/admin-panel/shipping-message",
+  orders: "/admin-panel/orders",
 };

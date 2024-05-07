@@ -11,7 +11,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
   const [isActive, setIsActive] = useState<string>("");
   const location = useLocation();
   const navigate = useNavigate();
-  const { adminData } = useAdmin();
+  const { orders, adminData } = useAdmin();
 
   useEffect(() => {
     setIsActive(location.pathname);
@@ -63,6 +63,8 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                   </svg>
                 )}
               </button>
+              <div className="flex">
+
               <NavLink
                 to="/"
                 className="text-xl font-bold flex items-center lg:ml-2.5 active:text-black"
@@ -70,32 +72,23 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                 <img
                   src={adminData?.logo}
                   className="h-10 mr-2"
-                  alt="Windster Logo"
+                  alt={`${adminData?.companyName} logo`}
                 />
                 <span className="self-center whitespace-nowrap">
                   {adminData?.companyName}
                 </span>
               </NavLink>
+              <NavLink
+                to="/admin-panel"
+                className="text-sm font-bold flex items-center lg:ml-2.5 active:text-black"
+              >
+                <span className="self-center whitespace-nowrap text-black">
+                  Panel de administración
+                </span>
+              </NavLink>
+              </div>
             </div>
             <div className="flex items-center">
-              <button
-                id="toggleSidebarMobileSearch"
-                type="button"
-                className="lg:hidden text-gray-500 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-lg"
-              >
-                <span className="sr-only">Search</span>
-                <svg
-                  className="w-6 h-6"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-              </button>
               <div className="hidden lg:flex items-center">
                 <span className="text-base font-normal text-gray-500 mr-5">
                   Hecho por Faster Order ❤️
@@ -123,275 +116,28 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           <div className="relative flex-1 flex flex-col min-h-full border-r border-gray-200 bg-white pt-0">
             <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
               <div className="flex-1 px-3 bg-white divide-y space-y-1">
-                <ul className="space-y-2 pb-2">
-                  <li>
-                    <form action="#" method="GET" className="lg:hidden">
-                      <label htmlFor="mobile-search" className="sr-only">
-                        Search
-                      </label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <svg
-                            className="w-5 h-5 text-gray-500"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
-                          </svg>
-                        </div>
-                        <input
-                          type="text"
-                          name="email"
-                          id="mobile-search"
-                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cyan-600 block w-full pl-10 p-2.5"
-                          placeholder="Search"
-                        />
-                      </div>
-                    </form>
-                  </li>
-                  <li>
-                    <NavLink
-                      to={routes.adminPanel}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
-                        isActive === routes.adminPanel ? "bg-gray-100" : ""
-                      }`}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        className="icon icon-tabler icons-tabler-outline icon-tabler-dashboard"
-                      >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M12 13m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                        <path d="M13.45 11.55l2.05 -2.05" />
-                        <path d="M6.4 20a9 9 0 1 1 11.2 0z" />
-                      </svg>
-                      <span className="ml-3">Dashboard</span>
-                    </NavLink>
-                  </li>
+                <ul className="space-y-2 pb-2 overflow-y-auto">
+                  {orders?.map((order) => (
+                     <li className="bg-gray-50 p-2 shadow-sm hover:bg-gray-100 hover:text-black">
+                     <NavLink
+                       to={`${routes.orders}/${order.id}`}
+                       className={`${
+                         isActive === `${routes.orders}/${order.id}`
+                           ? "bg-gray-100 text-black"
+                           : "text-gray-600"
+                       } flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg `}
+                     >
+                       <span className="truncate">{order.id}</span>
+                       <span className="text-gray-500 text-xs">
+                         {order.status}
+                       </span>
+                     </NavLink>
+                   </li>
+                  ))}
+                           
 
-                  <li>
-                    <NavLink
-                      to={routes.company}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
-                        isActive === routes.company ? "bg-gray-100" : ""
-                      }`}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        className="icon icon-tabler icons-tabler-outline icon-tabler-user"
-                      >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                        <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
-                      </svg>
-                      <span className="ml-3 flex-1 whitespace-nowrap">
-                        Empresa
-                      </span>
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to={routes.neighborhoods}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
-                        isActive === routes.neighborhoods ? "bg-gray-100" : ""
-                      }`}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        className="icon icon-tabler icons-tabler-outline icon-tabler-map-pin"
-                      >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
-                        <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" />
-                      </svg>
-                      <span className="ml-3 flex-1 whitespace-nowrap">
-                        Zonas
-                      </span>
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to={routes.schedule}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
-                        isActive === routes.schedule ? "bg-gray-100" : ""
-                      }`}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        className="icon icon-tabler icons-tabler-outline icon-tabler-clock"
-                      >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
-                        <path d="M12 7v5l3 3" />
-                      </svg>
-                      <span className="ml-3 flex-1 whitespace-nowrap">
-                        Horario de Apertura
-                      </span>
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to={routes.products}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
-                        isActive === routes.products && "bg-gray-100"
-                      }`}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        className="icon icon-tabler icons-tabler-outline icon-tabler-shopping-bag"
-                      >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" />
-                        <path d="M9 11v-5a3 3 0 0 1 6 0v5" />
-                      </svg>
-                      <span className="ml-3 flex-1 whitespace-nowrap">
-                        Productos
-                      </span>
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to={routes.shippingMessage}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
-                        isActive === routes.shippingMessage && "bg-gray-100"
-                      }`}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        className="icon icon-tabler icons-tabler-outline icon-tabler-pencil"
-                      >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
-                        <path d="M13.5 6.5l4 4" />
-                      </svg>
-                      <span className="ml-3 flex-1 whitespace-nowrap">
-                        Nota de Entrega
-                      </span>
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to={routes.media}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
-                        isActive === routes.media && "bg-gray-100"
-                      }`}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        className="icon icon-tabler icons-tabler-outline icon-tabler-camera"
-                      >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2" />
-                        <path d="M9 13a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
-                      </svg>
-                      <span className="ml-3 flex-1 whitespace-nowrap">
-                        Media
-                      </span>
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to={routes.orders}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
-                        isActive === routes.orders && "bg-gray-100"
-                      }`}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        className="icon icon-tabler icons-tabler-outline icon-tabler-clipboard"
-                      >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
-                        <path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
-                      </svg>
-                      <span className="ml-3 flex-1 whitespace-nowrap">
-                        Gestionar órdenes
-                      </span>
-                    </NavLink>
-                  </li>
                 </ul>
-                <div className="space-y-2 pt-2">
-                  <button
-                    onClick={() =>
-                      signOut(auth).then(() => {
-                        navigate(routes.home);
-                        toast.success("Sesión cerrada correctamente");
-                      })
-                    }
-                    className="text-start w-full  text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "
-                  >
-                    <svg
-                      className="w-6 h-6 text-gray-500 flex-shrink-0 group-hover:text-gray-900 transition duration-75"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
-                        clip-rule="evenodd"
-                      ></path>
-                    </svg>
-                    <span className="ml-3 flex-1 whitespace-nowrap">
-                      Cerrar sesión
-                    </span>
-                  </button>
-                </div>
+                
               </div>
             </div>
           </div>

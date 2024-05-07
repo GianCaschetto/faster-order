@@ -1,9 +1,122 @@
 import { useState } from "react";
-import { Extra, Product } from "@/types/types";
+import { Extra, Extras, Product } from "@/types/types";
 import Counter from "./Counter";
-import React from "react";
 import { X } from "lucide-react";
-import { extras } from "@/mock/data";
+
+const extras: Extras[] = [
+  {
+    id: "1",
+    available: true,
+    title: "Extras",
+    items: [
+      {
+        id: "1",
+        name: "Carne",
+        available: true,
+        price: 2,
+        qty: 2,
+      },
+      {
+        id: "2",
+        name: "Queso",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "3",
+        name: "Tocineta",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "4",
+        name: "Cebolla",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "5",
+        name: "BBQ",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "6",
+        name: "Salsa de la casa",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+    ],
+  },
+  {
+    id: "2",
+    available: true,
+    title: "Extras dulces",
+    items: [
+      {
+        id: "7",
+        name: "Chocolate",
+        available: true,
+        price: 2,
+        qty: 2,
+      },
+      {
+        id: "8",
+        name: "Fresas",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "9",
+        name: "Crema",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "10",
+        name: "Caramelo",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "11",
+        name: "Nutella",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "12",
+        name: "Mermelada",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "13",
+        name: "Leche condensada",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+      {
+        id: "14",
+        name: "Galletas",
+        available: true,
+        price: 1,
+        qty: 1,
+      },
+    ],
+  },
+];
 
 type ProductModalProps = {
   product: Product;
@@ -56,7 +169,11 @@ function ProductModal({
                 <p>{item.name}</p>
                 {/* Input para la cantidad del extra (se muestra solo si el checkbox está seleccionado) */}
                 {selectedExtras.some((extra) => extra.id === item.id) && (
-                 <select onChange={(e) => handleExtraQuantityChange(item.id, Number(e.target.value))}>
+                  <select
+                    onChange={(e) =>
+                      handleExtraQuantityChange(item.id, Number(e.target.value))
+                    }
+                  >
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>

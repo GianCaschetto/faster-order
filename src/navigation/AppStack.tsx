@@ -13,6 +13,9 @@ import ProductEdit from "@/pages/admin/products/ProductEdit";
 import MediaPage from "@/pages/admin/media/MediaPage";
 import NeighborhoodsPage from "@/pages/admin/Neightborhoods/NeighborhoodsPage";
 import SchedulesPage from "@/pages/admin/Schedules/SchedulesPage";
+import OrderMessage from "@/pages/admin/shippingMessage/OrderMessage";
+import OrdersLayout from "@/layouts/OrdersLayout";
+import OrdersPage from "@/pages/admin/orders/OrdersPage";
 
 const router = createBrowserRouter([
   {
@@ -31,43 +34,92 @@ const router = createBrowserRouter([
     path: routes.adminPanel,
     element: (
       <ProtectedRoute>
-        <AdminLayout />
+        <Outlet />
       </ProtectedRoute>
     ),
     errorElement: <ErrorPage />,
     children: [
       {
         index: true,
-        element: <AdminPanel />,
+        element: (
+          <AdminLayout>
+            <AdminPanel />
+          </AdminLayout>
+        ),
       },
       {
         path: routes.products,
-        element: <ProductsPage />,
+        element: (
+          <AdminLayout>
+            <ProductsPage />
+          </AdminLayout>
+        ),
       },
       {
         path: routes.company,
-        element: <CompanyPage />,
+        element: (
+          <AdminLayout>
+            <CompanyPage />
+          </AdminLayout>
+        ),
       },
       {
         path: routes.productsRegister,
-        element: <ProductsRegister />,
+        element: (
+          <AdminLayout>
+            <ProductsRegister />
+          </AdminLayout>
+        ),
       },
       {
         path: routes.productsEdit,
-        element: <ProductEdit />,
+        element: (
+          <AdminLayout>
+            <ProductEdit />
+          </AdminLayout>
+        ),
       },
       {
         path: routes.media,
-        element: <MediaPage />,
+        element: (
+          <AdminLayout>
+            <MediaPage />
+          </AdminLayout>
+        ),
       },
       {
         path: routes.neighborhoods,
-        element: <NeighborhoodsPage />,
+        element: (
+          <AdminLayout>
+            <NeighborhoodsPage />
+          </AdminLayout>
+        ),
       },
       {
         path: routes.schedule,
-        element: <SchedulesPage />,
+        element: (
+          <AdminLayout>
+            <SchedulesPage />
+          </AdminLayout>
+        ),
       },
+      {
+        path: routes.shippingMessage,
+        element: (
+          <AdminLayout>
+            <OrderMessage />
+          </AdminLayout>
+        ),
+      },
+      {
+        path: routes.orders,
+        element: (
+          <OrdersLayout>
+            <OrdersPage />
+          </OrdersLayout>
+        ),
+      },
+    
     ],
   },
 ]);

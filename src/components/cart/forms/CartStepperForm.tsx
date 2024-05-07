@@ -13,7 +13,8 @@ import OrderCreated from "../OrderCreated";
 import { toast } from "react-toastify";
 import confetti from "canvas-confetti";
 import { auth, db, signInAnonymous } from "@/services/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { useAdmin } from "@/contexts/AdminContext";
 
 type CartStepperFormProps = {
   cart: ShoppingCart;
@@ -32,16 +33,17 @@ function CartStepperForm({
   currentStep,
   setCurrentStep,
 }: CartStepperFormProps) {
+  const { totalOrders } = useAdmin();
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>(
     {} as CustomerInfo
   );
   const [order, setOrder] = useState<Order>({
-    id: crypto.randomUUID(),
+    id: totalOrders + 1,
     customer: customerInfo ?? ({} as CustomerInfo),
     orderType: "delivery",
     items: [],
     subtotal: 0,
-    status: "pending",
+    status: "nuevo",
     paymentMethod: "",
     createdAt: new Date().toISOString(),
   });
@@ -118,8 +120,15 @@ function CartStepperForm({
     if (currentStep === 2) {
       signInAnonymous(order.customer);
     } else if (currentStep === 3) {
-      setDoc(doc(db, "orders", order.id), order)
+      setOrder({
+        ...order,
+        id: totalOrders + 1,
+      });
+      addDoc(collection(db, "orders"), { ...order, id: totalOrders + 1 })
         .then(() => {
+          setDoc(doc(db, "admin", "totalOrders"), {
+            totalOrders: totalOrders + 1,
+          });
           toast.success("Orden creada con exito");
           confetti();
         })

@@ -53,11 +53,11 @@ export interface ShoppingCart {
 export type OrderType = "delivery" | "pickup";
 
 //Order Status
-export type OrderStatus = "pending" | "completed" | "cancelled" | "in-progress";
+export type OrderStatus = "nuevo" | "aceptado" | "preparando" | "enviando" | "entregado" | "cancelado";
 
 //Order type
 export type Order = {
-    id: string;
+    id: number;
     customer: CustomerInfo;
     orderType: OrderType;
     items: ShoppingCartItem[];
