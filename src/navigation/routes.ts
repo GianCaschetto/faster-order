@@ -1,5 +1,6 @@
 export const routes = {
   home: "/",
+  trackOrder: "/order/:orderNumberParam",
   signIn: "/fo-admin",
   adminPanel: "/admin-panel",
   products: "/admin-panel/products",
@@ -11,4 +12,5 @@ export const routes = {
   schedule: "/admin-panel/schedule",
   shippingMessage: "/admin-panel/shipping-message",
   orders: "/admin-panel/orders",
+  //orderDetail: "/admin-panel/orders/:id",
 };

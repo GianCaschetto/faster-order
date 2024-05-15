@@ -1,11 +1,8 @@
 import { storage } from "@/services/firebase";
+import { mediaRefType } from "@/types/types";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { useContext, useState, createContext, useEffect } from "react";
 
-type mediaRefType = {
-  name: string;
-  url: string;
-};
 
 type MediaContextType = {
   mediaList: mediaRefType[];
@@ -30,7 +27,7 @@ const MediaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         return Promise.all([urls, mediaNames]);
       })
       .then(async ([urls, mediaNames]) => {
-        const mediaList = await Promise.all(
+        const newMediaList = await Promise.all(
           mediaNames.map(async (name, index) => {
             const url = await urls[index];
             return {
@@ -39,10 +36,11 @@ const MediaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
             };
           })
         );
-        setMediaList(mediaList);
+        setMediaList(newMediaList);
       });
-      console.log(mediaList)
   }, []);
+
+  
   return (
     <MediaContext.Provider value={{ mediaList }}>
       {children}

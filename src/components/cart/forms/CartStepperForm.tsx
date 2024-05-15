@@ -6,6 +6,7 @@ import { ArrowLeft, X } from "lucide-react";
 import {
   CustomerInfo,
   Order,
+  OrderStatus,
   ShoppingCart,
   ShoppingCartItem,
 } from "@/types/types";
@@ -13,8 +14,7 @@ import OrderCreated from "../OrderCreated";
 import { toast } from "react-toastify";
 import confetti from "canvas-confetti";
 import { auth, db, signInAnonymous } from "@/services/firebase";
-import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
-import { useAdmin } from "@/contexts/AdminContext";
+import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 
 type CartStepperFormProps = {
   cart: ShoppingCart;
@@ -33,18 +33,17 @@ function CartStepperForm({
   currentStep,
   setCurrentStep,
 }: CartStepperFormProps) {
-  const { totalOrders } = useAdmin();
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>(
     {} as CustomerInfo
   );
   const [order, setOrder] = useState<Order>({
-    id: totalOrders + 1,
     customer: customerInfo ?? ({} as CustomerInfo),
     orderType: "delivery",
     items: [],
     subtotal: 0,
-    status: "nuevo",
+    status: OrderStatus.nuevo,
     paymentMethod: "",
+    orderNumber: undefined,
     createdAt: new Date().toISOString(),
   });
 
@@ -122,21 +121,21 @@ function CartStepperForm({
     } else if (currentStep === 3) {
       setOrder({
         ...order,
-        id: totalOrders + 1,
-      });
-      addDoc(collection(db, "orders"), { ...order, id: totalOrders + 1 })
-        .then(() => {
-          setDoc(doc(db, "admin", "totalOrders"), {
-            totalOrders: totalOrders + 1,
-          });
-          toast.success("Orden creada con exito");
-          confetti();
-        })
-        .catch((error) => {
-          toast.error("Error al crear la orden", error.message);
-        });
+        orderNumber: Math.round(Date.now() * Math.random()),
+      })
     }
   }, [currentStep]);
+
+  useEffect(() => {
+    if (order.orderNumber) {
+      const addOrder = async () => {
+        await addDoc(collection(db, "orders"), order);
+        toast.success("Orden creada exitosamente");
+        confetti();
+      };
+      addOrder();
+    }
+  }, [order.orderNumber]);
 
   return (
     <div className="h-screen min-h-screen md:max-w-6xl max-w-sm text-center p-4 mx-auto">

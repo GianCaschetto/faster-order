@@ -14,8 +14,9 @@ import MediaPage from "@/pages/admin/media/MediaPage";
 import NeighborhoodsPage from "@/pages/admin/Neightborhoods/NeighborhoodsPage";
 import SchedulesPage from "@/pages/admin/Schedules/SchedulesPage";
 import OrderMessage from "@/pages/admin/shippingMessage/OrderMessage";
-import OrdersLayout from "@/layouts/OrdersLayout";
 import OrdersPage from "@/pages/admin/orders/OrdersPage";
+import TrackOrder from "@/pages/order/TrackOrder";
+
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
         element: <MenuPage />,
       },
       { path: routes.signIn, element: <SignInPage /> },
+      { path: routes.trackOrder, element: <TrackOrder /> },
     ],
   },
   {
@@ -71,6 +73,7 @@ const router = createBrowserRouter([
           </AdminLayout>
         ),
       },
+     
       {
         path: routes.productsEdit,
         element: (
@@ -114,12 +117,17 @@ const router = createBrowserRouter([
       {
         path: routes.orders,
         element: (
-          <OrdersLayout>
-            <OrdersPage />
-          </OrdersLayout>
+          <OrdersPage />
         ),
       },
-    
+      // {
+      //   path: routes.orderDetail,
+      //   element: (
+      //     <OrdersLayout>
+      //       <OrderDetails />
+      //     </OrdersLayout>
+      //   ),
+      // },
     ],
   },
 ]);

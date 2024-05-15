@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ref, deleteObject } from "firebase/storage";
 import { storage } from "@/services/firebase";
 import { FileDropZone } from "@/components/FileDropZone";
 import { toast } from "react-toastify";
 import { useMedia } from "@/contexts/MediaContext";
+import { mediaRefType } from "@/types/types";
 
 function MediaPage() {
   const { mediaList } = useMedia();
@@ -12,6 +13,8 @@ function MediaPage() {
   const copyUrl = (url: string) => {
     navigator.clipboard.writeText(url);
   };
+
+
 
   return (
     <div>
@@ -31,9 +34,8 @@ function MediaPage() {
         </div>
       )}
       {/* Media List */}
-
       <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-10 gap-4">
-        {mediaList.map((media, index) => (
+        {mediaList?.map((media, index) => (
           <div
             key={index}
             className="relative"

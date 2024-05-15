@@ -5,13 +5,11 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 type AdminContextType = {
   adminData: AdminData | null;
-  totalOrders: number;
   orders: Order[] | null;
 };
 
 const AdminContext = createContext<AdminContextType>({
   adminData: null,
-  totalOrders: 0,
   orders: null,
 });
 
@@ -19,8 +17,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [adminData, setAdminData] = useState<AdminData | null>(null);
-  const [totalOrders, setTotalOrders] = useState<number>(0);
-  const [orders, setOrders] = useState<Order[] | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+
   useEffect(() => {
     const adminDataRef = doc(db, "admin", "data");
     const unsubscribe = onSnapshot(adminDataRef, (doc) => {
@@ -32,15 +30,14 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const ordersRef = collection(db, "orders");
-    const unOrdersLenghtSuscribe = onSnapshot(ordersRef, (doc) => {
-      setOrders(doc.docs.map((doc) => doc.data() as Order));
-      setTotalOrders(doc?.docs?.length ?? 0);
+    const unOrdersLenghtSuscribe = onSnapshot(ordersRef, (snapshot) => {
+      setOrders(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id} as Order)));
     });
     return () => unOrdersLenghtSuscribe();
-  }, [totalOrders]);
+  }, []);
 
   return (
-    <AdminContext.Provider value={{ adminData, totalOrders, orders }}>
+    <AdminContext.Provider value={{ adminData, orders }}>
       {children}
     </AdminContext.Provider>
   );

@@ -1,6 +1,7 @@
 import { useAdmin } from "@/contexts/AdminContext";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { Order } from "@/types/types";
+import { useNavigate } from "react-router-dom";
 
 type OrderCreatedProps = {
   order: Order;
@@ -9,6 +10,7 @@ type OrderCreatedProps = {
 function OrderCreated({ order }: OrderCreatedProps) {
   const {adminData} = useAdmin();
   const { tasaBCV } =  useCurrency();
+  const navigate = useNavigate();
   const msg = `
   ===== Orden =====
   Orden: ${order.id} 
@@ -51,7 +53,7 @@ function OrderCreated({ order }: OrderCreatedProps) {
     <div className="text-start">
       {/* Show the order */}
       <h1>Orden creada</h1>
-      <p>Orden: {order.id}</p>
+      <p>Orden: {order.orderNumber}</p>
       <p>Contenido de la orden</p>
       <ul>
         {order.items.map((item) => (
@@ -72,19 +74,20 @@ function OrderCreated({ order }: OrderCreatedProps) {
       <p>Barrio: {order.customer.neighborhood?.name}</p>
       <p>Estado: {order.status}</p>
       <p>Metodo de pago: {order.paymentMethod}</p>
-      <p>Fecha: {order.createdAt}</p>
       <p>Tipo de orden: {order.orderType}</p>
       <p>Subtotal: {order.subtotal}</p>
       <p>Gastos de envío: {order.delivertyPrice}</p>
       <p>Total: {order.subtotal + (order.delivertyPrice ?? 0)}</p>
       <p>
-        Total en bs:
-        {(order.subtotal + (order.delivertyPrice ?? 0)) * tasaBCV.price}
+        Total en bs: 
+         {(order.subtotal + (order.delivertyPrice ?? 0)) * tasaBCV.price}
       </p>
 
       <div className="flex flex-col">
         <button onClick={sendWhatsapp}>Envia tu pedido por whatsapp</button>
-        <button>Rastreo de orden</button>
+        <button onClick={() => {
+          navigate(`/order/${order.orderNumber}`);
+        }}>Rastreo de orden</button>
       </div>
     </div>
   );

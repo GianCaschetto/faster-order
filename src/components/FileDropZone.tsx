@@ -4,6 +4,7 @@ import { ValidMimeTypes } from "@/types/types";
 import { ref, uploadBytes } from "firebase/storage";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
+import { toast } from "react-toastify";
 
 export type FileDropZoneProps = {
   multipleFiles: boolean;
@@ -15,18 +16,16 @@ export function FileDropZone({ multipleFiles, accept }: FileDropZoneProps) {
     files.forEach((file) => {
       // Generate a random UUID for the filename
       const randomFileName = sanitizeFilename(file.name);
-      const photoRef = ref(storage, `products/${file.name}`);
+      const photoRef = ref(storage, `products/${randomFileName}`);
 
       if (!randomFileName) return;
 
       const newFile = new File([file], randomFileName, { type: file.type });
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        uploadBytes(photoRef, newFile);
-      };
-
-      reader.readAsArrayBuffer(newFile);
+      uploadBytes(photoRef, newFile).then(() => {
+        toast.success("Archivo subido correctamente");
+      }).catch((error) => {
+        console.error(error.message);
+      })
     });
   }, []);
 
