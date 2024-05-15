@@ -131,6 +131,17 @@ export type ValidMimeTypes = {
   "application/pdf": [".pdf"];
 };
 
+export type DataChartType = {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    backgroundColor: string[];
+    borderColor: string[];
+    borderWidth: number;
+  }[];
+};
+
 export type mediaRefType = {
   name: string;
   url: string;
