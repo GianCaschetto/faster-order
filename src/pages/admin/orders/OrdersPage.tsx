@@ -1,14 +1,37 @@
 import { useAdmin } from "@/contexts/AdminContext";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Order, OrderStatus } from "@/types/types";
+import { Order } from "@/types/types";
 import OrderDetails from "@/pages/admin/orders/OrderDetails";
+
+const orderStatusColors = {
+  nuevo: "bg-yellow-200",
+  "en proceso": "bg-orange-200",
+  enviado: "bg-blue-200",
+  entregado: "bg-pink-200",
+  finalizado: "bg-green-300",
+  cancelado: "bg-red-400",
+};
 
 function OrdersPage() {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [orderSelected, setOrderSelected] = useState<Order | null>(null);
-
+  const [orderToSearch, setOrderToSearch] = useState<string>("");
   const { orders, adminData } = useAdmin();
+
+  const filteredOrders =
+    orderToSearch === ""
+      ? orders
+      : orders?.filter((order) => {
+          return (
+            order.customer.name.toLowerCase() === orderToSearch.toLowerCase() ||
+            order.orderNumber?.toString().includes(orderToSearch) ||
+            order.customer.phone.includes(orderToSearch) ||
+            order.status.toLowerCase() === orderToSearch.toLowerCase() ||
+            order.createdAt.split("T")[0].includes(orderToSearch) ||
+            new Date(order.createdAt).toLocaleDateString().includes(orderToSearch)
+          );
+        });
 
   return (
     <div>
@@ -108,36 +131,37 @@ function OrdersPage() {
           <div className="relative flex-1 flex flex-col min-h-full border-r border-gray-200 bg-white pt-0">
             <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
               <div className="flex-1 px-3 bg-white divide-y space-y-1">
-                <ul className="space-y-2 pb-2">
-                  {orders
-                    ?.sort((a, b) => {
-                      if (a.status === OrderStatus.nuevo) return -1;
-                      if (b.status === OrderStatus.nuevo) return 1;
-                      return 0;
-                    })
-                    ?.map((order) => (
-                      <li
-                        key={order.orderNumber}
-                        className={`bg-gray-50 p-2 shadow-sm hover:bg-gray-100 hover:text-black ${
-                          orderSelected?.orderNumber === order?.orderNumber
-                            ? "bg-yellow-200"
-                            : "bg-gray-200"
-                        }`}
+                <input
+                  type="text"
+                  onChange={(event) => setOrderToSearch(event.target.value)}
+                />
+                <ul className="space-y-2 overflow-y-auto h-screen">
+                  {filteredOrders?.map((order) => (
+                    <li key={order.id}>
+                      <button
+                        onClick={() => setOrderSelected(order)}
+                        className="flex items-center justify-between w-full px-2 py-1 text-sm font-medium text-gray-900 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:bg-gray-200"
                       >
-                        <button
-                          onClick={() => {
-                            setOrderSelected(order);
-                            setSidebarOpen(false);
-                          }}
-                          className={` flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg w-full text-black`}
-                        >
-                          <span className="truncate">{order.orderNumber}</span>
-                          <span className="text-gray-500 text-xs">
-                            {order.status}
+                        <div className="flex flex-col text-start">
+                          <span className="text-xs font-bold">
+                            {order.orderNumber}
                           </span>
-                        </button>
-                      </li>
-                    ))}
+                          <span className="text-xs">
+                            {order.customer.name}
+                          </span>
+                          <span className="text-xs">
+                            {new Date(order.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <div className={`text-xs ${
+                          orderStatusColors[order.status]
+                        } px-2 rounded-full
+                        }`}>
+                          {order.status.toString().toUpperCase()}
+                        </div>
+                      </button>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -145,7 +169,7 @@ function OrdersPage() {
         </aside>
 
         <div id="main-content" className="h-screen w-full bg-gray-50">
-          <div className="text-gray-900 h-auto w-full relative">
+          <div className="text-gray-900 w-full relative">
             {orderSelected ? (
               <OrderDetails orderSelected={orderSelected} />
             ) : (

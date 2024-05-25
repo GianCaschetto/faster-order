@@ -19,6 +19,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({
   const [adminData, setAdminData] = useState<AdminData | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
 
+  
+
   useEffect(() => {
     const adminDataRef = doc(db, "admin", "data");
     const unsubscribe = onSnapshot(adminDataRef, (doc) => {
@@ -35,6 +37,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({
     });
     return () => unOrdersLenghtSuscribe();
   }, []);
+
 
   return (
     <AdminContext.Provider value={{ adminData, orders }}>

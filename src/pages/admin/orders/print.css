@@ -2,7 +2,7 @@
     body * {
         display: none;
     }
-    #printArea, #printArea * {
+    #print, #print * {
         display: block;
     }
 }

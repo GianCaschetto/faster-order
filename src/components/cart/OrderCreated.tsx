@@ -8,28 +8,88 @@ type OrderCreatedProps = {
 };
 
 function OrderCreated({ order }: OrderCreatedProps) {
-  const {adminData} = useAdmin();
-  const { tasaBCV } =  useCurrency();
+  const { adminData } = useAdmin();
+  const { tasaBCV, tasaEnParalelo } = useCurrency();
   const navigate = useNavigate();
-  const msg = `
+
+  const replaceTokens = (message: string) => {
+    let newMessage = message;
+    newMessage = newMessage.replace(
+      "##ORDER_NUMBER##",
+      order.orderNumber?.toString() ?? ""
+    );
+    newMessage = newMessage.replace(
+      "##ORDER_SUBTOTAL##",
+      order.subtotal.toString()
+    );
+    newMessage = newMessage.replace(
+      "##ORDER_DELIVERY_PRICE##",
+      order.delivertyPrice?.toString() ?? ""
+    );
+    newMessage = newMessage.replace("##ORDER_TOTAL##", order.total.toString());
+    newMessage = newMessage.replace("##CUSTOMER_NAME##", order.customer.name);
+    newMessage = newMessage.replace("##CUSTOMER_PHONE##", order.customer.phone);
+    newMessage = newMessage.replace(
+      "##CUSTOMER_ADDRESS##",
+      order.customer.address ?? ""
+    );
+    newMessage = newMessage.replace(
+      "##CUSTOMER_NEIGHBORHOOD##",
+      order.customer.neighborhood?.name ?? ""
+    );
+
+    // Manejar productos
+    const productDetails = order.items
+      .map((item) => {
+        const productMessage = `
+    ${item.quantity} x ${item.product.name}
+    ${item.extras
+      ?.map((extra) => `Extra: ${extra.qty} x ${extra.name}`)
+      .join("\n")}
+    `;
+        return productMessage.trim();
+      })
+      .join("\n");
+
+    newMessage = newMessage.replace("##PRODUCT_DETAILS##", productDetails);
+    newMessage = newMessage.replace(
+      "##TOTAL_PRICE_BS_BCV##",
+      (order.total * tasaBCV.price).toFixed(2)
+    );
+    newMessage = newMessage.replace(
+      "##TOTAL_PRICE_BS_PARALELO##",
+      (order.total * tasaEnParalelo).toFixed(2)
+    );
+    newMessage = newMessage.replace(
+      "##ORDER_PAYMENTMETHOD##",
+      order.paymentMethod
+    );
+    newMessage = newMessage.replace("##ORDER_ORDERTYPE##", order.orderType);
+
+    return newMessage;
+  };
+
+  const msg = adminData?.whatsappMessage
+    ? replaceTokens(adminData?.whatsappMessage)
+    : `
   ===== Orden =====
-  Orden: ${order.id} 
+  Orden: ${order.orderNumber} 
   Contenido de la orden
   ${order.items.map(
     (item) =>
       `
     ${item.quantity} x ${item.product.name}
-      ${item.extras?.map(extra => {
-        return `Extra: ${extra.qty} x ${extra.name}`
+      ${item.extras?.map((extra) => {
+        return `Extra: ${extra.qty} x ${extra.name}`;
       })}
     Precio: ${item.price}
     `
   )}
   Subtotal: ${order.subtotal}
   Gastos de envío: ${order.delivertyPrice}
-  Total: ${order.subtotal + (order.delivertyPrice ?? 0)}
+  Total: ${order.total}
 
-  Total en bs: ${((order.subtotal + (order.delivertyPrice ?? 0)) * tasaBCV.price).toFixed(2)}
+  Total en bs: ${parseFloat((order.total * tasaBCV.price).toFixed(2))}
 
   Método de pago: ${order.paymentMethod}
 
@@ -64,7 +124,9 @@ function OrderCreated({ order }: OrderCreatedProps) {
                 {extra.qty} x {extra.name}: {extra.price}
               </p>
             ))}
-            <p>Precio del {item.product.name}: {item.price}</p>
+            <p>
+              Precio del {item.product.name}: {item.price}
+            </p>
           </li>
         ))}
       </ul>
@@ -79,15 +141,19 @@ function OrderCreated({ order }: OrderCreatedProps) {
       <p>Gastos de envío: {order.delivertyPrice}</p>
       <p>Total: {order.subtotal + (order.delivertyPrice ?? 0)}</p>
       <p>
-        Total en bs: 
-         {(order.subtotal + (order.delivertyPrice ?? 0)) * tasaBCV.price}
+        Total en bs:
+        {parseFloat((order.total * tasaBCV.price).toFixed(2))}
       </p>
 
       <div className="flex flex-col">
         <button onClick={sendWhatsapp}>Envia tu pedido por whatsapp</button>
-        <button onClick={() => {
-          navigate(`/order/${order.orderNumber}`);
-        }}>Rastreo de orden</button>
+        <button
+          onClick={() => {
+            navigate(`/order/${order.orderNumber}`);
+          }}
+        >
+          Rastreo de orden
+        </button>
       </div>
     </div>
   );

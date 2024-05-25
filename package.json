@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.11.4",
     "canvas-confetti": "^1.9.2",
     "chart.js": "^4.4.2",
     "class-variance-authority": "^0.7.0",
@@ -22,6 +23,7 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-router-dom": "^6.22.3",
+    "react-to-print": "^2.15.1",
     "react-toastify": "^10.0.5",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7"

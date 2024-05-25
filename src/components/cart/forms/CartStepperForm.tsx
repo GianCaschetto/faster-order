@@ -13,8 +13,8 @@ import {
 import OrderCreated from "../OrderCreated";
 import { toast } from "react-toastify";
 import confetti from "canvas-confetti";
-import { auth, db, signInAnonymous } from "@/services/firebase";
-import { addDoc, collection, doc, getDoc } from "firebase/firestore";
+import { db } from "@/services/firebase";
+import { addDoc, collection } from "firebase/firestore";
 
 type CartStepperFormProps = {
   cart: ShoppingCart;
@@ -33,9 +33,13 @@ function CartStepperForm({
   currentStep,
   setCurrentStep,
 }: CartStepperFormProps) {
-  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>(
-    {} as CustomerInfo
-  );
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>(() => {
+    const customerInfoLocalStorage =
+      window.localStorage.getItem("customerInfo");
+    return customerInfoLocalStorage
+      ? JSON.parse(customerInfoLocalStorage)
+      : ({} as CustomerInfo);
+  });
   const [order, setOrder] = useState<Order>({
     customer: customerInfo ?? ({} as CustomerInfo),
     orderType: "delivery",
@@ -44,6 +48,7 @@ function CartStepperForm({
     status: OrderStatus.nuevo,
     paymentMethod: "",
     orderNumber: undefined,
+    total: 0,
     createdAt: new Date().toISOString(),
   });
 
@@ -89,23 +94,23 @@ function CartStepperForm({
     return order.paymentMethod !== "";
   };
 
-  useEffect(() => {
-    const fetchCustomerInfo = async () => {
-      const customerInfoRef = doc(db, `users/${auth.currentUser?.uid}`);
-      const customerInfoSnap = await getDoc(customerInfoRef);
-      if (customerInfoSnap.exists()) {
-        setCustomerInfo(customerInfoSnap.data() as CustomerInfo);
-      } else {
-        setCustomerInfo({
-          name: "",
-          phone: "",
-          address: null,
-          neighborhood: null,
-        } as CustomerInfo);
-      }
-    };
-    fetchCustomerInfo();
-  }, [auth.currentUser?.uid]);
+  // useEffect(() => {
+  //   const fetchCustomerInfo = async () => {
+  //     const customerInfoRef = doc(db, `users/${auth.currentUser?.uid}`);
+  //     const customerInfoSnap = await getDoc(customerInfoRef);
+  //     if (customerInfoSnap.exists()) {
+  //       setCustomerInfo(customerInfoSnap.data() as CustomerInfo);
+  //     } else {
+  //       setCustomerInfo({
+  //         name: "",
+  //         phone: "",
+  //         address: null,
+  //         neighborhood: null,
+  //       } as CustomerInfo);
+  //     }
+  //   };
+  //   fetchCustomerInfo();
+  // }, [auth.currentUser?.uid]);
 
   useEffect(() => {
     setOrder({
@@ -116,13 +121,12 @@ function CartStepperForm({
   }, [cart]);
 
   useEffect(() => {
-    if (currentStep === 2) {
-      signInAnonymous(order.customer);
-    } else if (currentStep === 3) {
+    if (currentStep === 3) {
       setOrder({
         ...order,
         orderNumber: Math.round(Date.now() * Math.random()),
-      })
+        total: order.subtotal + (order.delivertyPrice ?? 0),
+      });
     }
   }, [currentStep]);
 

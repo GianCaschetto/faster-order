@@ -73,6 +73,7 @@ export type Order = {
   delivertyPrice?: number;
   paymentMethod: string;
   orderNumber?: number;
+  total: number;
   createdAt: string;
 };
 
@@ -93,7 +94,7 @@ export type Neighborhood = {
 };
 
 //TasaBCV type
-export type TasaBCV = {
+export type TasaUSD = {
   price: number;
   price_old: number;
   title: string;
@@ -112,6 +113,7 @@ export type AdminData = Partial<{
   icon: string;
   logo: string;
   whatsapp: string;
+  whatsappMessage: string;
   email: string;
   categories: Category[];
   products: Product[];

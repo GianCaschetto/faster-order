@@ -103,6 +103,7 @@ function InfoForm({ customerInfo, order, setCustomerInfo, setOrder }: InfoFormPr
           onChange={handlePhone}
           className="p-2 border border-gray-300 rounded-lg"
         />
+        
       </div>
       {orderType === "delivery" && (
         <>

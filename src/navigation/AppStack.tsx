@@ -16,7 +16,8 @@ import SchedulesPage from "@/pages/admin/Schedules/SchedulesPage";
 import OrderMessage from "@/pages/admin/shippingMessage/OrderMessage";
 import OrdersPage from "@/pages/admin/orders/OrdersPage";
 import TrackOrder from "@/pages/order/TrackOrder";
-
+import CompanyChatAi from "@/pages/admin/company-chat-ai/CompanyChatAi";
+import OrdersHistoryPage from "@/pages/admin/orders/ordersHistory/OrdersHistoryPage";
 
 const router = createBrowserRouter([
   {
@@ -58,14 +59,6 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: routes.company,
-        element: (
-          <AdminLayout>
-            <CompanyPage />
-          </AdminLayout>
-        ),
-      },
-      {
         path: routes.productsRegister,
         element: (
           <AdminLayout>
@@ -73,7 +66,6 @@ const router = createBrowserRouter([
           </AdminLayout>
         ),
       },
-     
       {
         path: routes.productsEdit,
         element: (
@@ -82,6 +74,15 @@ const router = createBrowserRouter([
           </AdminLayout>
         ),
       },
+      {
+        path: routes.company,
+        element: (
+          <AdminLayout>
+            <CompanyPage />
+          </AdminLayout>
+        ),
+      },
+
       {
         path: routes.media,
         element: (
@@ -116,8 +117,22 @@ const router = createBrowserRouter([
       },
       {
         path: routes.orders,
+        element: <OrdersPage />,
+      },
+      {
+        path: routes.ordersHistory,
         element: (
-          <OrdersPage />
+          <AdminLayout>
+            <OrdersHistoryPage />
+          </AdminLayout>
+        ),
+      },
+      {
+        path: routes.companyChatAi,
+        element: (
+          <AdminLayout>
+            <CompanyChatAi />
+          </AdminLayout>
         ),
       },
       // {

@@ -12,5 +12,6 @@ export const routes = {
   schedule: "/admin-panel/schedule",
   shippingMessage: "/admin-panel/shipping-message",
   orders: "/admin-panel/orders",
-  //orderDetail: "/admin-panel/orders/:id",
+  ordersHistory: "/admin-panel/orders-history",
+  companyChatAi: "/admin-panel/company-chat-ai",
 };

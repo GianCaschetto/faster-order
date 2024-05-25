@@ -1,9 +1,10 @@
-import { TasaBCV } from "@/types/types";
+import { TasaUSD } from "@/types/types";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type CurrencyContextType = {
-  tasaBCV: TasaBCV;
-  setTasaBCV: (tasaBCV: TasaBCV) => void;
+  tasaBCV: TasaUSD;
+  tasaEnParalelo: number;
+  setTasaBCV: (tasaBCV: TasaUSD) => void;
 };
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(
@@ -15,19 +16,29 @@ export default function CurrencyProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [tasaBCV, setTasaBCV] = useState<TasaBCV>({
+  const [tasaBCV, setTasaBCV] = useState<TasaUSD>({
     price: 0,
     price_old: 0,
     title: "",
   });
+  const [tasaEnParalelo, setTasaEnParalelo] = useState<number>(0);
+
   useEffect(() => {
     fetch("https://pydolarvenezuela-api.vercel.app/api/v1/dollar?page=bcv")
       .then((res) => res.json())
       .then((data) => setTasaBCV(data.monitors.usd));
   }, []);
 
+  useEffect(() => {
+    fetch(
+      "https://pydolarvenezuela-api.vercel.app/api/v1/dollar/unit/enparalelovzla"
+    )
+      .then((res) => res.json())
+      .then((data) => setTasaEnParalelo(data.price));
+  }, []);
+
   return (
-    <CurrencyContext.Provider value={{ tasaBCV, setTasaBCV }}>
+    <CurrencyContext.Provider value={{ tasaBCV, setTasaBCV, tasaEnParalelo }}>
       {children}
     </CurrencyContext.Provider>
   );

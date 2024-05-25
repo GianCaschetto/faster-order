@@ -106,7 +106,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
         </div>
       </nav>
 
-      <div className="flex overflow-hidden bg-white pt-16">
+      <div className="flex overflow-y-auto bg-white pt-16 h-screen">
         <div
           onClick={() => setSidebarOpen(false)}
           className={`${
@@ -365,8 +365,62 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                       </span>
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink
+                      to={routes.ordersHistory}
+                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                        isActive === routes.ordersHistory && "bg-gray-100"
+                      }`}
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        className="icon icon-tabler icons-tabler-outline icon-tabler-clipboard"
+                      >
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                        <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                        <path d="M12 14m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                        <path d="M12 12.496v1.504l1 1" />
+                      </svg>
+                      <span className="ml-3 flex-1 whitespace-nowrap">
+                        Historial de Ordenes
+                      </span>
+                    </NavLink>
+                  </li>
                 </ul>
                 <div className="space-y-2 pt-2">
+                  <NavLink
+                    to={routes.companyChatAi}
+                    className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                      isActive === routes.orders && "bg-gray-100"
+                    }`}
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      className="icon icon-tabler icons-tabler-outline icon-tabler-brand-hipchat"
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M17.802 17.292s.077 -.055 .2 -.149c1.843 -1.425 3 -3.49 3 -5.789c0 -4.286 -4.03 -7.764 -9 -7.764c-4.97 0 -9 3.478 -9 7.764c0 4.288 4.03 7.646 9 7.646c.424 0 1.12 -.028 2.088 -.084c1.262 .82 3.104 1.493 4.716 1.493c.499 0 .734 -.41 .414 -.828c-.486 -.596 -1.156 -1.551 -1.416 -2.29z" />
+                      <path d="M7.5 13.5c2.5 2.5 6.5 2.5 9 0" />
+                    </svg>
+                    <span className="ml-3 flex-1 whitespace-nowrap">
+                      Chatea con tu empresa
+                    </span>
+                  </NavLink>
                   <button
                     onClick={() =>
                       signOut(auth).then(() => {
@@ -399,9 +453,9 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
 
         <div
           id="main-content"
-          className="h-full w-full bg-gray-50 relative overflow-y-auto p-2"
+          className="h-full w-full bg-gray-50 relative p-2"
         >
-          <div className="text-gray-900 h-screen w-full">{children}</div>
+          <div className="text-gray-900 h-full w-full">{children}</div>
         </div>
       </div>
     </div>

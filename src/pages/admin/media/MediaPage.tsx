@@ -1,18 +1,35 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ref, deleteObject } from "firebase/storage";
 import { storage } from "@/services/firebase";
 import { FileDropZone } from "@/components/FileDropZone";
 import { toast } from "react-toastify";
 import { useMedia } from "@/contexts/MediaContext";
-import { mediaRefType } from "@/types/types";
 
 function MediaPage() {
-  const { mediaList } = useMedia();
+    const { mediaList } = useMedia();
+  // const [mediaList, setMediaList] = useState<mediaRefType[]>([]);
+
   const [showAddMediaDropzone, setShowAddMediaDropzone] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
   const copyUrl = (url: string) => {
     navigator.clipboard.writeText(url);
   };
+  //const listMediaRef = ref(storage, "products");
+
+  // useEffect(() => {
+  //   listAll(listMediaRef).then((res) => {
+  //     const newMediaList = res.items.map(async (folderRef) => {
+  //       return {
+  //         name: folderRef.name,
+  //         url: await getDownloadURL(folderRef),
+  //       };
+  //     });
+  //     Promise.all(newMediaList).then((res) => {
+  //       setMediaList(res);
+  //     });
+  //   });
+  //   console.log("mediaList", mediaList);
+  // }, []);
 
 
 
@@ -75,6 +92,7 @@ function MediaPage() {
                   onClick={() => {
                     deleteObject(ref(storage, `products/${media.name}`)).then(
                       () => {
+                        window.location.reload();
                         toast.success("Archivo eliminado correctamente");
                       }
                     );

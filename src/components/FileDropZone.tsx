@@ -22,6 +22,7 @@ export function FileDropZone({ multipleFiles, accept }: FileDropZoneProps) {
 
       const newFile = new File([file], randomFileName, { type: file.type });
       uploadBytes(photoRef, newFile).then(() => {
+        window.location.reload();
         toast.success("Archivo subido correctamente");
       }).catch((error) => {
         console.error(error.message);

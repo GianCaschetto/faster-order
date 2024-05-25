@@ -7,6 +7,8 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  signInWithPhoneNumber,
+  RecaptchaVerifier,
 } from "firebase/auth";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { AdminData, CustomerInfo } from "@/types/types";
@@ -63,6 +65,30 @@ const signInAdmin = async ({ email, password }) => {
   return user;
 };
 
+const signInUserPhone = async ({ phone }) => {
+  try {
+    const recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
+    signInWithPhoneNumber(auth, `+58${phone}`, recaptchaVerifier).then(
+      (confirmationResult) => {
+        const code = window.prompt("Ingrese el código de verificación");
+        confirmationResult.confirm(code ?? "")
+          .then((result) => {
+            toast.success("Número verificado correctamente");
+            const user = result.user;
+            console.log(user)
+          })
+          .catch((error) => {
+            toast.error("Error al verificar el número");
+            console.error(error);
+          });
+      }
+    );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.error(error.message);
+  }
+};
+
 const logOut = () => {
   signOut(auth).then(() => {
     toast.success("Sesión cerrada correctamente");
@@ -90,5 +116,5 @@ export {
   signInAdmin,
   logOut,
   saveAdminData,
-  
+  signInUserPhone,
 };
