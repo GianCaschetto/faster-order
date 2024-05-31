@@ -7,7 +7,8 @@ type HistoryMessage = {
 };
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest", systemInstruction: "Responde en español venezolano siempre" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest", 
+systemInstruction: "Respondeme en italiano" });
 
 function Chat() {
   const [historyChat, setHistoryChat] = useState<HistoryMessage[]>([]);

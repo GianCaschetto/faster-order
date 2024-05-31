@@ -62,7 +62,8 @@ function AdminPanel() {
         (acc, order) => acc + order.subtotal,
         0
       );
-      setTotalSells(total);
+      const formattedTotal = parseFloat(total.toFixed(2));
+      setTotalSells(formattedTotal);
     }
   }, [completedOrders]);
 

@@ -46,12 +46,12 @@ function MenuNav({
           <ul className="flex gap-4 p-4 w-3/4 max-w-full items-start">
             {categories.map((category) => (
               <li key={category.id}>
-                <NavLink
-                  to={`#${category.name}`}
+                <a
+                  href={`#${category.name}`}
                   className="p-2 bg-blue-500 rounded-xl hover:bg-blue-700"
                 >
                   {category.name}
-                </NavLink>
+                </a>
               </li>
             ))}
           </ul>

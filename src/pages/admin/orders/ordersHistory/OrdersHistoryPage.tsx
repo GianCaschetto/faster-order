@@ -1,8 +1,11 @@
 import { useAdmin } from "@/contexts/AdminContext";
+import { routes } from "@/navigation/routes";
+import { useNavigate } from "react-router-dom";
 
 function OrdersHistoryPage() {
   //const navigate = useNavigate();
   const { orders } = useAdmin();
+  const navigate = useNavigate();
 
   // const removeProduct = (id: string) => {
   //   const adminDataRef = doc(db, "admin", "data");
@@ -23,10 +26,10 @@ function OrdersHistoryPage() {
       {/* Add order button */}
       <div className="flex justify-end py-2">
         <button
-          //onClick={() => navigate("/admin-panel/products/new-product")}
+          onClick={() => navigate(routes.ordersHistoryRegister)}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          Agregar Pedido
+          Agregar Orden
         </button>
       </div>
       {/* Orders Table */}
@@ -69,7 +72,7 @@ function OrdersHistoryPage() {
                 <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">
                   Fecha
                 </span>
-                {new Date(order.createdAt).toLocaleDateString()}
+                {/* {order.createdAt?.toLocaleDateString()} */}
               </td>
 
               <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static">
@@ -77,7 +80,9 @@ function OrdersHistoryPage() {
                   Acciones
                 </span>
                 <button
-                  //onClick={() => navigate(`/admin-panel/products/edit-product/${product.id}`)}
+                  onClick={() =>
+                    navigate(`/admin-panel/orders-history/edit/${order.id}`)
+                  }
                   className="text-blue-400 hover:text-blue-600 underline"
                 >
                   Edit

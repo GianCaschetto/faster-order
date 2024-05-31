@@ -74,7 +74,7 @@ export type Order = {
   paymentMethod: string;
   orderNumber?: number;
   total: number;
-  createdAt: string;
+  createdAt: Date;
 };
 
 //Customer Info type

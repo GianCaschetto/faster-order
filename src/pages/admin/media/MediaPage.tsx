@@ -6,32 +6,39 @@ import { toast } from "react-toastify";
 import { useMedia } from "@/contexts/MediaContext";
 
 function MediaPage() {
-    const { mediaList } = useMedia();
-  // const [mediaList, setMediaList] = useState<mediaRefType[]>([]);
-
+  const { mediaList } = useMedia();
   const [showAddMediaDropzone, setShowAddMediaDropzone] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
+  const [selectedMedia, setSelectedMedia] = useState<string[]>([]);
+
   const copyUrl = (url: string) => {
     navigator.clipboard.writeText(url);
   };
-  //const listMediaRef = ref(storage, "products");
 
-  // useEffect(() => {
-  //   listAll(listMediaRef).then((res) => {
-  //     const newMediaList = res.items.map(async (folderRef) => {
-  //       return {
-  //         name: folderRef.name,
-  //         url: await getDownloadURL(folderRef),
-  //       };
-  //     });
-  //     Promise.all(newMediaList).then((res) => {
-  //       setMediaList(res);
-  //     });
-  //   });
-  //   console.log("mediaList", mediaList);
-  // }, []);
+  const handleSelectMedia = (url: string) => {
+    if (selectedMedia.includes(url)) {
+      setSelectedMedia(selectedMedia.filter((item) => item !== url));
+    } else {
+      setSelectedMedia([...selectedMedia, url]);
+    }
+  };
 
+  const handleDeleteSelected = () => {
+    const promises = selectedMedia.map((url) => {
+      const fileName = mediaList.find((media) => media.url === url)?.name;
+      return fileName ? deleteObject(ref(storage, `products/${fileName}`)) : Promise.resolve();
+    });
 
+    Promise.all(promises)
+      .then(() => {
+        toast.success("Archivos eliminados correctamente");
+        window.location.reload();
+      })
+      .catch((error) => {
+        toast.error("Error al eliminar los archivos");
+        console.error(error);
+      });
+  };
 
   return (
     <div>
@@ -41,7 +48,7 @@ function MediaPage() {
       {showAddMediaDropzone && (
         <div className="w-full">
           <FileDropZone
-            multipleFiles
+            multipleFiles={true}
             accept={{
               "image/png": [".png"],
               "image/jpeg": [".jpg", ".jpeg"],
@@ -50,8 +57,13 @@ function MediaPage() {
           />
         </div>
       )}
+      {selectedMedia.length > 0 && (
+        <button onClick={handleDeleteSelected} className="mt-4">
+          Eliminar archivos seleccionados
+        </button>
+      )}
       {/* Media List */}
-      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-10 gap-4">
+      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-10 gap-4 mt-4">
         {mediaList?.map((media, index) => (
           <div
             key={index}
@@ -59,6 +71,12 @@ function MediaPage() {
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(-1)}
           >
+            <input
+              type="checkbox"
+              checked={selectedMedia.includes(media.url)}
+              onChange={() => handleSelectMedia(media.url)}
+              className="absolute top-2 left-2 z-10"
+            />
             <img
               className="h-auto max-w-full rounded-lg shadow-md object-cover"
               src={media.url}
@@ -78,9 +96,9 @@ function MediaPage() {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     className="icon icon-tabler icons-tabler-outline icon-tabler-copy"
                   >
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -105,9 +123,9 @@ function MediaPage() {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     className="icon icon-tabler icons-tabler-outline icon-tabler-trash"
                   >
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />

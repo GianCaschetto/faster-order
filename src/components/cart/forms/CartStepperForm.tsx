@@ -15,6 +15,8 @@ import { toast } from "react-toastify";
 import confetti from "canvas-confetti";
 import { db } from "@/services/firebase";
 import { addDoc, collection } from "firebase/firestore";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { FieldValue } from "@google-cloud/firestore";
 
 type CartStepperFormProps = {
   cart: ShoppingCart;
@@ -25,6 +27,8 @@ type CartStepperFormProps = {
   setCurrentStep: (currentStep: number) => void;
 };
 
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+
 function CartStepperForm({
   cart,
   setCart,
@@ -33,6 +37,7 @@ function CartStepperForm({
   currentStep,
   setCurrentStep,
 }: CartStepperFormProps) {
+  const model = genAI.getGenerativeModel({ model: "embedding-001" });
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>(() => {
     const customerInfoLocalStorage =
       window.localStorage.getItem("customerInfo");
@@ -49,7 +54,7 @@ function CartStepperForm({
     paymentMethod: "",
     orderNumber: undefined,
     total: 0,
-    createdAt: new Date().toISOString(),
+    createdAt: new Date(),
   });
 
   const steps = [
@@ -94,6 +99,18 @@ function CartStepperForm({
     return order.paymentMethod !== "";
   };
 
+  const addOrder = async () => {
+    const orderText = JSON.stringify(order);
+    const result = await model.embedContent(orderText);
+    const embedding = result.embedding;
+    await addDoc(collection(db, "orders"), {
+      ...order,
+      createdAt: new Date(), 
+    });
+    toast.success("Orden creada exitosamente");
+    confetti();
+  };
+
   // useEffect(() => {
   //   const fetchCustomerInfo = async () => {
   //     const customerInfoRef = doc(db, `users/${auth.currentUser?.uid}`);
@@ -116,7 +133,7 @@ function CartStepperForm({
     setOrder({
       ...order,
       items: cart.items,
-      subtotal: cart.totalPrice,
+      subtotal: parseFloat(cart.totalPrice.toFixed(2)),
     });
   }, [cart]);
 
@@ -125,18 +142,17 @@ function CartStepperForm({
       setOrder({
         ...order,
         orderNumber: Math.round(Date.now() * Math.random()),
-        total: order.subtotal + (order.delivertyPrice ?? 0),
+        total: parseFloat(
+          (
+            parseFloat(cart.totalPrice.toFixed(2)) + (order.delivertyPrice ?? 0)
+          ).toFixed(2)
+        ),
       });
     }
   }, [currentStep]);
 
   useEffect(() => {
     if (order.orderNumber) {
-      const addOrder = async () => {
-        await addDoc(collection(db, "orders"), order);
-        toast.success("Orden creada exitosamente");
-        confetti();
-      };
       addOrder();
     }
   }, [order.orderNumber]);

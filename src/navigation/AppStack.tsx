@@ -18,6 +18,8 @@ import OrdersPage from "@/pages/admin/orders/OrdersPage";
 import TrackOrder from "@/pages/order/TrackOrder";
 import CompanyChatAi from "@/pages/admin/company-chat-ai/CompanyChatAi";
 import OrdersHistoryPage from "@/pages/admin/orders/ordersHistory/OrdersHistoryPage";
+import OrdersHistoryRegister from "@/pages/admin/orders/ordersHistory/OrdersHistoryRegister";
+import OrdersHistoryEdit from "@/pages/admin/orders/ordersHistory/OrdersHistoryEdit";
 
 const router = createBrowserRouter([
   {
@@ -124,6 +126,22 @@ const router = createBrowserRouter([
         element: (
           <AdminLayout>
             <OrdersHistoryPage />
+          </AdminLayout>
+        ),
+      },
+      {
+        path: routes.ordersHistoryRegister,
+        element: (
+          <AdminLayout>
+            <OrdersHistoryRegister />
+          </AdminLayout>
+        ),
+      },
+      {
+        path: routes.ordersHistoryEdit,
+        element: (
+          <AdminLayout>
+            <OrdersHistoryEdit />
           </AdminLayout>
         ),
       },

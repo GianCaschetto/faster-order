@@ -70,7 +70,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                 <img
                   src={adminData?.logo}
                   className="h-10 mr-2"
-                  alt="Windster Logo"
+                  alt="Logo"
                 />
                 <span className="self-center whitespace-nowrap">
                   {adminData?.companyName}
@@ -98,7 +98,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               </button>
               <div className="hidden lg:flex items-center">
                 <span className="text-base font-normal text-gray-500 mr-5">
-                  Hecho por Faster Order ❤️
+                  Universidad José Antonio Páez ❤️
                 </span>
               </div>
             </div>

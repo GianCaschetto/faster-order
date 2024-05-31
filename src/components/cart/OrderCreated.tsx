@@ -139,10 +139,10 @@ function OrderCreated({ order }: OrderCreatedProps) {
       <p>Tipo de orden: {order.orderType}</p>
       <p>Subtotal: {order.subtotal}</p>
       <p>Gastos de envío: {order.delivertyPrice}</p>
-      <p>Total: {order.subtotal + (order.delivertyPrice ?? 0)}</p>
+      <p>Total: {order.total}</p>
       <p>
         Total en bs:
-        {parseFloat((order.total * tasaBCV.price).toFixed(2))}
+        {(order.total * tasaBCV.price).toFixed(2)}
       </p>
 
       <div className="flex flex-col">

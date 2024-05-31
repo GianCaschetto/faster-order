@@ -13,5 +13,7 @@ export const routes = {
   shippingMessage: "/admin-panel/shipping-message",
   orders: "/admin-panel/orders",
   ordersHistory: "/admin-panel/orders-history",
+  ordersHistoryEdit: "/admin-panel/orders-history/edit/:id",
+  ordersHistoryRegister: "/admin-panel/orders-history/register",
   companyChatAi: "/admin-panel/company-chat-ai",
 };
