@@ -27,7 +27,6 @@ type CartStepperFormProps = {
   setCurrentStep: (currentStep: number) => void;
 };
 
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
 function CartStepperForm({
   cart,
@@ -37,7 +36,6 @@ function CartStepperForm({
   currentStep,
   setCurrentStep,
 }: CartStepperFormProps) {
-  const model = genAI.getGenerativeModel({ model: "embedding-001" });
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>(() => {
     const customerInfoLocalStorage =
       window.localStorage.getItem("customerInfo");
@@ -100,13 +98,8 @@ function CartStepperForm({
   };
 
   const addOrder = async () => {
-    const orderText = JSON.stringify(order);
-    const result = await model.embedContent(orderText);
-    const embedding = result.embedding;
-    await addDoc(collection(db, "orders"), {
-      ...order,
-      createdAt: new Date(), 
-    });
+
+    await addDoc(collection(db, "orders"), order);
     toast.success("Orden creada exitosamente");
     confetti();
   };
