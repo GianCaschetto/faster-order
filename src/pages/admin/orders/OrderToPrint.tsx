@@ -64,7 +64,7 @@ function OrderToPrint({ orderSelected }: { orderSelected: Order }) {
         </div>
         <div className="text-xs">
           <div className="text-right">
-            <div>{orderSelected?.createdAt}</div>
+            <div>{orderSelected?.createdAt.toISOString()}</div>
             <div className="font-medium text-sm">
               Subtotal: {orderSelected?.subtotal}
             </div>

@@ -1,7 +1,6 @@
 import { Category, Product } from "@/types/types";
 import debounce from "just-debounce-it";
 import { Search } from "lucide-react";
-import { NavLink } from "react-router-dom";
 
 type MenuNavProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

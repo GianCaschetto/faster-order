@@ -1,9 +1,5 @@
-import React from 'react'
-
 function OrdersHistoryRegister() {
-  return (
-    <div>OrdersHistoryRegister</div>
-  )
+  return <div>OrdersHistoryRegister</div>;
 }
 
-export default OrdersHistoryRegister
+export default OrdersHistoryRegister;

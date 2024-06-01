@@ -15,8 +15,6 @@ import { toast } from "react-toastify";
 import confetti from "canvas-confetti";
 import { db } from "@/services/firebase";
 import { addDoc, collection } from "firebase/firestore";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { FieldValue } from "@google-cloud/firestore";
 
 type CartStepperFormProps = {
   cart: ShoppingCart;

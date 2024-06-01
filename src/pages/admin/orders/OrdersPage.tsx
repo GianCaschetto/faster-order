@@ -28,7 +28,7 @@ function OrdersPage() {
             order.orderNumber?.toString().includes(orderToSearch) ||
             order.customer.phone.includes(orderToSearch) ||
             order.status.toLowerCase() === orderToSearch.toLowerCase() ||
-            order.createdAt.split("T")[0].includes(orderToSearch) ||
+            order.createdAt.toISOString().split("T")[0].includes(orderToSearch) ||
             new Date(order.createdAt).toLocaleDateString().includes(orderToSearch)
           );
         });
