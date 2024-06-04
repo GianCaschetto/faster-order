@@ -48,7 +48,7 @@ function OrdersHistoryEdit() {
                 <label htmlFor="">Fecha</label>
                 <input
                   type="text"
-                  defaultValue={orderSelected?.createdAt.toISOString()}
+                  defaultValue={orderSelected?.createdAt?.toDate().toLocaleDateString()}
                   className="text-white"
                 />
               </div>

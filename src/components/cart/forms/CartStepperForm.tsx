@@ -14,7 +14,7 @@ import OrderCreated from "../OrderCreated";
 import { toast } from "react-toastify";
 import confetti from "canvas-confetti";
 import { auth, db } from "@/services/firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { Timestamp, addDoc, collection } from "firebase/firestore";
 import { signInAnonymously, signInWithCustomToken } from "firebase/auth";
 
 type CartStepperFormProps = {
@@ -50,7 +50,7 @@ function CartStepperForm({
     paymentMethod: "",
     orderNumber: undefined,
     total: 0,
-    createdAt: new Date(),
+    createdAt: Timestamp.now(),
   });
 
   const steps = [

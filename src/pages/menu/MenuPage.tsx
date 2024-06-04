@@ -50,7 +50,8 @@ function MenuPage() {
       extras,
       price:
         (product.price +
-          extras.reduce((acc, extra) => acc + extra.price * extra.qty, 0)) *
+          extras.reduce((acc, extra) => acc + extra.price * (extra.qty ?? 0), 0))  
+            *
         counter,
     };
     if (cart.items.length === 0) {

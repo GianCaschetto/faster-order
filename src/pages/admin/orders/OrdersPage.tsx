@@ -28,8 +28,15 @@ function OrdersPage() {
             order.orderNumber?.toString().includes(orderToSearch) ||
             order.customer.phone.includes(orderToSearch) ||
             order.status.toLowerCase() === orderToSearch.toLowerCase() ||
-            order.createdAt.toISOString().split("T")[0].includes(orderToSearch) ||
-            new Date(order.createdAt).toLocaleDateString().includes(orderToSearch)
+            order.createdAt
+              .toDate()
+              .toISOString()
+              .split("T")[0]
+              .includes(orderToSearch) ||
+            order.createdAt
+              .toDate()
+              .toLocaleDateString()
+              .includes(orderToSearch)
           );
         });
 
@@ -146,17 +153,17 @@ function OrdersPage() {
                           <span className="text-xs font-bold">
                             {order.orderNumber}
                           </span>
+                          <span className="text-xs">{order.customer.name}</span>
                           <span className="text-xs">
-                            {order.customer.name}
-                          </span>
-                          <span className="text-xs">
-                            {new Date(order.createdAt).toLocaleDateString()}
+                            {order.createdAt.toDate().toLocaleDateString()}
                           </span>
                         </div>
-                        <div className={`text-xs ${
-                          orderStatusColors[order.status]
-                        } px-2 rounded-full
-                        }`}>
+                        <div
+                          className={`text-xs ${
+                            orderStatusColors[order.status]
+                          } px-2 rounded-full
+                        }`}
+                        >
                           {order.status.toString().toUpperCase()}
                         </div>
                       </button>

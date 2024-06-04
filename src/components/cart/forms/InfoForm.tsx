@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAdmin } from "@/contexts/AdminContext";
-import { auth } from "@/services/firebase";
 import {
   CustomerInfo,
   Neighborhood,
@@ -8,9 +7,7 @@ import {
   OrderType,
   ShoppingCart,
 } from "@/types/types";
-import { onAuthStateChanged, signInAnonymously, signInWithCustomToken } from "firebase/auth";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { toast } from "react-toastify";
 
 type InfoFormProps = {
   cart: ShoppingCart;
