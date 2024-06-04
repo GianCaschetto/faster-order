@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 //Category type
 export type Category = {
   id: string;
@@ -28,8 +30,8 @@ export type Extra = {
   id: string;
   name: string;
   available: boolean;
-  qty: number;
   price: number;
+  qty?: number;
   description?: string;
 };
 
@@ -74,7 +76,7 @@ export type Order = {
   paymentMethod: string;
   orderNumber?: number;
   total: number;
-  createdAt: Date;
+  createdAt: Timestamp;
 };
 
 //Customer Info type
@@ -105,6 +107,7 @@ export type Schedule = {
   day: string;
   open: string;
   close: string;
+  forced: boolean;
 };
 
 //AdminData type
@@ -117,6 +120,7 @@ export type AdminData = Partial<{
   email: string;
   categories: Category[];
   products: Product[];
+  extras: Extras[];
   address: string;
   neighborhoods: Neighborhood[];
   schedules: Schedule[];

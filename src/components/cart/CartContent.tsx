@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 
 type CartContentProps = {
   cart: ShoppingCart;
+  setCart: (cart: ShoppingCart) => void;
   deleteItem: (item: ShoppingCartItem) => void;
 };
 
@@ -28,7 +29,7 @@ function CartContent({cart, deleteItem}: CartContentProps) {
                 </li>
               ))}
             </ul>
-            <span>{(item.product.price + (item.extras?.reduce((acc, extra) => acc + extra.price * extra.qty, 0) ?? 0)) * item.quantity}$</span>
+            {/* <span>{(item.product.price + (item.extras?.reduce((acc, extra) => acc + extra.price * extra.qty, 0) ?? 0)) * item.quantity}$</span> */}
             </div>
             {/* Delete button */}
             <button

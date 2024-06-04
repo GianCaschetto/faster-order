@@ -86,6 +86,10 @@ function MenuPage() {
       (schedule) => schedule.day === day.toString()
     );
 
+    if (currentSchedule?.forced) {
+      setIsOpen(true);
+    }
+
     if (currentSchedule) {
       if (
         currentHour >= currentSchedule.open &&
@@ -98,7 +102,6 @@ function MenuPage() {
 
   return (
     <div className="min-h-screen md:max-w-5xl max-w-sm  text-center p-4 mx-auto">
-
       <Header />
       <main className="mt-16 ">
         {/* Menu nav */}

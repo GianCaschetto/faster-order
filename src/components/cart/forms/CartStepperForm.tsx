@@ -13,8 +13,9 @@ import {
 import OrderCreated from "../OrderCreated";
 import { toast } from "react-toastify";
 import confetti from "canvas-confetti";
-import { db } from "@/services/firebase";
+import { auth, db } from "@/services/firebase";
 import { addDoc, collection } from "firebase/firestore";
+import { signInAnonymously, signInWithCustomToken } from "firebase/auth";
 
 type CartStepperFormProps = {
   cart: ShoppingCart;
@@ -24,7 +25,6 @@ type CartStepperFormProps = {
   currentStep: number;
   setCurrentStep: (currentStep: number) => void;
 };
-
 
 function CartStepperForm({
   cart,
@@ -56,12 +56,15 @@ function CartStepperForm({
   const steps = [
     {
       label: "Carrito",
-      component: <CartContent cart={cart} deleteItem={deleteItem} />,
+      component: (
+        <CartContent cart={cart} setCart={setCart} deleteItem={deleteItem} />
+      ),
     },
     {
       label: "Info",
       component: (
         <InfoForm
+          cart={cart}
           order={order}
           setOrder={setOrder}
           customerInfo={customerInfo}
@@ -96,7 +99,6 @@ function CartStepperForm({
   };
 
   const addOrder = async () => {
-
     await addDoc(collection(db, "orders"), order);
     toast.success("Orden creada exitosamente");
     confetti();
@@ -125,19 +127,49 @@ function CartStepperForm({
       ...order,
       items: cart.items,
       subtotal: parseFloat(cart.totalPrice.toFixed(2)),
+      total: parseFloat(
+        (
+          parseFloat(cart.totalPrice.toFixed(2)) +
+          (order.delivertyPrice ?? customerInfo.neighborhood?.price ?? 0)
+        ).toFixed(2)
+      ),
     });
-  }, [cart]);
+  }, [cart, customerInfo.neighborhood?.price]);
 
   useEffect(() => {
-    if (currentStep === 3) {
+    if (currentStep === 2) {
+      const storedUID = localStorage.getItem("firebaseUID");
+
+      if (storedUID) {
+        // If UID exists in local storage, fetch the user using the UID
+        signInWithCustomToken(auth, storedUID)
+          .then(() => {
+            // User signed in successfully
+            toast.success("Sesión iniciada correctamente");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        // If no UID, sign in anonymously
+        signInAnonymously(auth)
+          .then((result) => {
+            // Store the UID in local storage
+            localStorage.setItem("firebaseUID", result.user.uid);
+            setCustomerInfo({
+              ...customerInfo,
+              uid: result.user.uid,
+            });
+            toast.success("Sesión iniciada correctamente por primera vez");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    } else if (currentStep === 3) {
       setOrder({
         ...order,
         orderNumber: Math.round(Date.now() * Math.random()),
-        total: parseFloat(
-          (
-            parseFloat(cart.totalPrice.toFixed(2)) + (order.delivertyPrice ?? 0)
-          ).toFixed(2)
-        ),
       });
     }
   }, [currentStep]);

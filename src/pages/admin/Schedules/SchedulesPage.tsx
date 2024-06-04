@@ -1,3 +1,4 @@
+import Switch from "@/components/Switch";
 import { useAdmin } from "@/contexts/AdminContext";
 import { saveAdminData } from "@/services/firebase";
 import { Schedule } from "@/types/types";
@@ -9,36 +10,43 @@ const defaultSchedules: Schedule[] = [
     day: "0",
     open: "0:00",
     close: "23:59",
+    forced: false,
   },
   {
     day: "1",
     open: "0:00",
     close: "23:59",
+    forced: false,
   },
   {
     day: "2",
     open: "0:00",
     close: "23:59",
+    forced: false,
   },
   {
     day: "3",
     open: "0:00",
     close: "23:59",
+    forced: false,
   },
   {
     day: "4",
     open: "0:00",
     close: "23:59",
+    forced: false,
   },
   {
     day: "5",
     open: "0:00",
     close: "23:59",
+    forced: false,
   },
   {
     day: "6",
     open: "0:00",
     close: "23:59",
+    forced: false,
   },
 ];
 
@@ -94,6 +102,12 @@ function SchedulesPage() {
               >
                 Cierra
               </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Forzar apertura
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -124,6 +138,16 @@ function SchedulesPage() {
                       setSchedules(updatedSchedules);
                     }}
                     className="w-24 border border-gray-300 rounded-md p-1 text-white"
+                  />
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <Switch
+                    onChange={() => {
+                      const updatedSchedules = [...schedules];
+                      updatedSchedules[index].forced = !schedule.forced;
+                      setSchedules(updatedSchedules);
+                    }}
+                    value={schedule.forced}
                   />
                 </td>
               </tr>

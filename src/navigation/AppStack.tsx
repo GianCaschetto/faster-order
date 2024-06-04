@@ -20,6 +20,9 @@ import CompanyChatAi from "@/pages/admin/company-chat-ai/CompanyChatAi";
 import OrdersHistoryPage from "@/pages/admin/orders/ordersHistory/OrdersHistoryPage";
 import OrdersHistoryRegister from "@/pages/admin/orders/ordersHistory/OrdersHistoryRegister";
 import OrdersHistoryEdit from "@/pages/admin/orders/ordersHistory/OrdersHistoryEdit";
+import ExtrasPage from "@/pages/admin/products/extras/ExtrasPage";
+import ExtrasRegister from "@/pages/admin/products/extras/ExtrasRegister";
+import ExtrasEdit from "@/pages/admin/products/extras/ExtrasEdit";
 
 const router = createBrowserRouter([
   {
@@ -56,26 +59,37 @@ const router = createBrowserRouter([
         path: routes.products,
         element: (
           <AdminLayout>
-            <ProductsPage />
+            <Outlet />
           </AdminLayout>
         ),
+        children: [
+          {
+            index: true,
+            element: <ProductsPage />,
+          },
+          {
+            path: routes.productsRegister,
+            element: <ProductsRegister />,
+          },
+          {
+            path: routes.productsEdit,
+            element: <ProductEdit />,
+          },
+          {
+            path: routes.extras,
+            element: <ExtrasPage />,
+          },
+          {
+            path: routes.extraRegister,
+            element: <ExtrasRegister />,
+          },
+          {
+            path: routes.extraEdit,
+            element: <ExtrasEdit />,
+          },
+        ],
       },
-      {
-        path: routes.productsRegister,
-        element: (
-          <AdminLayout>
-            <ProductsRegister />
-          </AdminLayout>
-        ),
-      },
-      {
-        path: routes.productsEdit,
-        element: (
-          <AdminLayout>
-            <ProductEdit />
-          </AdminLayout>
-        ),
-      },
+
       {
         path: routes.company,
         element: (

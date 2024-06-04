@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { useAdmin } from "@/contexts/AdminContext";
 
 type HistoryMessage = {
   role: "user" | "model";
@@ -7,13 +8,22 @@ type HistoryMessage = {
 };
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest", 
-systemInstruction: "Respondeme en italiano" });
 
 function Chat() {
+  const { orders, adminData } = useAdmin();
   const [historyChat, setHistoryChat] = useState<HistoryMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoadingAnswer, setIsLoadingAnswer] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash-latest",
+    systemInstruction: `Eres la empresa con estas ordenes: ${JSON.stringify(
+      orders
+    )}, ten en cuenta la informacion de la empresa ${JSON.stringify(
+      adminData
+    )} responde todo tipo de preguntas`,
+  });
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -25,11 +35,7 @@ function Chat() {
     setInputValue("");
     setIsLoadingAnswer(true);
 
-    const chat = model.startChat({
-      generationConfig: {
-        maxOutputTokens: 100,
-      },
-    });
+    const chat = model.startChat({});
 
     setHistoryChat([
       ...historyChat,
@@ -46,9 +52,11 @@ function Chat() {
       { role: "model", parts: [{ text: text }] },
     ]);
     setIsLoadingAnswer(false);
-
-    
   };
+
+  useEffect(() => {
+    bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [historyChat]);
 
   return (
     <div className="flex flex-col h-full">
@@ -71,6 +79,7 @@ function Chat() {
             </span>
           </li>
         )}
+        <div ref={bottomRef}></div>
       </ul>
       <form onSubmit={handleSubmit} className="flex px-4 py-2 ">
         <input

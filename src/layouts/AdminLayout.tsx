@@ -1,3 +1,4 @@
+import CollapsibleMenuItem from "@/components/CollapsibleMenuItem";
 import { useAdmin } from "@/contexts/AdminContext";
 import { routes } from "@/navigation/routes";
 import { auth } from "@/services/firebase";
@@ -67,11 +68,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                 to="/"
                 className="text-xl font-bold flex items-center lg:ml-2.5 active:text-black"
               >
-                <img
-                  src={adminData?.logo}
-                  className="h-10 mr-2"
-                  alt="Logo"
-                />
+                <img src={adminData?.logo} className="h-10 mr-2" alt="Logo" />
                 <span className="self-center whitespace-nowrap">
                   {adminData?.companyName}
                 </span>
@@ -257,33 +254,69 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                       </span>
                     </NavLink>
                   </li>
-                  <li>
-                    <NavLink
-                      to={routes.products}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
-                        isActive === routes.products && "bg-gray-100"
-                      }`}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        className="icon icon-tabler icons-tabler-outline icon-tabler-shopping-bag"
-                      >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" />
-                        <path d="M9 11v-5a3 3 0 0 1 6 0v5" />
-                      </svg>
-                      <span className="ml-3 flex-1 whitespace-nowrap">
-                        Productos
-                      </span>
-                    </NavLink>
-                  </li>
+
+                  <CollapsibleMenuItem title="Ecommerce">
+                    <ul>
+                      <li>
+                        <NavLink
+                          to={routes.products}
+                          className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                            isActive === routes.products && "bg-gray-100"
+                          }`}
+                        >
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            className="icon icon-tabler icons-tabler-outline icon-tabler-shopping-bag"
+                          >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" />
+                            <path d="M9 11v-5a3 3 0 0 1 6 0v5" />
+                          </svg>
+                          <span className="ml-3 flex-1 whitespace-nowrap">
+                            Productos
+                          </span>
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          to={routes.extras}
+                          className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                            isActive === routes.extras && "bg-gray-100"
+                          }`}
+                        >
+                          <svg
+                            className="icon icon-tabler icon-tabler-basket-plus"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="#2c3e50"
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M17 10l-2 -6" />
+                            <path d="M7 10l2 -6" />
+                            <path d="M12 20h-4.756a3 3 0 0 1 -2.965 -2.544l-1.255 -7.152a2 2 0 0 1 1.977 -2.304h13.999a2 2 0 0 1 1.977 2.304l-.359 2.043" />
+                            <path d="M10 14a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                            <path d="M16 19h6" />
+                            <path d="M19 16v6" />
+                          </svg>
+                          <span className="ml-3 flex-1 whitespace-nowrap">
+                            Extras
+                          </span>
+                        </NavLink>
+                      </li>
+                    </ul>
+                  </CollapsibleMenuItem>
                   <li>
                     <NavLink
                       to={routes.shippingMessage}
