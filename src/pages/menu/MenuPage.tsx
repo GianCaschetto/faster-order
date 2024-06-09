@@ -50,8 +50,10 @@ function MenuPage() {
       extras,
       price:
         (product.price +
-          extras.reduce((acc, extra) => acc + extra.price * (extra.qty ?? 0), 0))  
-            *
+          extras.reduce(
+            (acc, extra) => acc + extra.price * (extra.qty ?? 0),
+            0
+          )) *
         counter,
     };
     if (cart.items.length === 0) {
@@ -102,40 +104,47 @@ function MenuPage() {
   }, [adminData?.schedules]);
 
   return (
-    <div className="min-h-screen md:max-w-5xl max-w-sm  text-center p-4 mx-auto">
-      <Header />
-      <main className="mt-16 ">
-        {/* Menu nav */}
-        <MenuNav
-          inputRef={inputRef}
-          setFilteredProducts={setFilteredProducts}
-          categories={categories}
-          products={products}
-        />
-        {/* Category Section */}
-        <MenuSection
-          categories={categories}
-          products={products}
-          addToCart={addToCart}
-          filteredProducts={filteredProducts}
-          inputRef={inputRef}
-        />
-        <BackToTop />
-        {/* Cart Button badge */}
-        <CartBadge
-          cart={cart}
-          showSideBar={showSideBar}
-          setShowSideBar={setShowSideBar}
-        />
-        {/* Sidebar */}
-        <CartSidebar
-          showSideBar={showSideBar}
-          setShowSideBar={setShowSideBar}
-          cart={cart}
-          setCart={setCart}
-        />
-      </main>
-      <Footer />
+    <div className="transition-colors duration-500"
+    // style={{
+    //   backgroundColor: adminData?.colors?.primary,
+    //   color: adminData?.colors?.secondary
+    // }}
+    >
+      <div className="min-h-screen md:max-w-5xl max-w-sm  text-center p-4 mx-auto">
+        <Header />
+        <main className="mt-16 ">
+          {/* Menu nav */}
+          <MenuNav
+            inputRef={inputRef}
+            setFilteredProducts={setFilteredProducts}
+            categories={categories}
+            products={products}
+          />
+          {/* Category Section */}
+          <MenuSection
+            categories={categories}
+            products={products}
+            addToCart={addToCart}
+            filteredProducts={filteredProducts}
+            inputRef={inputRef}
+          />
+          <BackToTop />
+          {/* Cart Button badge */}
+          <CartBadge
+            cart={cart}
+            showSideBar={showSideBar}
+            setShowSideBar={setShowSideBar}
+          />
+          {/* Sidebar */}
+          <CartSidebar
+            showSideBar={showSideBar}
+            setShowSideBar={setShowSideBar}
+            cart={cart}
+            setCart={setCart}
+          />
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 }

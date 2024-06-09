@@ -113,8 +113,8 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
         <aside
           id="sidebar"
           className={` ${
-            sidebarOpen ? "w-64" : "w-0"
-          } min-h-full lg:flex flex-shrink-0 flex-col transition-all duration-300 z-20 md:w-64`}
+            sidebarOpen ? "w-72" : "w-0"
+          } min-h-full lg:flex flex-shrink-0 flex-col transition-all duration-300 z-20 md:w-72`}
           aria-label="Sidebar"
         >
           <div className="relative flex-1 flex flex-col min-h-full border-r border-gray-200 bg-white pt-0">
@@ -260,7 +260,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                       <li>
                         <NavLink
                           to={routes.products}
-                          className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                          className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 dark:text-white flex items-center p-2 group ${
                             isActive === routes.products && "bg-gray-100"
                           }`}
                         >
@@ -279,7 +279,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                             <path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" />
                             <path d="M9 11v-5a3 3 0 0 1 6 0v5" />
                           </svg>
-                          <span className="ml-3 flex-1 whitespace-nowrap">
+                          <span className="ml-3 flex-1 whitespace-nowrap dark:  text-white text-gray-900">
                             Productos
                           </span>
                         </NavLink>
@@ -287,7 +287,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                       <li>
                         <NavLink
                           to={routes.extras}
-                          className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                          className={`text-base text-gray-900 dark:text-white font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
                             isActive === routes.extras && "bg-gray-100"
                           }`}
                         >

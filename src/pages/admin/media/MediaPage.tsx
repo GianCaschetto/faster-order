@@ -67,7 +67,8 @@ function MediaPage() {
         {mediaList?.map((media, index) => (
           <div
             key={index}
-            className="relative"
+            className="relative hover:cursor-pointer"
+            onClick={() => handleSelectMedia(media.url)}
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(-1)}
           >

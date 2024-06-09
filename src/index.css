@@ -5,6 +5,24 @@
 :root {
   color-scheme: light dark;
   scroll-behavior: smooth;
+  --primary-color: #000000;
+  --secondary-color: #ffffff;
+}
+
+.bg-primary {
+  background-color: var(--primary-color);
+}
+
+.text-primary {
+  color: var(--primary-color);
+}
+
+.bg-secondary {
+  background-color: var(--secondary-color);
+}
+
+.text-secondary {
+  color: var(--secondary-color);
 }
 
 /* Estilos responsivos */

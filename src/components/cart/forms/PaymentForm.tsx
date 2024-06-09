@@ -24,11 +24,10 @@ function PaymentForm({ order, setOrder }: PaymentProps) {
   }, [paymentMethodSelected]);
 
   useEffect(() => {
-    if(adminData?.paymentMethods){
+    if (adminData?.paymentMethods) {
       setPaymentMethods(adminData.paymentMethods);
     }
   }, [adminData?.paymentMethods]);
-
 
   return (
     <div>
@@ -62,7 +61,7 @@ function PaymentForm({ order, setOrder }: PaymentProps) {
 
       {order.orderType === "pickup" && (
         <div>
-          <p>Total: {parseFloat((order.total * tasaBCV.price).toFixed(2))}</p>
+          <p>Total: {parseFloat(order.total.toFixed(2))}</p>
         </div>
       )}
     </div>

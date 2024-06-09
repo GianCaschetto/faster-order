@@ -24,15 +24,12 @@ function OrdersPage() {
       ? orders
       : orders?.filter((order) => {
           return (
-            order.customer.name.toLowerCase() === orderToSearch.toLowerCase() ||
+            order.customer.name
+              .toLowerCase()
+              .includes(orderToSearch.toLowerCase()) ||
             order.orderNumber?.toString().includes(orderToSearch) ||
             order.customer.phone.includes(orderToSearch) ||
-            order.status.toLowerCase() === orderToSearch.toLowerCase() ||
-            order.createdAt
-              .toDate()
-              .toISOString()
-              .split("T")[0]
-              .includes(orderToSearch) ||
+            order.status.toLowerCase().includes(orderToSearch.toLowerCase()) ||
             order.createdAt
               .toDate()
               .toLocaleDateString()

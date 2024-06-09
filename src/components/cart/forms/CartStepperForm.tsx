@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CartContent from "../CartContent";
 import InfoForm from "./InfoForm";
 import PaymentForm from "./PaymentForm";
-import { ArrowLeft, X } from "lucide-react";
+import { X } from "lucide-react";
 import {
   CustomerInfo,
   Order,
@@ -56,12 +56,51 @@ function CartStepperForm({
   const steps = [
     {
       label: "Carrito",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          className="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+          <path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+          <path d="M17 17h-11v-14h-2" />
+          <path d="M6 5l14 1l-1 7h-13" />
+        </svg>
+      ),
+
       component: (
         <CartContent cart={cart} setCart={setCart} deleteItem={deleteItem} />
       ),
     },
     {
       label: "Info",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          className="icon icon-tabler icons-tabler-outline icon-tabler-user"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+          <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+        </svg>
+      ),
       component: (
         <InfoForm
           cart={cart}
@@ -74,6 +113,24 @@ function CartStepperForm({
     },
     {
       label: "Pago",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          className="icon icon-tabler icons-tabler-outline icon-tabler-circle-check"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+          <path d="M9 12l2 2l4 -4" />
+        </svg>
+      ),
       component: <PaymentForm order={order} setOrder={setOrder} />,
     },
     {
@@ -181,18 +238,31 @@ function CartStepperForm({
   }, [order.orderNumber]);
 
   return (
-    <div className="h-screen min-h-screen md:max-w-6xl max-w-sm text-center p-4 mx-auto">
+    <div className="h-screen min-h-screen md:max-w-6xl max-w-sm text-center mx-auto">
       {/* Steps */}
-      <div className="flex justify-center items-center space-x-4">
-        {currentStep > 0 && currentStep < 3 && (
-          <button
-            onClick={() => setCurrentStep(currentStep - 1)}
-            disabled={currentStep === 0}
-            className={`bg-blue-500 text-white px-4 py-2 rounded-lg border w-1/5 hover:bg-blue-700 cursor-pointer`}
+      <div className="flex flex-grow items-center w-full border border-gray-300 ">
+        <button
+          onClick={() => setCurrentStep(currentStep - 1)}
+          disabled={currentStep === 0}
+          className={`  bg-blue-500 text-white px-4 py-6 rounded-lg border-r border-gray-300 hover:bg-blue-700 cursor-pointer`}
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            className="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left"
           >
-            <ArrowLeft />
-          </button>
-        )}
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M5 12l14 0" />
+            <path d="M5 12l6 6" />
+            <path d="M5 12l6 -6" />
+          </svg>
+        </button>
 
         {steps.slice(0, steps.length - 1).map((step, index) => (
           <div
@@ -201,9 +271,12 @@ function CartStepperForm({
               currentStep === index
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 text-gray-800"
-            } px-4 py-2 rounded-lg w-1/5`}
+            } px-4 py-2 rounded-lg flex-grow border-r border-gray-300 `}
           >
-            {step.label}
+            <div className="flex flex-col justify-center items-center py-1">
+              {step.icon}
+              {step.label}
+            </div>
           </div>
         ))}
         <button
@@ -226,13 +299,13 @@ function CartStepperForm({
               );
             }
           }}
-          className="w-1/5 flex justify-center border py-2 hover:bg-red-500"
+          className=" flex justify-center py-6 px-4 hover:bg-red-500"
         >
           <X color="white" />
         </button>
       </div>
       {/* Step content */}
-      <div className="">{steps[currentStep].component}</div>
+      <div className="h-full">{steps[currentStep].component}</div>
 
       {/* Next Button */}
       {currentStep !== 3 && (

@@ -110,21 +110,29 @@ export type Schedule = {
   forced: boolean;
 };
 
+//Colors Type
+export type Colors = {
+  primary: string;
+  secondary: string;
+};
+
 //AdminData type
 export type AdminData = Partial<{
+  address: string;
+  categories: Category[];
+  colors: Colors;
   companyName: string;
+  email: string;
+  extras: Extras[];
   icon: string;
   logo: string;
-  whatsapp: string;
-  whatsappMessage: string;
-  email: string;
-  categories: Category[];
-  products: Product[];
-  extras: Extras[];
-  address: string;
   neighborhoods: Neighborhood[];
-  schedules: Schedule[];
   paymentMethods: string[];
+  products: Product[];
+  schedules: Schedule[];
+  whatsapp: string;
+  whatsappDeliveryMessage: string;
+  whatsappPickupMessage: string;
 }>;
 
 export type ValidMimeTypes = {

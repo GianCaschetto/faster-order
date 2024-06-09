@@ -9,6 +9,7 @@ import {
   signOut,
   signInWithPhoneNumber,
   RecaptchaVerifier,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { AdminData, CustomerInfo } from "@/types/types";
@@ -35,6 +36,17 @@ const db = getFirestore(app);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
+
+const forgotPassword = (email: string) => {
+  sendPasswordResetEmail(auth, email)
+    .then(() => {
+      toast.success("Se ha enviado un correo para restablecer tu contraseña!");
+    })
+    .catch((error) => {
+      toast.error("Error al enviar el correo!");
+      console.error(error);
+    });
+};
 
 const signInAnonymous = (data: CustomerInfo) => {
   signInAnonymously(auth)
@@ -71,11 +83,12 @@ const signInUserPhone = async ({ phone }) => {
     signInWithPhoneNumber(auth, `+58${phone}`, recaptchaVerifier).then(
       (confirmationResult) => {
         const code = window.prompt("Ingrese el código de verificación");
-        confirmationResult.confirm(code ?? "")
+        confirmationResult
+          .confirm(code ?? "")
           .then((result) => {
             toast.success("Número verificado correctamente");
             const user = result.user;
-            console.log(user)
+            console.log(user);
           })
           .catch((error) => {
             toast.error("Error al verificar el número");
@@ -116,5 +129,6 @@ export {
   signInAdmin,
   logOut,
   saveAdminData,
+  forgotPassword,
   signInUserPhone,
 };

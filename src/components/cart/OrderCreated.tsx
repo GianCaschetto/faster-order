@@ -69,9 +69,12 @@ function OrderCreated({ order }: OrderCreatedProps) {
     return newMessage;
   };
 
-  const msg = adminData?.whatsappMessage
-    ? replaceTokens(adminData?.whatsappMessage)
-    : `
+  const msg =
+    order.orderType === "delivery"
+      ? replaceTokens(adminData?.whatsappDeliveryMessage ?? "")
+      : order.orderType === "pickup"
+      ? replaceTokens(adminData?.whatsappPickupMessage ?? "")
+      : `
   ===== Orden =====
   Orden: ${order.orderNumber} 
   Contenido de la orden

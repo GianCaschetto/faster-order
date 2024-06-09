@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { saveAdminData } from "@/services/firebase";
 import { Category } from "@/types/types";
@@ -6,12 +6,22 @@ import { toast } from "react-toastify";
 import MediaModal from "../media/MediaModal";
 
 function CompanyPage() {
+  const { adminData: admin } = useAdmin();
   const [isOpenLogo, setIsOpenLogo] = useState(false);
   const [isOpenIcon, setIsOpenIcon] = useState(false);
   const [logoSelected, setLogoSelected] = useState<string | null>(null);
   const [iconSelected, setIconSelected] = useState<string | null>(null);
+  const [primaryColor, setPrimaryColor] = useState("");
+  const [secondaryColor, setSecondaryColor] = useState("");
 
-  const { adminData: admin } = useAdmin();
+  // Initialize state with admin colors
+  useEffect(() => {
+    if (admin?.colors) {
+      setPrimaryColor(admin.colors.primary);
+      setSecondaryColor(admin.colors.secondary);
+    }
+  }, [admin?.colors]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -44,8 +54,13 @@ function CompanyPage() {
       icon: iconSelected ?? admin?.icon,
       categories: categoriesFormatted,
       paymentMethods: paymentMethods,
+      colors: {
+        primary: primaryColor,
+        secondary: secondaryColor,
+      },
     });
   };
+
   return (
     <div className="flex items-center justify-center p-12">
       <div className="mx-auto w-full max-w-[550px]">
@@ -89,61 +104,65 @@ function CompanyPage() {
               </div>
             </div>
           </div>
-          <div className="mb-5">
-            <label
-              htmlFor="photo"
-              className="mb-3 block text-base font-medium text-[#07074D]"
-            >
-              Logo de la empresa
-            </label>
-            {logoSelected || admin?.logo && (
-              <img
-                src={logoSelected ?? admin?.logo}
-                alt="logo de la empresa"
-                className="w-auto h-32 object-cover rounded-md"
+          <div className="flex justify-between">
+            <div className="mb-5">
+              <label
+                htmlFor="photo"
+                className="mb-3 block text-base font-medium text-[#07074D]"
+              >
+                Logo de la empresa
+              </label>
+              {logoSelected ||
+                (admin?.logo && (
+                  <img
+                    src={logoSelected ?? admin?.logo}
+                    alt="logo de la empresa"
+                    className="w-auto h-32 object-cover rounded-md"
+                  />
+                ))}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsOpenLogo(true);
+                }}
+              >
+                Elegir
+              </button>
+              <MediaModal
+                isOpen={isOpenLogo}
+                onClose={() => setIsOpenLogo(false)}
+                setImageSelected={setLogoSelected}
               />
-            )}
-            <button
-              type="button"
-              onClick={() => {
-                setIsOpenLogo(true);
-              }}
-            >
-              Elegir
-            </button>
-            <MediaModal
-              isOpen={isOpenLogo}
-              onClose={() => setIsOpenLogo(false)}
-              setImageSelected={setLogoSelected}
-            />
-          </div>
-          <div className="mb-5">
-            <label
-              htmlFor="photo"
-              className="mb-3 block text-base font-medium text-[#07074D]"
-            >
-              Icono del sitio web
-            </label>
-            {iconSelected || admin?.icon && (
-              <img
-                src={iconSelected ?? admin?.icon}
-                alt="icono delsitio web de la empresa"
-                className="w-auto h-32 object-cover rounded-md"
+            </div>
+            <div className="mb-5">
+              <label
+                htmlFor="photo"
+                className="mb-3 block text-base font-medium text-[#07074D]"
+              >
+                Icono del sitio web
+              </label>
+              {iconSelected ||
+                (admin?.icon && (
+                  <img
+                    src={iconSelected ?? admin?.icon}
+                    alt="icono delsitio web de la empresa"
+                    className="w-auto h-32 object-cover rounded-md"
+                  />
+                ))}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsOpenIcon(true);
+                }}
+              >
+                Elegir
+              </button>
+              <MediaModal
+                isOpen={isOpenIcon}
+                onClose={() => setIsOpenIcon(false)}
+                setImageSelected={setIconSelected}
               />
-            )}
-            <button
-              type="button"
-              onClick={() => {
-                setIsOpenIcon(true);
-              }}
-            >
-              Elegir
-            </button>
-            <MediaModal
-              isOpen={isOpenIcon}
-              onClose={() => setIsOpenIcon(false)}
-              setImageSelected={setIconSelected}
-            />
+            </div>
           </div>
           <div className="mb-5">
             <label
@@ -214,6 +233,42 @@ function CompanyPage() {
               Pago móvil, Zelle, Transferencia, Efectivo.
             </span>
             <br />
+          </div>
+
+          {/* Color Inputs */}
+          <div className="flex justify-around">
+            <div className="mb-5 flex flex-col justify-center items-center">
+              <label
+                htmlFor="primaryColor"
+                className="mb-3 block text-base font-medium text-[#07074D]"
+              >
+                Color primario
+              </label>
+              <input
+                type="color"
+                name="primaryColor"
+                id="primaryColor"
+                value={primaryColor ?? "#fff"}
+                onChange={(e) => setPrimaryColor(e.target.value)}
+                className="p-1 h-10 w-14 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700"
+              />
+            </div>
+            <div className="mb-5 flex flex-col justify-center items-center">
+              <label
+                htmlFor="secondaryColor"
+                className="mb-3 block text-base font-medium text-[#07074D]"
+              >
+                Color secundario
+              </label>
+              <input
+                type="color"
+                name="secondaryColor"
+                id="secondaryColor"
+                value={secondaryColor ?? "#000"}
+                onChange={(e) => setSecondaryColor(e.target.value)}
+                className="p-1 h-10 w-14 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700"
+              />
+            </div>
           </div>
 
           <div>

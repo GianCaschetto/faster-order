@@ -1,37 +1,44 @@
 import { useAdmin } from "@/contexts/AdminContext";
 import { routes } from "@/navigation/routes";
+import { db } from "@/services/firebase";
+import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function OrdersHistoryPage() {
   //const navigate = useNavigate();
   const { orders } = useAdmin();
   const navigate = useNavigate();
 
-  // const removeProduct = (id: string) => {
-  //   const adminDataRef = doc(db, "admin", "data");
-  //   setDoc(adminDataRef, {
-  //     products: adminData?.products?.filter((product) => product.id !== id),
-  //   }, { merge: true })
-  //     .then(() => {
-  //       toast.success("Producto eliminado correctamente");
-  //     })
-  //     .catch((error) => {
-  //       toast.error("Error al eliminar el producto");
-  //       console.error(error);
-  //     });
-  // }
+  const removeOrder = (id: string) => {
+    const adminDataRef = doc(db, "admin", "data");
+    setDoc(
+      adminDataRef,
+      {
+        orders: orders?.filter((order) => order.id !== id),
+      },
+      { merge: true }
+    )
+      .then(() => {
+        toast.success("Orden eliminado correctamente");
+      })
+      .catch((error) => {
+        toast.error("Error al eliminar el orden");
+        console.error(error);
+      });
+  };
 
   return (
     <div className="p-4">
       {/* Add order button */}
-      <div className="flex justify-end py-2">
+      {/* <div className="flex justify-end py-2">
         <button
           onClick={() => navigate(routes.ordersHistoryRegister)}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           Agregar Orden
         </button>
-      </div>
+      </div> */}
       {/* Orders Table */}
       <table className="border-collapse w-full">
         <thead>
@@ -89,7 +96,7 @@ function OrdersHistoryPage() {
                 </button>
                 <button
                   className="text-blue-400 hover:text-blue-600 underline pl-6"
-                  // onClick={()=> removeProduct(product.id)}
+                  onClick={() => removeOrder(order.id as string)}
                 >
                   Remove
                 </button>

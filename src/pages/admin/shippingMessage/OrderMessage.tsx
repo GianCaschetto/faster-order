@@ -17,17 +17,29 @@ const tokens = {
   "##PRODUCT_DETAILS##": "Detalles del producto",
   "##TOTAL_PRICE_BS_BCV##": "Precio total en bolívares a tasa BCV",
   "##TOTAL_PRICE_BS_PARALELO##": "Precio total en bolívares a tasa PARALELO",
-
 };
 
 function OrderMessage() {
   const { adminData } = useAdmin();
   const [orderTypeMessage, setOrderTypeMessage] =
     useState<OrderType>("delivery");
-  const [message, setMessage] = useState<string>("");
+  const [deliveryMessage, setDeliveryMessage] = useState<string>(
+    adminData?.whatsappDeliveryMessage ?? ""
+  );
+  const [pickupMessage, setPickupMessage] = useState<string>(
+    adminData?.whatsappPickupMessage ?? ""
+  );
 
-  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
+  const handleDeliveryMessageChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setDeliveryMessage(e.target.value);
+  };
+
+  const handlePickupMessageChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setPickupMessage(e.target.value);
   };
 
   const handleOrderTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -35,9 +47,11 @@ function OrderMessage() {
   };
 
   const saveMessageToAdmin = () => {
-    saveAdminData({
-      whatsappMessage: message,
-    });
+    if (orderTypeMessage === "delivery") {
+      saveAdminData({ whatsappDeliveryMessage: deliveryMessage });
+    } else {
+      saveAdminData({ whatsappPickupMessage: pickupMessage });
+    }
   };
 
   return (
@@ -65,14 +79,29 @@ function OrderMessage() {
           </ul>
         }
       </div>
+
       <textarea
         className="w-full h-96 p-2 text-white"
         placeholder="Escribe el mensaje"
-        onChange={handleMessageChange}
-        defaultValue={adminData?.whatsappMessage}
-      ></textarea>
+        defaultValue={
+          orderTypeMessage === "delivery"
+            ? adminData?.whatsappDeliveryMessage ?? deliveryMessage
+            : adminData?.whatsappPickupMessage ?? pickupMessage
+        }
+        onChange={
+          orderTypeMessage === "delivery"
+            ? handleDeliveryMessageChange
+            : handlePickupMessageChange
+        }
+      />
 
-      <button onClick={saveMessageToAdmin}>Guardar</button>
+      <button
+        onClick={() => {
+          saveMessageToAdmin();
+        }}
+      >
+        Guardar
+      </button>
     </section>
   );
 }

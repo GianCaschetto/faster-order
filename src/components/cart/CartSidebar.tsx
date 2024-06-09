@@ -42,12 +42,12 @@ function Sidebar({ showSideBar, setShowSideBar, cart, setCart }: SidebarProps) {
         }}
         className={`${
           !showSideBar && "hidden"
-        } bg-gray-600/50 min-h-screen w-full fixed top-0 left-0 right-0 backdrop-blur-sm`}
+        } bg-gray-600/30 min-h-screen w-full fixed top-0 left-0 right-0 backdrop-blur-sm`}
       ></div>
       <aside
         className={`${
           showSideBar ? " w-[26rem]" : "w-0"
-        } transition-all duration-300 bg-blue-600 min-h-screen fixed top-0 right-0`}
+        } transition-all duration-300 bg-blue-600 min-h-screen fixed top-0 right-0 border-l border-gray-300`}
       >
         <div className={`${!showSideBar && "hidden"}`}>
           <CartStepperForm

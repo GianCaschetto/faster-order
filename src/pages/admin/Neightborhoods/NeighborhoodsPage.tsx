@@ -1,3 +1,4 @@
+import Button from "@/components/Button";
 import { useAdmin } from "@/contexts/AdminContext";
 import { saveAdminData } from "@/services/firebase";
 import { Neighborhood } from "@/types/types";
@@ -69,11 +70,7 @@ const NeighborhoodsPage = () => {
       toast.error("No puedes guardar una zona sin nombre");
       return;
     }
-    if (
-      !neighborhoods.every(
-        (neighborhood) => neighborhood.price >= 0
-      )
-    ) {
+    if (!neighborhoods.every((neighborhood) => neighborhood.price >= 0)) {
       toast.error("Precio no válido");
       return;
     }
@@ -134,7 +131,13 @@ const NeighborhoodsPage = () => {
         <button onClick={addRow}>Agregar fila</button>
       </table>
 
-      <button onClick={handleSave}>Guardar datos</button>
+      <button
+        onClick={handleSave}
+        className="group relative h-12 w-48 overflow-hidden rounded-2xl bg-green-500 text-lg font-bold text-white"
+      >
+        Guardar datos
+        <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
+      </button>
     </div>
   );
 };

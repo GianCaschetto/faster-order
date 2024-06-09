@@ -62,7 +62,9 @@ const daysOfWeek = [
 
 function SchedulesPage() {
   const { adminData } = useAdmin();
-  const [schedules, setSchedules] = useState<Schedule[]>(defaultSchedules);
+  const [schedules, setSchedules] = useState<Schedule[]>(
+    adminData?.schedules ?? defaultSchedules
+  );
 
   const handleSave = () => {
     if (!schedules.every((schedule) => schedule.open <= schedule.close)) {
@@ -72,6 +74,8 @@ function SchedulesPage() {
     const updatedAdminData = { ...adminData, schedules };
     saveAdminData(updatedAdminData);
   };
+
+
 
   useEffect(() => {
     setSchedules(adminData?.schedules ?? defaultSchedules);
@@ -114,6 +118,7 @@ function SchedulesPage() {
             {schedules.map((schedule, index) => (
               <tr key={schedule.day}>
                 <td className="px-6 py-4 whitespace-nowrap">
+                  <p>{schedule.forced}</p>
                   <span>{daysOfWeek[schedule.day]}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -131,6 +136,7 @@ function SchedulesPage() {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <input
                     type="time"
+                    
                     value={schedule.close}
                     onChange={(e) => {
                       const updatedSchedules = [...schedules];
