@@ -1,5 +1,4 @@
 import { useAdmin } from "@/contexts/AdminContext";
-import { routes } from "@/navigation/routes";
 import { db } from "@/services/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";

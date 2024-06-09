@@ -1,5 +1,4 @@
 import { ShoppingCart, ShoppingCartItem } from "@/types/types";
-import { X } from "lucide-react";
 
 type CartContentProps = {
   cart: ShoppingCart;

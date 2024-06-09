@@ -1,5 +1,4 @@
 import { useAdmin } from "@/contexts/AdminContext";
-import { useCurrency } from "@/contexts/CurrencyContext";
 import { Order } from "@/types/types";
 import { useEffect, useState } from "react";
 
@@ -11,7 +10,7 @@ type PaymentProps = {
 function PaymentForm({ order, setOrder }: PaymentProps) {
   const { adminData } = useAdmin();
   const [paymentMethods, setPaymentMethods] = useState<string[]>([]);
-  const { tasaBCV } = useCurrency();
+  // const { tasaBCV } = useCurrency();
 
   const [paymentMethodSelected, setPaymentMethodSelected] =
     useState<string>("");

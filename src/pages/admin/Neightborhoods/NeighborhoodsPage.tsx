@@ -1,4 +1,3 @@
-import Button from "@/components/Button";
 import { useAdmin } from "@/contexts/AdminContext";
 import { saveAdminData } from "@/services/firebase";
 import { Neighborhood } from "@/types/types";
