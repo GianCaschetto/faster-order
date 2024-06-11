@@ -29,15 +29,19 @@ function Sidebar({ showSideBar, setShowSideBar, cart, setCart }: SidebarProps) {
   return (
     <div>
       <div
-        onClick={() => {setShowSideBar(false)
-          setCurrentStep(0)
-          if(currentStep=== 3){
-            setCart({items: [], totalItems: 0, totalPrice: 0})
-            window.localStorage.setItem("cart", JSON.stringify({
-              items: [],
-              totalItems: 0,
-              totalPrice: 0,
-            }))
+        onClick={() => {
+          setShowSideBar(false);
+          setCurrentStep(0);
+          if (currentStep === 3) {
+            setCart({ items: [], totalItems: 0, totalPrice: 0 });
+            window.localStorage.setItem(
+              "cart",
+              JSON.stringify({
+                items: [],
+                totalItems: 0,
+                totalPrice: 0,
+              })
+            );
           }
         }}
         className={`${
@@ -45,9 +49,10 @@ function Sidebar({ showSideBar, setShowSideBar, cart, setCart }: SidebarProps) {
         } bg-gray-600/30 min-h-screen w-full fixed top-0 left-0 right-0 backdrop-blur-sm`}
       ></div>
       <aside
+       
         className={`${
           showSideBar ? " w-[26rem]" : "w-0"
-        } transition-all duration-300 bg-blue-600 min-h-screen fixed top-0 right-0 border-l border-gray-300`}
+        } transition-all duration-300 bg-slate-200 min-h-screen fixed top-0 right-0 border-l border-slate-500`}
       >
         <div className={`${!showSideBar && "hidden"}`}>
           <CartStepperForm

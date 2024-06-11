@@ -8,12 +8,14 @@ function CollapsibleMenuItem({ title, children }) {
   };
 
   return (
-    <div className="bg-gray-800 text-white w-64">
+    <div className="bg-slate-100 text-black w-64">
       <div
-        className="p-4 hover:bg-gray-700 cursor-pointer flex justify-between items-center"
+        className="p-4 hover:bg-slate-300 cursor-pointer flex justify-between items-center"
         onClick={toggleItem}
       >
-        <span className="text-sm font-medium">{title}</span>
+        <span className=" flex-1 whitespace-nowrap dark:   text-gray-900">
+          {title}
+        </span>
         <span>
           {isOpen ? (
             <svg

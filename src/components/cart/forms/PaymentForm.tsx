@@ -30,13 +30,14 @@ function PaymentForm({ order, setOrder }: PaymentProps) {
 
   return (
     <div>
-      <form action="">
-        <section>
-          <label>Metodo de pago</label>
-          <div className="flex justify-around flex-col overflow-y-auto">
+      <form action="" className="mt-6 px-6">
+        <section className="flex flex-col text-black">
+          <h3 className="text-2xl font-bold text-black">Metodo de pago</h3>
+          <div className="flex flex-col overflow-y-auto">
             {paymentMethods.map((method) => (
               <label key={method}>
                 <input
+                
                   type="radio"
                   name="paymentMethod"
                   value={method}
@@ -51,7 +52,7 @@ function PaymentForm({ order, setOrder }: PaymentProps) {
       </form>
       {/* Total */}
       {order.orderType === "delivery" && (
-        <div>
+        <div className="text-black">
           <p>Subtotal: {order.subtotal}</p>
           <p>Gastos de envío: {order.delivertyPrice}</p>
           <p>Total: {order.total}</p>

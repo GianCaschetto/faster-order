@@ -4,6 +4,8 @@ import { saveAdminData } from "@/services/firebase";
 import { Schedule } from "@/types/types";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import DatePicker, { registerLocale } from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const defaultSchedules: Schedule[] = [
   {
@@ -75,15 +77,13 @@ function SchedulesPage() {
     saveAdminData(updatedAdminData);
   };
 
-
-
   useEffect(() => {
     setSchedules(adminData?.schedules ?? defaultSchedules);
   }, [adminData?.schedules]);
 
   return (
-    <div>
-      <h1 className="text-3xl font-semibold text-gray-800">Horarios</h1>
+    <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 w-2/3 mt-4 mx-auto">
+      <h2 className="text-3xl font-semibold text-gray-800 text-center mb-4">Horarios</h2>
       <div className="mt-6">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -119,7 +119,9 @@ function SchedulesPage() {
               <tr key={schedule.day}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <p>{schedule.forced}</p>
-                  <span>{daysOfWeek[schedule.day]}</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    {daysOfWeek[schedule.day]}
+                  </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <input
@@ -132,11 +134,25 @@ function SchedulesPage() {
                     }}
                     className="w-24 border border-gray-300 rounded-md p-1 text-white"
                   />
+
+                  {/* <DatePicker
+                    selected={schedule.open}
+                    onChange={(e) => {
+                      const updatedSchedules = [...schedules];
+                      updatedSchedules[index].open = e.target.value;
+                      setSchedules(updatedSchedules);
+                    }}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={60}
+                    timeCaption="Hora"
+                    dateFormat="HH:mm"
+                    placeholderText="Selecciona una hora"
+                  /> */}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <input
                     type="time"
-                    
                     value={schedule.close}
                     onChange={(e) => {
                       const updatedSchedules = [...schedules];

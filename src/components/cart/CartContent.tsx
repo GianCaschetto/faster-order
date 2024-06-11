@@ -108,7 +108,7 @@ function CartContent({ cart, deleteItem }: CartContentProps) {
       ) : (
         <div className="flex flex-col items-center justify-center p-20 ">
           <svg
-            fill="#bbb"
+            fill="gray"
             className="w-64 h-64"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
@@ -119,7 +119,7 @@ function CartContent({ cart, deleteItem }: CartContentProps) {
             <circle cx="304" cy="232" r="8"></circle>
             <circle cx="416" cy="232" r="8"></circle>
           </svg>
-          <p>Carrito vacío, agrega productos para comenzar a comprar</p>
+          <p className="text-black">Carrito vacío, agrega productos para comenzar a comprar</p>
         </div>
       )}
     </div>

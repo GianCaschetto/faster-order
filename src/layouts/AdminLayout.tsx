@@ -149,7 +149,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                   <li>
                     <NavLink
                       to={routes.adminPanel}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group border-b ${
                         isActive === routes.adminPanel ? "bg-gray-100" : ""
                       }`}
                     >
@@ -176,7 +176,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                   <li>
                     <NavLink
                       to={routes.company}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                      className={`text-base border-b  text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
                         isActive === routes.company ? "bg-gray-100" : ""
                       }`}
                     >
@@ -203,7 +203,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                   <li>
                     <NavLink
                       to={routes.neighborhoods}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                      className={`text-base border-b  text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
                         isActive === routes.neighborhoods ? "bg-gray-100" : ""
                       }`}
                     >
@@ -230,7 +230,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                   <li>
                     <NavLink
                       to={routes.schedule}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                      className={`text-base border-b  text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
                         isActive === routes.schedule ? "bg-gray-100" : ""
                       }`}
                     >
@@ -254,13 +254,13 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                       </span>
                     </NavLink>
                   </li>
-
+                  <div className="flex"></div>
                   <CollapsibleMenuItem title="Ecommerce">
                     <ul>
                       <li>
                         <NavLink
                           to={routes.products}
-                          className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 dark:text-white flex items-center p-2 group ${
+                          className={`text-base text-gray-900 font-normal rounded-lg hover:bg-slate-300  flex items-center p-2 group ${
                             isActive === routes.products && "bg-gray-100"
                           }`}
                         >
@@ -279,7 +279,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                             <path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" />
                             <path d="M9 11v-5a3 3 0 0 1 6 0v5" />
                           </svg>
-                          <span className="ml-3 flex-1 whitespace-nowrap dark:  text-white text-gray-900">
+                          <span className="ml-3 flex-1 whitespace-nowrap dark:   text-gray-900">
                             Productos
                           </span>
                         </NavLink>
@@ -287,7 +287,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                       <li>
                         <NavLink
                           to={routes.extras}
-                          className={`text-base text-gray-900 dark:text-white font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                          className={`text-base text-gray-900 font-normal rounded-lg hover:bg-slate-300  flex items-center p-2 group ${
                             isActive === routes.extras && "bg-gray-100"
                           }`}
                         >
@@ -320,7 +320,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                   <li>
                     <NavLink
                       to={routes.shippingMessage}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                      className={`text-base border-b  text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
                         isActive === routes.shippingMessage && "bg-gray-100"
                       }`}
                     >
@@ -347,7 +347,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                   <li>
                     <NavLink
                       to={routes.media}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                      className={`text-base border-b  text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
                         isActive === routes.media && "bg-gray-100"
                       }`}
                     >
@@ -374,7 +374,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                   <li>
                     <NavLink
                       to={routes.orders}
-                      className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                      className={`text-base border-b  text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
                         isActive === routes.orders && "bg-gray-100"
                       }`}
                     >
@@ -488,7 +488,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           id="main-content"
           className="h-full w-full bg-gray-50 relative p-2"
         >
-          <div className="text-gray-900 h-full w-full">{children}</div>
+          <div className="h-full w-full bg-gray-50 relative overflow-y-auto ">{children}</div>
         </div>
       </div>
     </div>

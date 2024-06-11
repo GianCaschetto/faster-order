@@ -134,7 +134,7 @@ function CompanyPage() {
                 setImageSelected={setLogoSelected}
               />
             </div>
-            <div className="mb-5">
+            {/* <div className="mb-5">
               <label
                 htmlFor="photo"
                 className="mb-3 block text-base font-medium text-[#07074D]"
@@ -162,7 +162,7 @@ function CompanyPage() {
                 onClose={() => setIsOpenIcon(false)}
                 setImageSelected={setIconSelected}
               />
-            </div>
+            </div> */}
           </div>
           <div className="mb-5">
             <label
@@ -198,7 +198,7 @@ function CompanyPage() {
               placeholder="Hamburguesas, Pizzas, Bebidas, Postres"
               className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
             />
-            <span>
+            <span className="text-gray-500">
               Enumere todas las categorías del menú separadas por coma (,).
               Como: cat1, cat2, cat3, cat4.
             </span>
@@ -228,7 +228,7 @@ function CompanyPage() {
               placeholder="Pago móvil, Zelle, Transferencia, Efectivo"
               className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
             />
-            <span>
+            <span className="text-gray-500">
               Enumere todos los métodos de pago separados por coma (,). Como:
               Pago móvil, Zelle, Transferencia, Efectivo.
             </span>
@@ -272,8 +272,9 @@ function CompanyPage() {
           </div>
 
           <div>
-            <button className="hover:shadow-form rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none">
+            <button className="group relative h-12 w-48 overflow-hidden rounded-2xl bg-slate-600 text-lg font-bold text-white">
               Guardar
+              <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
             </button>
           </div>
         </form>

@@ -29,7 +29,7 @@ function Header() {
             </ul>
           </nav>
         </div>
-        <div>
+        {/* <div>
           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
             Empresa
           </h1>
@@ -40,7 +40,7 @@ function Header() {
             <li>Sede Prebo Delivery o pickup 🛻</li>
             <li>El tiempo de espera estimado es de 30/55 min</li>
           </ul>
-        </div>
+        </div> */}
       </header>
   )
 }

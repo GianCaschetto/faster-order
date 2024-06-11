@@ -42,7 +42,9 @@ function MediaPage() {
 
   return (
     <div>
-      <button onClick={() => setShowAddMediaDropzone(!showAddMediaDropzone)}>
+      <button
+      
+      onClick={() => setShowAddMediaDropzone(!showAddMediaDropzone)}>
         Agregar un nuevo archivo
       </button>
       {showAddMediaDropzone && (

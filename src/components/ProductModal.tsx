@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Extra, Extras, Product } from "@/types/types";
 import Counter from "./Counter";
 import { X } from "lucide-react";
+import { useAdmin } from "@/contexts/AdminContext";
 
 const extras: Extras[] = [
   {
@@ -133,6 +134,7 @@ function ProductModal({
     product.extras?.includes(extra.id)
   );
   // Estado para rastrear los extras seleccionados y su cantidad
+  const {adminData} = useAdmin()
   const [selectedExtras, setSelectedExtras] = useState<Extra[]>([]);
   const [counter, setCounter] = useState<number>(1);
   // Manejar cambios en la cantidad de extras
@@ -145,7 +147,11 @@ function ProductModal({
 
   return (
     <div className="z-10 fixed h-screen top-0 left-0 right-0 bg-black bg-opacity-50 flex justify-center items-center py-6">
-      <div className=" dark:bg-white dark:text-black bg-slate-900 text-white p-4 flex flex-col lg:w-1/3 w-3/4 h-full relative rounded-xl">
+      <div 
+        style={{
+          backgroundColor: adminData?.colors?.primary
+        }}
+        className=" dark:bg-white dark:text-black bg-slate-900 text-white p-4 flex flex-col lg:w-1/3 w-3/4 h-full relative rounded-xl">
         <div className="flex justify-between items-center w-full">
           <button onClick={toggleShowModal}>
             <X />

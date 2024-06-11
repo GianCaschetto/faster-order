@@ -130,21 +130,24 @@ function InfoForm({
   }, [customerInfo]);
 
   return (
-    <form className="mt-6">
-      <h2 className="text-2xl font-bold">Información de contacto</h2>
-      <div className="flex justify-around">
+    <form className="mt-6 px-6">
+      <h2 className="text-2xl font-bold text-black">Información de contacto</h2>
+      <div className="flex justify-around text-black my-4">
         <div
-          className="cursor-pointer"
+          className="cursor-pointer bg-slate-600 py-2 px-4 rounded-xl text-white hover:bg-slate-300/40 hover:text-slate-800" 
           onClick={() => setOrderType("delivery")}
         >
           Delivery
         </div>
-        <div className="cursor-pointer" onClick={() => setOrderType("pickup")}>
+        <div
+          className="cursor-pointer bg-slate-600 py-2 px-4 rounded-xl text-white hover:bg-slate-300/40 hover:text-slate-800" 
+          onClick={() => setOrderType("pickup")}
+        >
           Pickup
         </div>
       </div>
       <div className="flex flex-col">
-        <label htmlFor="name" className="text-left">
+        <label htmlFor="name" className="text-left text-black">
           Nombre
         </label>
         <input
@@ -154,11 +157,11 @@ function InfoForm({
           name="name"
           value={customerInfo.name}
           onChange={handleName}
-          className="p-2 border border-gray-300 rounded-lg"
+          className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
       <div className="flex flex-col">
-        <label htmlFor="phone" className="text-left">
+        <label htmlFor="phone" className="text-left text-black">
           Teléfono
         </label>
         <input
@@ -168,13 +171,13 @@ function InfoForm({
           name="phone"
           value={customerInfo.phone}
           onChange={handlePhone}
-          className="p-2 border border-gray-300 rounded-lg"
+          className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
       {orderType === "delivery" && (
         <>
           <div className="flex flex-col">
-            <label htmlFor="address" className="text-left">
+            <label htmlFor="address" className="text-left text-black">
               Dirección
             </label>
             <input
@@ -184,10 +187,10 @@ function InfoForm({
               name="address"
               value={customerInfo.address ?? ""}
               onChange={handleAddress}
-              className="p-2 border border-gray-300 rounded-lg"
+              className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col text-black">
             <label htmlFor="neighborhood" className="text-left">
               Barrio
             </label>
@@ -197,7 +200,7 @@ function InfoForm({
               id="neighborhood"
               value={customerInfo.neighborhood?.name}
               onChange={handleNeighborhood}
-              className="p-2 border border-gray-300 rounded-lg"
+              className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="">Seleccione un barrio</option>
               {neighborhoods?.map((neighborhood) => (

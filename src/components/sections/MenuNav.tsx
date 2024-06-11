@@ -1,3 +1,4 @@
+import { useAdmin } from "@/contexts/AdminContext";
 import { Category, Product } from "@/types/types";
 import debounce from "just-debounce-it";
 import { Search } from "lucide-react";
@@ -16,6 +17,8 @@ function MenuNav({
   categories,
   products,
 }: MenuNavProps) {
+  const {adminData} = useAdmin();
+
   //Search the item
   const handleSearch = () => {
     const search = inputRef.current.value;
@@ -47,6 +50,9 @@ function MenuNav({
               <li key={category.id}>
                 <a
                   href={`#${category.name}`}
+                  style={{
+                    backgroundColor: adminData?.colors?.primary,
+                  }}
                   className="p-2 bg-blue-500 rounded-xl hover:bg-blue-700"
                 >
                   {category.name}

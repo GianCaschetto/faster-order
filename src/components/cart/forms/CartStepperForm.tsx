@@ -16,6 +16,7 @@ import confetti from "canvas-confetti";
 import { auth, db } from "@/services/firebase";
 import { Timestamp, addDoc, collection } from "firebase/firestore";
 import { signInAnonymously, signInWithCustomToken } from "firebase/auth";
+import { useAdmin } from "@/contexts/AdminContext";
 
 type CartStepperFormProps = {
   cart: ShoppingCart;
@@ -34,6 +35,7 @@ function CartStepperForm({
   currentStep,
   setCurrentStep,
 }: CartStepperFormProps) {
+  const { adminData } = useAdmin();
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>(() => {
     const customerInfoLocalStorage =
       window.localStorage.getItem("customerInfo");
@@ -240,8 +242,12 @@ function CartStepperForm({
   return (
     <div className="h-screen min-h-screen md:max-w-6xl max-w-sm text-center mx-auto">
       {/* Steps */}
-      <div className="flex flex-grow items-center w-full border border-gray-300 ">
+      <div className="flex flex-grow items-center w-full border border-slate-500 ">
         <button
+        style={{
+          backgroundColor: adminData?.colors?.primary,
+        
+        }}
           onClick={() => setCurrentStep(currentStep - 1)}
           disabled={currentStep === 0}
           className={`  bg-blue-500 text-white px-4 py-6 rounded-lg border-r border-gray-300 hover:bg-blue-700 cursor-pointer`}
@@ -266,11 +272,14 @@ function CartStepperForm({
 
         {steps.slice(0, steps.length - 1).map((step, index) => (
           <div
+            style={{
+              backgroundColor: adminData?.colors?.primary,
+            }}
             key={index}
             className={`${
               currentStep === index
                 ? "bg-blue-500 text-white"
-                : "bg-gray-200 text-gray-800"
+                : "bg-gray-200 text-gray-500"
             } px-4 py-2 rounded-lg flex-grow border-r border-gray-300 `}
           >
             <div className="flex flex-col justify-center items-center py-1">
@@ -312,6 +321,9 @@ function CartStepperForm({
         <div className="absolute bottom-0 left-0 right-0">
           <button
             type="button"
+            style={{
+              backgroundColor: adminData?.colors?.primary,
+            }}
             onClick={() => {
               if (currentStep === 0 && cart.items.length === 0) {
                 toast.info("Agrega productos al carrito");

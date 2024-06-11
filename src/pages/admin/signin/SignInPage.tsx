@@ -1,3 +1,4 @@
+import { useAdmin } from "@/contexts/AdminContext";
 import { routes } from "@/navigation/routes";
 import { forgotPassword, signInAdmin } from "@/services/firebase";
 import { useState } from "react";
@@ -5,6 +6,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function SignInPage() {
+  const { adminData } = useAdmin();
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -39,9 +41,9 @@ function SignInPage() {
           className="h-full w-full flex justify-center items-center"
         >
           <img
-            src="https://placehold.co/800x/667fff/ffffff.png?text=Your+Image&font=Montserrat"
-            alt="Placeholder Image"
-            className="object-cover w-full h-full"
+            src={adminData?.logo ?? "https://via.placeholder.com/150"}
+            alt="Logo de la empresa"
+            className="object-cover w-auto h-auto"
           />
         </NavLink>
       </div>
