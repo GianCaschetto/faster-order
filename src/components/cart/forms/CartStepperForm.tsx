@@ -159,6 +159,7 @@ function CartStepperForm({
 
   const addOrder = async () => {
     await addDoc(collection(db, "orders"), order);
+   
     toast.success("Orden creada exitosamente");
     confetti();
   };
@@ -230,6 +231,7 @@ function CartStepperForm({
         ...order,
         orderNumber: Math.round(Date.now() * Math.random()),
       });
+
     }
   }, [currentStep]);
 

@@ -65,7 +65,10 @@ function OrderCreated({ order }: OrderCreatedProps) {
       order.paymentMethod
     );
     newMessage = newMessage.replace("##ORDER_ORDERTYPE##", order.orderType);
-
+    newMessage = newMessage.replace(
+      "##TRACK_ORDER_PAGE##",
+      `${window.location.origin}/order/${order.orderNumber}`
+    );
     return newMessage;
   };
 
@@ -102,6 +105,9 @@ function OrderCreated({ order }: OrderCreatedProps) {
   Teléfono: ${order.customer.phone}
   Dirección: ${order.customer.address}
   Zona: ${order.customer.neighborhood?.name}
+
+  Rastreo de orden 👇🏻
+   ${window.location.origin}/order/${order.orderNumber}
   `;
   const formattedMsg = encodeURIComponent(msg);
 

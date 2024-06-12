@@ -3,6 +3,7 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Order } from "@/types/types";
 import OrderDetails from "@/pages/admin/orders/OrderDetails";
+import { Search } from "lucide-react";
 
 const orderStatusColors = {
   nuevo: "bg-yellow-200",
@@ -135,10 +136,17 @@ function OrdersPage() {
           <div className="relative flex-1 flex flex-col min-h-full border-r border-gray-200 bg-white pt-0">
             <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
               <div className="flex-1 px-3 bg-white divide-y space-y-1">
-                <input
-                  type="text"
-                  onChange={(event) => setOrderToSearch(event.target.value)}
-                />
+                <div className="flex items-center justify-between w-full px-2 py-1 text-sm font-medium text-gray-900 bg-gray-100">
+                  <Search />
+                  <div className="flex flex-col text-start">
+                    <input
+                      type="text"
+                      placeholder="Buscar..."
+                      className="border p-2 rounded-lg text-white"
+                      onChange={(e) => setOrderToSearch(e.target.value)}
+                    />
+                  </div>
+                </div>
                 <ul className="space-y-2 overflow-y-auto h-screen">
                   {filteredOrders?.map((order) => (
                     <li key={order.id}>

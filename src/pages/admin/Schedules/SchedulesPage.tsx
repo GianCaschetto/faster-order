@@ -83,7 +83,9 @@ function SchedulesPage() {
 
   return (
     <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 w-2/3 mt-4 mx-auto">
-      <h2 className="text-3xl font-semibold text-gray-800 text-center mb-4">Horarios</h2>
+      <h2 className="text-3xl font-semibold text-gray-800 text-center mb-4">
+        Horarios
+      </h2>
       <div className="mt-6">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -176,7 +178,13 @@ function SchedulesPage() {
             ))}
           </tbody>
         </table>
-        <button onClick={handleSave}>Guardar</button>
+        <button
+          onClick={handleSave}
+          className="group relative mt-4 h-12 w-48 overflow-hidden rounded-2xl bg-slate-600 text-lg font-bold text-white"
+        >
+          Guardar datos
+          <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
+        </button>{" "}
       </div>
     </div>
   );

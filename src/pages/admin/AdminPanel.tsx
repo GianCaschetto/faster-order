@@ -60,28 +60,29 @@ function AdminPanel() {
     ],
   };
 
-
   const getSalesPerDay = (orders: Order[]): Record<string, number> => {
     let salesPerDay: Record<string, number> = {};
-  
+
     orders.forEach((order) => {
       const day = order.createdAt.toDate().toLocaleDateString();
-  
+
       if (!salesPerDay[day]) {
         salesPerDay[day] = order.total;
       } else {
         salesPerDay[day] += order.total;
       }
     });
-  
+
     salesPerDay = Object.fromEntries(
-      Object.entries(salesPerDay).sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime())
+      Object.entries(salesPerDay).sort(
+        (a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime()
+      )
     );
 
     return salesPerDay;
   };
 
-  const salesPerMonth = getSalesPerDay(orders);
+  const salesPerMonth = getSalesPerDay(orders as Order[]);
 
   const lineLabels = Object.keys(salesPerMonth);
   const lineData = Object.values(salesPerMonth);
@@ -295,8 +296,8 @@ function AdminPanel() {
           </div>
         </div>
       </div>
-      <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 w-1/3 mt-4 ">
-        <div className="mb-4 flex items-center justify-between">
+      <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 mt-4">
+        <div className="mb-4 flex">
           <div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">
               Período de ventas
@@ -307,22 +308,17 @@ function AdminPanel() {
             </span>
           </div>
         </div>
-        <div className="flex flex-col mt-8 ">
+        <div className="flex flex-col">
           <div className="overflow-x-auto rounded-lg">
-            <div className="align-middle inline-block min-w-full">
+            <div className="align-middle min-w-full">
               <div
                 style={{
-                  width: "450px",
-                  height: "225px",
+                  width: "50%",
+                  height: "50%",
                 }}
               >
-                <div
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                >
-                  <LineChart data={{
+                <LineChart
+                  data={{
                     labels: lineLabels,
                     datasets: [
                       {
@@ -333,9 +329,8 @@ function AdminPanel() {
                         tension: 0.1,
                       },
                     ],
-                  
-                  }} />
-                </div>
+                  }}
+                />
               </div>
             </div>
           </div>
