@@ -33,7 +33,7 @@ export function FileDropZone({ multipleFiles, accept }: FileDropZoneProps) {
   const {
     getRootProps,
     getInputProps,
-    isDragActive,
+    //isDragActive,
     // isDragAccept,
     // isDragReject,
   } = useDropzone({

@@ -4,7 +4,7 @@ import { saveAdminData } from "@/services/firebase";
 import { Schedule } from "@/types/types";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import DatePicker, { registerLocale } from "react-datepicker";
+//import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const defaultSchedules: Schedule[] = [

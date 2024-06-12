@@ -1,13 +1,11 @@
 import { useAdmin } from "@/contexts/AdminContext";
 import { db } from "@/services/firebase";
 import { doc, setDoc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function OrdersHistoryPage() {
   //const navigate = useNavigate();
   const { orders } = useAdmin();
-  const navigate = useNavigate();
 
   const removeOrder = (id: string) => {
     const adminDataRef = doc(db, "admin", "data");

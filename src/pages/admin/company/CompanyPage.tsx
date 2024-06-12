@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { saveAdminData } from "@/services/firebase";
@@ -8,9 +9,8 @@ import MediaModal from "../media/MediaModal";
 function CompanyPage() {
   const { adminData: admin } = useAdmin();
   const [isOpenLogo, setIsOpenLogo] = useState(false);
-  const [isOpenIcon, setIsOpenIcon] = useState(false);
   const [logoSelected, setLogoSelected] = useState<string | null>(null);
-  const [iconSelected, setIconSelected] = useState<string | null>(null);
+  const [iconSelected] = useState<string | null>(null);
   const [primaryColor, setPrimaryColor] = useState("");
   const [secondaryColor, setSecondaryColor] = useState("");
 
