@@ -58,7 +58,7 @@ function OrderMessage() {
   return (
     <section className="text-black w-5/6 mx-auto">
       <div className="text-center">
-        <h3 className="text-3xl font-semibold text-gray-800 text-center mb-4">
+        <h3 className="text-3xl font-semibold text-gray-800 text-start mb-4">
           Tokens disponibles
         </h3>
         {
@@ -83,7 +83,7 @@ function OrderMessage() {
                       }}
                     >
                       <button
-                        className="flex hover:scale-105  select-none items-center gap-2 rounded-lg py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase transition-all disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                        className="flex hover:scale-105  select-none items-center gap-2 rounded-lg  px-4 text-center align-middle font-sans text-xs font-bold uppercase transition-all disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         type="button"
                         data-ripple-dark="true"
                         onClick={() => {
