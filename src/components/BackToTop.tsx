@@ -1,8 +1,10 @@
+import { useAdmin } from "@/contexts/AdminContext";
 import { ArrowUp } from "lucide-react";
 import { useEffect, useState } from "react"
 
 
 function BackToTop() {
+    const {adminData} = useAdmin();
     const [showBackToTop, setShowBackToTop] = useState(false);
     const handleScroll = () => {
         if(window.scrollY > 100){
@@ -25,8 +27,12 @@ function BackToTop() {
         <div>
             {showBackToTop && (
                 <button
+                    style={{
+                        backgroundColor: adminData?.colors?.secondary,
+                        color: adminData?.colors?.primary,
+                    }}
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                    className="fixed right-4 bottom-28 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-800"
+                    className="fixed right-4 bottom-28 text-white p-3 rounded-lg"
                 >
                     <ArrowUp />
                 </button>

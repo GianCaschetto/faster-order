@@ -26,7 +26,9 @@ function MediaPage() {
   const handleDeleteSelected = () => {
     const promises = selectedMedia.map((url) => {
       const fileName = mediaList.find((media) => media.url === url)?.name;
-      return fileName ? deleteObject(ref(storage, `products/${fileName}`)) : Promise.resolve();
+      return fileName
+        ? deleteObject(ref(storage, `products/${fileName}`))
+        : Promise.resolve();
     });
 
     Promise.all(promises)
@@ -43,9 +45,11 @@ function MediaPage() {
   return (
     <div>
       <button
-      
-      onClick={() => setShowAddMediaDropzone(!showAddMediaDropzone)}>
-        Agregar un nuevo archivo
+        onClick={() => setShowAddMediaDropzone(!showAddMediaDropzone)}
+        className="group relative mt-4 h-12 w-48 overflow-hidden rounded-2xl bg-slate-600 text-lg font-bold text-white"
+      >
+        Subir archivo
+        <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
       </button>
       {showAddMediaDropzone && (
         <div className="w-full">
@@ -60,8 +64,12 @@ function MediaPage() {
         </div>
       )}
       {selectedMedia.length > 0 && (
-        <button onClick={handleDeleteSelected} className="mt-4">
-          Eliminar archivos seleccionados
+        <button
+          onClick={handleDeleteSelected}
+          className="group relative ml-2 mt-4 h-12 w-48 overflow-hidden rounded-2xl bg-red-700 text-lg font-bold text-white"
+        >
+          Eliminar
+          <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
         </button>
       )}
       {/* Media List */}

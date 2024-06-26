@@ -13,9 +13,8 @@ import {
 import OrderCreated from "../OrderCreated";
 import { toast } from "react-toastify";
 import confetti from "canvas-confetti";
-import { auth, db } from "@/services/firebase";
+import { db } from "@/services/firebase";
 import { Timestamp, addDoc, collection } from "firebase/firestore";
-import { signInAnonymously, signInWithCustomToken } from "firebase/auth";
 import { useAdmin } from "@/contexts/AdminContext";
 
 type CartStepperFormProps = {
@@ -43,6 +42,7 @@ function CartStepperForm({
       ? JSON.parse(customerInfoLocalStorage)
       : ({} as CustomerInfo);
   });
+
   const [order, setOrder] = useState<Order>({
     customer: customerInfo ?? ({} as CustomerInfo),
     orderType: "delivery",
@@ -159,7 +159,7 @@ function CartStepperForm({
 
   const addOrder = async () => {
     await addDoc(collection(db, "orders"), order);
-   
+
     toast.success("Orden creada exitosamente");
     confetti();
   };
@@ -197,47 +197,60 @@ function CartStepperForm({
   }, [cart, customerInfo.neighborhood?.price]);
 
   useEffect(() => {
-    if (currentStep === 2) {
-      const storedUID = localStorage.getItem("firebaseUID");
+    // if (currentStep === 2) {
+    //   const storedUID = localStorage.getItem("firebaseUID");
 
-      if (storedUID) {
-        // If UID exists in local storage, fetch the user using the UID
-        signInWithCustomToken(auth, storedUID)
-          .then(() => {
-            // User signed in successfully
-            toast.success("Sesión iniciada correctamente");
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } else {
-        // If no UID, sign in anonymously
-        signInAnonymously(auth)
-          .then((result) => {
-            // Store the UID in local storage
-            localStorage.setItem("firebaseUID", result.user.uid);
-            setCustomerInfo({
-              ...customerInfo,
-              uid: result.user.uid,
-            });
-            toast.success("Sesión iniciada correctamente por primera vez");
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      }
-    } else if (currentStep === 3) {
+    //   if (storedUID) {
+    //     // If UID exists in local storage, fetch the user using the UID
+    //     signInWithCustomToken(auth, storedUID)
+    //       .then(() => {
+    //         // User signed in successfully
+    //         toast.success("Sesión iniciada correctamente");
+    //       })
+    //       .catch((error) => {
+    //         console.error(error);
+    //       });
+    //   } else {
+    //     // If no UID, sign in anonymously
+    //     signInAnonymously(auth)
+    //       .then((result) => {
+    //         // Store the UID in local storage
+    //         localStorage.setItem("firebaseUID", result.user.uid);
+    //         setCustomerInfo({
+    //           ...customerInfo,
+    //           uid: result.user.uid,
+    //         });
+    //         toast.success("Sesión iniciada correctamente por primera vez");
+    //       })
+    //       .catch((error) => {
+    //         console.error(error);
+    //       });
+    //   }
+
+    if (currentStep === 3) {
       setOrder({
         ...order,
         orderNumber: Math.round(Date.now() * Math.random()),
       });
-
     }
   }, [currentStep]);
 
   useEffect(() => {
     if (order.orderNumber) {
       addOrder();
+      setCart({
+        items: [],
+        totalItems: 0,
+        totalPrice: 0,
+      });
+      window.localStorage.setItem(
+        "cart",
+        JSON.stringify({
+          items: [],
+          totalItems: 0,
+          totalPrice: 0,
+        })
+      );
     }
   }, [order.orderNumber]);
 
@@ -246,12 +259,11 @@ function CartStepperForm({
       {/* Steps */}
       <div className="flex flex-grow items-center w-full border border-slate-500 ">
         <button
-        style={{
-          backgroundColor: adminData?.colors?.primary,
-        
-        }}
+          style={{
+            backgroundColor: adminData?.colors?.primary,
+          }}
           onClick={() => setCurrentStep(currentStep - 1)}
-          disabled={currentStep === 0}
+          disabled={currentStep === 0 || currentStep === 3}
           className={`  bg-blue-500 text-white px-4 py-6 rounded-lg border-r border-gray-300 hover:bg-blue-700 cursor-pointer`}
         >
           <svg
@@ -276,6 +288,7 @@ function CartStepperForm({
           <div
             style={{
               backgroundColor: adminData?.colors?.primary,
+              color: currentStep === index ? adminData?.colors?.secondary ?? "white" : `${adminData?.colors?.secondary}80` ?? "black",
             }}
             key={index}
             className={`${
@@ -310,7 +323,7 @@ function CartStepperForm({
               );
             }
           }}
-          className=" flex justify-center py-6 px-4 hover:bg-red-500"
+          className=" flex justify-center py-6 px-4 bg-red-600 hover:bg-red-800"
         >
           <X color="white" />
         </button>
@@ -322,6 +335,7 @@ function CartStepperForm({
       {currentStep !== 3 && (
         <div className="absolute bottom-0 left-0 right-0">
           <button
+            id="next"
             type="button"
             style={{
               backgroundColor: adminData?.colors?.primary,
@@ -334,11 +348,24 @@ function CartStepperForm({
               } else if (currentStep === 1 && !checkStep1()) {
                 toast.error("Por favor completa los campos");
                 return;
+              } else if (currentStep === 1 && checkStep1()) {
+                // if (auth.currentUser?.phoneNumber === `+58${order.customer?.phone}`) {
+                //   console.log(auth.currentUser);
+                //   setCurrentStep(currentStep + 1);
+                // } else {
+                //   console.log(auth.currentUser);
+                //   signInUserPhone({ phone: order.customer?.phone }).then((user) => {
+                //     if(user){
+                //       setCurrentStep(currentStep + 1);
+                //     }
+                //   });
+                //   return;
+                // }
+                // return;
               } else if (currentStep === 2 && !checkStep2()) {
                 toast.error("Por favor selecciona un metodo de pago");
                 return;
               }
-
               setCurrentStep(currentStep + 1);
             }}
             className={`bg-blue-500 text-white px-4 py-2 rounded-lg w-full border cursor-pointer`}

@@ -34,20 +34,25 @@ function SignInPage() {
   };
 
   return (
-    <div className="bg-gray-100 flex justify-center items-center h-screen">
-      <div className="w-1/2 h-screen hidden lg:block">
-        <NavLink
-          to="/"
-          className="h-full w-full flex justify-center items-center"
+    <div className="bg-gray-100 flex justify-center items-center h-screen ">
+      <NavLink to="/" className="absolute top-10 left-10 flex justify-center items-center ">
+        <svg
+          className="w-6 h-6 text-black"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <img
-            src={adminData?.logo ?? "https://via.placeholder.com/150"}
-            alt="Logo de la empresa"
-            className="object-cover w-auto h-auto"
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
           />
-        </NavLink>
-      </div>
-      <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
+        </svg>
+        <span className="text-black hover:underline">Atrás</span>
+      </NavLink>
+      <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/3 container">
         <h1 className="text-2xl font-semibold mb-4 text-black">
           Iniciar Sesión
         </h1>
@@ -59,7 +64,7 @@ function SignInPage() {
                 type="email"
                 id="email"
                 name="email"
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+                className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
               />
             </div>
             <div className="mb-4">
@@ -68,7 +73,7 @@ function SignInPage() {
                 type="password"
                 id="password"
                 name="password"
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+                className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
               />
             </div>
             <div className="mb-4 flex items-center">
@@ -82,6 +87,7 @@ function SignInPage() {
             </div>
             <div className="mb-6 text-blue-500">
               <button
+              type="button"
                 onClick={() => setShowForgotPassword(true)}
                 className="hover:underline"
               >
@@ -89,6 +95,10 @@ function SignInPage() {
               </button>
             </div>
             <button
+              style={{
+                backgroundColor: adminData?.colors?.primary ?? "#6B46C1",
+                color: adminData?.colors?.secondary ?? "#fff",
+              }}
               type="submit"
               className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
             >
@@ -103,7 +113,7 @@ function SignInPage() {
                 type="email"
                 id="email"
                 name="email"
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+                className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
               />
             </div>
             <div className="mb-6 text-blue-500">
@@ -117,6 +127,10 @@ function SignInPage() {
             <button
               type="submit"
               className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
+              style={{
+                backgroundColor: adminData?.colors?.primary ?? "#6B46C1",
+                color: adminData?.colors?.secondary ?? "#fff",
+              }}
             >
               Restablecer contraseña
             </button>

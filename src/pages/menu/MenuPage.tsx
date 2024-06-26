@@ -5,7 +5,6 @@ import MenuSection from "@/components/sections/MenuSection";
 import BackToTop from "@/components/BackToTop";
 import CartBadge from "@/components/cart/CartBadge";
 import CartSidebar from "@/components/cart/CartSidebar";
-import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import { toast } from "react-toastify";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -104,14 +103,37 @@ function MenuPage() {
   }, [adminData?.schedules]);
 
   return (
-    <div className="transition-colors duration-500"
-    // style={{
-    //   backgroundColor: adminData?.colors?.primary,
-    //   color: adminData?.colors?.secondary
-    // }}
+    <div
+      className="transition-colors duration-500"
+      style={{
+        backgroundColor: adminData?.colors?.primary,
+        color: adminData?.colors?.secondary,
+      }}
     >
-      <div className="min-h-screen md:max-w-5xl max-w-sm  text-center p-4 mx-auto">
-        <Header />
+      <div
+        style={{
+          backgroundColor: adminData?.colors?.secondary,
+          color: adminData?.colors?.primary,
+        }}
+        className="w-full p-16 mx-auto text-center"
+      >
+        <img
+          src={adminData?.logo ?? "https://via.placeholder.com/150"}
+          alt=""
+          className="h-24 object-cover mx-auto"
+        />
+        <h1
+          style={{
+            color: adminData?.colors?.primary,
+          }}
+          className="my-4 text-4xl font-extrabold leading-none tracking-tight  md:text-5xl lg:text-6xl "
+        >
+          {adminData?.companyName ?? "Tu negocio"}{" "}
+        </h1>
+        <p>{adminData?.address ?? ""}</p>
+      </div>
+      <div className="min-h-screen md:max-w-6xl max-w-sm  text-center p-4 mx-auto">
+        {/* <Header /> */}
         <main className="mt-16 ">
           {/* Menu nav */}
           <MenuNav

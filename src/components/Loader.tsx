@@ -1,10 +1,15 @@
+import { useAdmin } from "@/contexts/AdminContext";
+
 function Loader() {
+  const {adminData} = useAdmin();
   return (
     <div className="fixed right-0 left-0 bottom-0 top-0 flex items-center justify-center h-screen bg-black z-50">
-      <div role="status">
+      <div role="status"
+      >
         <svg
           aria-hidden="true"
-          className="inline w-16 h-16 text-red-500 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300"
+       
+          className={`inline w-16 h-16 text-[#${adminData?.colors?.primary}] animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300`}
           viewBox="0 0 100 101"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

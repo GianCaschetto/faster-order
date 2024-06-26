@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useAdmin } from "@/contexts/AdminContext";
+import ReactMarkdown from "react-markdown";
 
 type HistoryMessage = {
   role: "user" | "model";
@@ -10,7 +11,7 @@ type HistoryMessage = {
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
 function CompanyChatAi() {
-  const { orders, adminData } = useAdmin();
+  const { orders } = useAdmin();
   const [historyChat, setHistoryChat] = useState<HistoryMessage[]>(() => {
     const savedHistory = localStorage.getItem("chatHistory");
     return savedHistory ? JSON.parse(savedHistory) : [];
@@ -21,13 +22,32 @@ function CompanyChatAi() {
 
   const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash-latest",
-    systemInstruction: `Eres la empresa con estas ordenes: ${JSON.stringify(
-      orders
-    )}, ten en cuenta la informacion de la empresa ${JSON.stringify(
-      adminData
-    )} responde todo tipo de preguntas`,
-  });
+    systemInstruction: `
+      Estas son las ordenes que han llegado hasta ahora: ${JSON.stringify(orders)}
+      Eres un chatbot que ayuda a las empresas a responder preguntas frecuentes de sus clientes sobre pedidos, envíos, devoluciones y productos.
+      Debes proporcionar respuestas precisas y concisas basadas en las órdenes proporcionadas.
+      Responde solo con la información relevante y necesaria.
+      No proporciones detalles adicionales que no sean solicitados.
 
+      Ejemplos de preguntas y respuestas:
+
+      Pregunta: ¿Cuál es el estado del pedido #12345?
+      Respuesta: El pedido #12345 está en camino.
+
+      Pregunta: ¿Quién es mi cliente más fiel?
+      Respuesta: El cliente más fiel es x.
+
+      Pregunta: ¿Cuál es el producto más vendido?
+      Respuesta: El producto más vendido es x.
+
+  
+
+    `,
+    generationConfig: {
+      temperature: 1,
+      topP: 0.9,
+    },
+  });
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
@@ -76,10 +96,10 @@ function CompanyChatAi() {
           <li key={index} className={`mb-6 flex`}>
             <span
               className={`${
-                message.role === "user" ? "bg-green-200" : "bg-gray-200 ml-auto"
+                message.role === "user" ? "bg-green-200 ml-auto" : "bg-gray-200 "
               } text-black rounded-lg py-2 px-4 break-words inline-block max-w-80`}
             >
-              {message.parts[0].text}
+              <ReactMarkdown>{message.parts[0].text}</ReactMarkdown>
             </span>
           </li>
         ))}
@@ -93,6 +113,28 @@ function CompanyChatAi() {
         <div ref={bottomRef}></div>
       </ul>
       <form onSubmit={handleSubmit} className="flex px-4 py-2 ">
+        {/* Clear chat button */}
+        <button onClick={() =>{
+          window.localStorage.removeItem("chatHistory");
+          window
+        }}>
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="black"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          className="icon icon-tabler icons-tabler-outline icon-tabler-messages-off"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M3 3l18 18" />
+          <path d="M11 11a1 1 0 0 1 -1 -1m0 -3.968v-2.032a1 1 0 0 1 1 -1h9a1 1 0 0 1 1 1v10l-3 -3h-3" />
+          <path d="M14 15v2a1 1 0 0 1 -1 1h-7l-3 3v-10a1 1 0 0 1 1 -1h2" />
+        </svg>
+        </button>
         <input
           type="text"
           placeholder="Escribe un mensaje aquí"

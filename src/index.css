@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light dark;
+ 
+  font-family: 'Roboto', sans-serif;
   scroll-behavior: smooth;
   --primary-color: #000000;
   --secondary-color: #ffffff;

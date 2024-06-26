@@ -4,7 +4,7 @@ import { saveAdminData } from "@/services/firebase";
 import { Schedule } from "@/types/types";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-//import DatePicker, { registerLocale } from "react-datepicker";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const defaultSchedules: Schedule[] = [
@@ -68,6 +68,13 @@ function SchedulesPage() {
     adminData?.schedules ?? defaultSchedules
   );
 
+  const createDateFromTimeString = (timeString: string): Date => {
+    const [hours, minutes] = timeString.split(":").map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0); // Sets hours, minutes, seconds, and milliseconds
+    return date;
+  };
+
   const handleSave = () => {
     if (!schedules.every((schedule) => schedule.open <= schedule.close)) {
       toast.error("La hora de cierre debe ser mayor a la de apertura");
@@ -126,42 +133,47 @@ function SchedulesPage() {
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <input
-                    type="time"
-                    value={schedule.open}
-                    onChange={(e) => {
-                      const updatedSchedules = [...schedules];
-                      updatedSchedules[index].open = e.target.value;
-                      setSchedules(updatedSchedules);
-                    }}
+                  <DatePicker
                     className="w-24 border border-gray-300 rounded-md p-1 text-white"
-                  />
-
-                  {/* <DatePicker
-                    selected={schedule.open}
-                    onChange={(e) => {
+                    selected={createDateFromTimeString(schedule.open)}
+                    onChange={(date) => {
                       const updatedSchedules = [...schedules];
-                      updatedSchedules[index].open = e.target.value;
+                      const hours = date.getHours().toString().padStart(2, "0");
+                      const minutes = date
+                        .getMinutes()
+                        .toString()
+                        .padStart(2, "0");
+                      updatedSchedules[index].open = `${hours}:${minutes}`;
                       setSchedules(updatedSchedules);
                     }}
                     showTimeSelect
                     showTimeSelectOnly
-                    timeIntervals={60}
+                    timeIntervals={1}
                     timeCaption="Hora"
                     dateFormat="HH:mm"
                     placeholderText="Selecciona una hora"
-                  /> */}
+                  />
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <input
-                    type="time"
-                    value={schedule.close}
-                    onChange={(e) => {
+                  <DatePicker
+                    className="w-24 border border-gray-300 rounded-md p-1 text-white"
+                    selected={createDateFromTimeString(schedule.close)}
+                    onChange={(date) => {
                       const updatedSchedules = [...schedules];
-                      updatedSchedules[index].close = e.target.value;
+                      const hours = date.getHours().toString().padStart(2, "0");
+                      const minutes = date
+                        .getMinutes()
+                        .toString()
+                        .padStart(2, "0");
+                      updatedSchedules[index].close = `${hours}:${minutes}`;
                       setSchedules(updatedSchedules);
                     }}
-                    className="w-24 border border-gray-300 rounded-md p-1 text-white"
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={1}
+                    timeCaption="Hora"
+                    dateFormat="HH:mm"
+                    placeholderText="Selecciona una hora"
                   />
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">

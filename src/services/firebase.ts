@@ -79,7 +79,10 @@ const signInAdmin = async ({ email, password }) => {
 
 const signInUserPhone = async ({ phone }) => {
   try {
-    const recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
+    const recaptchaVerifier = new RecaptchaVerifier(auth, "next", {
+      size: "invisible",
+    });
+    let user;
     signInWithPhoneNumber(auth, `+58${phone}`, recaptchaVerifier).then(
       (confirmationResult) => {
         const code = window.prompt("Ingrese el código de verificación");
@@ -87,8 +90,8 @@ const signInUserPhone = async ({ phone }) => {
           .confirm(code ?? "")
           .then((result) => {
             toast.success("Número verificado correctamente");
-            const user = result.user;
-            console.log(user);
+            user = result.user;
+            recaptchaVerifier.clear()
           })
           .catch((error) => {
             toast.error("Error al verificar el número");
@@ -96,7 +99,8 @@ const signInUserPhone = async ({ phone }) => {
           });
       }
     );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return user;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error(error.message);
   }

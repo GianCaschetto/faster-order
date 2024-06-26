@@ -13,7 +13,7 @@ function CartContent({ cart, deleteItem }: CartContentProps) {
         <ul className="h-[800px] overflow-y-auto w-full text-black  ">
           {cart.items?.map((item: ShoppingCartItem) => (
             <li key={item.id}>
-              <div className="py-2 px-4 flex  hover:bg-gray-100 cursor-pointer border-b border-gray-100">
+              <div className="py-2 px-4 flex  hover:bg-gray-100 cursor-pointer border-b border-gray-300">
                 <div className="p-2 w-20">
                   <img src={item.product.image} alt="imagen del producto" />
                 </div>
@@ -22,7 +22,7 @@ function CartContent({ cart, deleteItem }: CartContentProps) {
                     {item.quantity} x {item.product.name}
                   </div>
                   <div className="truncate">
-                    <ul className="text-end">
+                    <ul className="ml-4 text-start">
                       {item.extras?.map((extra) => (
                         <li key={extra.id}>
                           {extra.qty} x {extra.name}
@@ -55,12 +55,12 @@ function CartContent({ cart, deleteItem }: CartContentProps) {
                     </svg>
                   </div>
                   <div className="text-lg">
-                    {(item.product.price +
+                    {((item.product.price +
                       (item.extras?.reduce(
                         (acc, extra) => acc + extra.price * (extra.qty ?? 0),
                         0
                       ) ?? 0)) *
-                      item.quantity}
+                      item.quantity).toFixed(2)}
                     $
                   </div>
                 </div>

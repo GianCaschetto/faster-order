@@ -135,7 +135,7 @@ function ProductsRegister() {
               <img
                 src={imageSelected}
                 alt="product"
-                className="w-full h-32 object-cover rounded-md"
+                className="h-32 object-cover rounded-md"
               />
             )}
             <button
@@ -143,9 +143,11 @@ function ProductsRegister() {
               onClick={() => {
                 setIsOpen(true);
               }}
+              className="text-black underline hover:text-blue-500 text-sm font-medium mt-2 block"
             >
-              Elegir
+              Elegir foto
             </button>
+            
             <MediaModal
               isOpen={isOpen}
               onClose={() => setIsOpen(false)}

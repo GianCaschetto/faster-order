@@ -184,7 +184,7 @@ function ProductEdit() {
               htmlFor="photo"
               className="mb-3 block text-base font-medium text-[#07074D]"
             >
-              Foto
+              Foto principal
             </label>
             <div className="w-3/4">
               {productData.image && (
@@ -200,8 +200,9 @@ function ProductEdit() {
               onClick={() => {
                 setIsOpen(true);
               }}
+              className="text-black underline hover:text-blue-500 text-sm font-medium mt-2 block"
             >
-              Elegir
+              Elegir foto principal
             </button>
             <MediaModal
               isOpen={isOpen}

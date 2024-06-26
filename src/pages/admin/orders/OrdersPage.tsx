@@ -1,9 +1,10 @@
 import { useAdmin } from "@/contexts/AdminContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Order } from "@/types/types";
 import OrderDetails from "@/pages/admin/orders/OrderDetails";
-import { Search } from "lucide-react";
+import Lottie from "react-lottie";
+import searchAnimation from "@/assets/lotties/search.json";
 
 const orderStatusColors = {
   nuevo: "bg-yellow-200",
@@ -18,12 +19,15 @@ function OrdersPage() {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [orderSelected, setOrderSelected] = useState<Order | null>(null);
   const [orderToSearch, setOrderToSearch] = useState<string>("");
+  const [ordersWithoutCancelled, setOrdersWithoutCancelled] = useState<
+    Order[] | null
+  >(null);
   const { orders, adminData } = useAdmin();
 
   const filteredOrders =
     orderToSearch === ""
-      ? orders
-      : orders?.filter((order) => {
+      ? ordersWithoutCancelled
+      : ordersWithoutCancelled?.filter((order) => {
           return (
             order.customer.name
               .toLowerCase()
@@ -37,6 +41,46 @@ function OrdersPage() {
               .includes(orderToSearch)
           );
         });
+
+  useEffect(() => {
+    //Filter the orders that are not cancelled or finished
+    const owc = orders?.filter((order) => {
+      return order.status !== "cancelado" && order.status !== "finalizado";
+    });
+
+    //Sort by status
+    owc?.sort((a, b) => {
+      if (a.status === "nuevo") {
+        return -1;
+      }
+      if (a.status === "en proceso" && b.status === "nuevo") {
+        return 1;
+      }
+      if (a.status === "enviado" && b.status === "nuevo") {
+        return 1;
+      }
+      if (a.status === "enviado" && b.status === "en proceso") {
+        return 1;
+      }
+      if (a.status === "entregado" && b.status === "nuevo") {
+        return 1;
+      }
+      if (a.status === "entregado" && b.status === "en proceso") {
+        return 1;
+      }
+      if (a.status === "entregado" && b.status === "enviado") {
+        return 1;
+      }
+      if (a.status === "finalizado") {
+        return 1;
+      }
+      if (a.status === "cancelado") {
+        return 1;
+      }
+      return 0;
+    });
+    setOrdersWithoutCancelled(owc as Order[]);
+  }, [orders]);
 
   return (
     <div>
@@ -100,9 +144,29 @@ function OrdersPage() {
                 </NavLink>
                 <NavLink
                   to="/admin-panel"
-                  className="text-sm font-bold flex items-center lg:ml-2.5 active:text-black"
+                  className="text-sm font-bold flex items-center lg:ml-2.5 active:text-black
+                  
+                  "
                 >
-                  <span className="self-center whitespace-nowrap text-black">
+                  <span className="hitespace-nowrap text-black flex items-center hover:underline ">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      className="mr-2 icon icon-tabler icons-tabler-outline icon-tabler-layout-dashboard"
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M5 4h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" />
+                      <path d="M5 16h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" />
+                      <path d="M15 12h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" />
+                      <path d="M15 4h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" />
+                    </svg>
                     Panel de administración
                   </span>
                 </NavLink>
@@ -137,12 +201,11 @@ function OrdersPage() {
             <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
               <div className="flex-1 px-3 bg-white divide-y space-y-1">
                 <div className="flex items-center justify-between w-full px-2 py-1 text-sm font-medium text-gray-900 bg-gray-100">
-                  <Search />
                   <div className="flex flex-col text-start">
                     <input
                       type="text"
                       placeholder="Buscar..."
-                      className="border p-2 rounded-lg text-white"
+                      className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                       onChange={(e) => setOrderToSearch(e.target.value)}
                     />
                   </div>
@@ -166,8 +229,13 @@ function OrdersPage() {
                         <div
                           className={`text-xs ${
                             orderStatusColors[order.status]
-                          } px-2 rounded-full
-                        }`}
+                          } px-2 py-1 rounded-lg font-bold uppercase ${
+                            order.status.toLowerCase() === "cancelado" &&
+                            "line-through"
+                          } ${
+                            order.status.toLowerCase() === "finalizado" &&
+                            "line-through"
+                          }`}
                         >
                           {order.status.toString().toUpperCase()}
                         </div>
@@ -180,12 +248,23 @@ function OrdersPage() {
           </div>
         </aside>
 
-        <div id="main-content" className="h-screen w-full bg-gray-50">
+        <div id="main-content" className="h-full w-full  relative">
           <div className="text-gray-900 w-full relative">
             {orderSelected ? (
               <OrderDetails orderSelected={orderSelected} />
             ) : (
-              "Selecciona una orden"
+              <div className="flex flex-col items-center justify-center h-full w-1/3 mx-auto">
+                <h2 className="text-2xl font-bold text-gray-700 mt-4">
+                  Selecciona o crea una orden
+                </h2>
+                <Lottie
+                  options={{
+                    loop: true,
+                    autoplay: true,
+                    animationData: searchAnimation,
+                  }}
+                />
+              </div>
             )}
           </div>
         </div>

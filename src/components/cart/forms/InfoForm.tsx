@@ -40,6 +40,7 @@ function InfoForm({
     setCustomerInfo({
       ...customerInfo,
       name: nameRef.current.value,
+      
     });
   };
 
@@ -73,47 +74,6 @@ function InfoForm({
     });
   };
 
-  // useEffect(() => {
-  //   const storedUID = localStorage.getItem("firebaseUID");
-
-  //   if (storedUID) {
-  //     // If UID exists in local storage, fetch the user using the UID
-  //     signInWithCustomToken(auth, storedUID)
-  //       .then(() => {
-  //         // User signed in successfully
-  //         toast.success("Sesión iniciada correctamente");
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   } else {
-  //     // If no UID, sign in anonymously
-  //     signInAnonymously(auth)
-  //       .then((result) => {
-  //         // Store the UID in local storage
-  //         localStorage.setItem("firebaseUID", result.user.uid);
-  //         setCustomerInfo({
-  //           ...customerInfo,
-  //           uid: result.user.uid,
-  //         });
-  //         toast.success("Sesión iniciada correctamente por primera vez");
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   }
-
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       setCustomerInfo({
-  //         ...customerInfo,
-  //         uid: user.uid,
-  //       });
-  //     }
-  //   });
-
-  //   return () => unsubscribe();
-  // }, []);
 
   useEffect(() => {
     setOrder({
@@ -132,22 +92,24 @@ function InfoForm({
   return (
     <form className="mt-6 px-6">
       <h2 className="text-2xl font-bold text-black">Información de contacto</h2>
-      <div className="flex justify-around text-black my-4">
+      <div className="flex justify-around gap-6 text-black my-4">
         <div
-          className="cursor-pointer bg-slate-600 py-2 px-4 rounded-xl text-white hover:bg-slate-300/40 hover:text-slate-800" 
+          className="flex justify-center items-center group cursor-pointer relative h-12 w-32 overflow-hidden rounded-2xl bg-slate-600 text-lg font-bold text-white"
           onClick={() => setOrderType("delivery")}
         >
           Delivery
+          <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
         </div>
         <div
-          className="cursor-pointer bg-slate-600 py-2 px-4 rounded-xl text-white hover:bg-slate-300/40 hover:text-slate-800" 
           onClick={() => setOrderType("pickup")}
+          className="flex justify-center items-center group cursor-pointer relative h-12 w-32 overflow-hidden rounded-2xl bg-slate-600 text-lg font-bold text-white"
         >
-          Pickup
+          Pickup{" "}
+          <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
         </div>
       </div>
       <div className="flex flex-col">
-        <label htmlFor="name" className="text-left text-black">
+        <label htmlFor="name" className="text-left text-black mt-1">
           Nombre
         </label>
         <input
@@ -157,11 +119,11 @@ function InfoForm({
           name="name"
           value={customerInfo.name}
           onChange={handleName}
-          className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+          className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
         />
       </div>
       <div className="flex flex-col">
-        <label htmlFor="phone" className="text-left text-black">
+        <label htmlFor="phone" className="text-left text-black mt-1">
           Teléfono
         </label>
         <input
@@ -171,13 +133,13 @@ function InfoForm({
           name="phone"
           value={customerInfo.phone}
           onChange={handlePhone}
-          className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+          className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
         />
       </div>
       {orderType === "delivery" && (
         <>
           <div className="flex flex-col">
-            <label htmlFor="address" className="text-left text-black">
+            <label htmlFor="address" className="text-left text-black mt-1">
               Dirección
             </label>
             <input
@@ -187,12 +149,12 @@ function InfoForm({
               name="address"
               value={customerInfo.address ?? ""}
               onChange={handleAddress}
-              className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
             />
           </div>
-          <div className="flex flex-col text-black">
+          <div className="flex flex-col text-black mt-1">
             <label htmlFor="neighborhood" className="text-left">
-              Barrio
+              Zona
             </label>
             <select
               ref={neighborhoodRef}
@@ -200,7 +162,7 @@ function InfoForm({
               id="neighborhood"
               value={customerInfo.neighborhood?.name}
               onChange={handleNeighborhood}
-              className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
             >
               <option value="">Seleccione un barrio</option>
               {neighborhoods?.map((neighborhood) => (

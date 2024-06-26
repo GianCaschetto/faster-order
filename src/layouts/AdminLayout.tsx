@@ -311,7 +311,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                             <path d="M19 16v6" />
                           </svg>
                           <span className="ml-3 flex-1 whitespace-nowrap">
-                            Extras
+                            Agregados
                           </span>
                         </NavLink>
                       </li>

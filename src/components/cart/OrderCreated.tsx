@@ -119,49 +119,25 @@ function OrderCreated({ order }: OrderCreatedProps) {
   };
 
   return (
-    <div className="text-start">
-      {/* Show the order */}
-      <h1>Orden creada</h1>
-      <p>Orden: {order.orderNumber}</p>
-      <p>Contenido de la orden</p>
-      <ul>
-        {order.items.map((item) => (
-          <li key={item.product.id}>
-            {item.quantity} x {item.product.name}
-            {item.extras?.map((extra) => (
-              <p key={extra.id}>
-                {extra.qty} x {extra.name}: {extra.price}
-              </p>
-            ))}
-            <p>
-              Precio del {item.product.name}: {item.price}
-            </p>
-          </li>
-        ))}
-      </ul>
-      <p>Cliente: {order.customer.name}</p>
-      <p>Telefono: {order.customer.phone}</p>
-      <p>Dirección: {order.customer.address}</p>
-      <p>Barrio: {order.customer.neighborhood?.name}</p>
-      <p>Estado: {order.status}</p>
-      <p>Metodo de pago: {order.paymentMethod}</p>
-      <p>Tipo de orden: {order.orderType}</p>
-      <p>Subtotal: {order.subtotal}</p>
-      <p>Gastos de envío: {order.delivertyPrice}</p>
-      <p>Total: {order.total}</p>
-      <p>
-        Total en bs:
-        {(order.total * tasaBCV.price).toFixed(2)}
+    <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 w-2/3 mt-4 mx-auto">
+      <h2 className="text-3xl font-semibold text-gray-800 text-center mb-4">
+        Orden creada
+      </h2>
+      <p className="text-center text-lg text-gray-800">
+        Tu número de orden es: <span className="font-semibold">{order.orderNumber}</span>
       </p>
-
-      <div className="flex flex-col">
-        <button onClick={sendWhatsapp}>Envia tu pedido por whatsapp</button>
+      <div className="flex flex-col justify-center gap-4 mt-4">
         <button
-          onClick={() => {
-            navigate(`/order/${order.orderNumber}`);
-          }}
+          onClick={() => navigate("/order/" + order.orderNumber, { replace: true })}
+          className="bg-gray-200 text-gray-800 text-lg font-semibold px-4 py-2 rounded-lg"
         >
-          Rastreo de orden
+          Rastrear Orden
+        </button>
+        <button
+          onClick={sendWhatsapp}
+          className="bg-[#25d366] text-white text-lg font-semibold px-4 py-2 rounded-lg"
+        >
+          Enviar por Whatsapp
         </button>
       </div>
     </div>

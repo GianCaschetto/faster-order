@@ -106,10 +106,10 @@ function ProductsPage() {
                   onClick={() => navigate(`/admin-panel/products/edit-product/${product.id}`)}
                   className="text-blue-400 hover:text-blue-600 underline"
                 >
-                  Edit
+                  Editar
                 </button>
                 <button className="text-blue-400 hover:text-blue-600 underline pl-6" onClick={()=> removeProduct(product.id)}>
-                  Remove
+                  Eliminar
                 </button>
               </td>
             </tr>

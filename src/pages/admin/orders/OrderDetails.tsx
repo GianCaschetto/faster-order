@@ -26,7 +26,7 @@ function OrderDetails({ orderSelected }: OrderDetailsProps) {
   }, [statusSelected]);
 
   return (
-    <div className="bg-gray-200">
+    <div className="bg-gray-100 h-full w-full relative">
       <OrderToPrint orderSelected={orderSelected} />
 
       <div className=" fixed right-0 top-48 bottom-48 text-white text-sm h-auto bg-orange-500 ">

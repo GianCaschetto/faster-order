@@ -2,6 +2,7 @@ import { useAdmin } from "@/contexts/AdminContext";
 import { db } from "@/services/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
+import { NavLink } from "react-router-dom";
 
 function OrdersHistoryPage() {
   //const navigate = useNavigate();
@@ -53,6 +54,9 @@ function OrdersHistoryPage() {
               Status
             </th>
             <th className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
+              Número de orden
+            </th>
+            <th className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
               Acciones
             </th>
           </tr>
@@ -86,6 +90,18 @@ function OrdersHistoryPage() {
                   Status
                 </span>
                 {order.status}
+              </td>
+              <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
+                <NavLink
+                  target="_blank"
+                  className="underline text-blue-400 hover:text-blue-600"
+                  to={`/order/${order.orderNumber}`}
+                >
+                  <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase ">
+                    Número de orden
+                  </span>
+                  {order.orderNumber}
+                </NavLink>
               </td>
 
               <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">

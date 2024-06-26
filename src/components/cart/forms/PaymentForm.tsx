@@ -10,8 +10,6 @@ type PaymentProps = {
 function PaymentForm({ order, setOrder }: PaymentProps) {
   const { adminData } = useAdmin();
   const [paymentMethods, setPaymentMethods] = useState<string[]>([]);
-  // const { tasaBCV } = useCurrency();
-
   const [paymentMethodSelected, setPaymentMethodSelected] =
     useState<string>("");
 
@@ -29,39 +27,79 @@ function PaymentForm({ order, setOrder }: PaymentProps) {
   }, [adminData?.paymentMethods]);
 
   return (
-    <div>
-      <form action="" className="mt-6 px-6">
+    <div className="p-6 bg-white rounded-lg shadow-md">
+      <form action="">
         <section className="flex flex-col text-black">
-          <h3 className="text-2xl font-bold text-black">Metodo de pago</h3>
-          <div className="flex flex-col overflow-y-auto">
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">
+            Método de pago
+          </h3>
+          <div className="grid grid-cols-1 gap-4">
             {paymentMethods.map((method) => (
-              <label key={method}>
+              <label
+                key={method}
+                className={`flex items-center  justify-between p-4 border-2 rounded-lg cursor-pointer ${
+                  paymentMethodSelected === method
+                    ? "border-green-600"
+                    : "border-gray-300"
+                }`}
+                onClick={() => setPaymentMethodSelected(method)}
+              >
                 <input
-                
                   type="radio"
                   name="paymentMethod"
                   value={method}
                   checked={paymentMethodSelected === method}
                   onChange={(e) => setPaymentMethodSelected(e.target.value)}
+                  className="hidden"
                 />
-                {method}
+                <span className="text-gray-700">{method}</span>
+                {paymentMethodSelected === method && (
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="green"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    className="icon icon-tabler icons-tabler-outline icon-tabler-circle-check"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                    <path d="M9 12l2 2l4 -4" />
+                  </svg>
+                )}
               </label>
             ))}
           </div>
         </section>
       </form>
+
       {/* Total */}
       {order.orderType === "delivery" && (
-        <div className="text-black">
-          <p>Subtotal: {order.subtotal}</p>
-          <p>Gastos de envío: {order.delivertyPrice}</p>
-          <p>Total: {order.total}</p>
+        <div className="text-black mt-6">
+          <p className="text-lg">
+            Subtotal: <span className="font-semibold">{order.subtotal}</span>
+          </p>
+          <p className="text-lg">
+            Gastos de envío:{" "}
+            <span className="font-semibold">{order.delivertyPrice}</span>
+          </p>
+          <p className="text-lg">
+            Total: <span className="font-semibold">{order.total}</span>
+          </p>
         </div>
       )}
 
       {order.orderType === "pickup" && (
-        <div>
-          <p>Total: {parseFloat(order.total.toFixed(2))}</p>
+        <div className="text-black mt-6">
+          <p className="text-lg">
+            Total:{" "}
+            <span className="font-semibold">
+              {parseFloat(order.total.toFixed(2))}
+            </span>
+          </p>
         </div>
       )}
     </div>

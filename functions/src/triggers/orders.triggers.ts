@@ -3,7 +3,7 @@ import * as functions from "firebase-functions";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(functions.config().gemini.api_key);
-const model = genAI.getGenerativeModel({ model: "embedding-001" });
+// const model = genAI.getGenerativeModel({ model: "embedding-001" });
 
 export const onCreateOrder = functions.firestore
   .document("orders/{orderId}")
@@ -13,13 +13,14 @@ export const onCreateOrder = functions.firestore
         console.log("No data associated with the event");
         return;
       }
-      const data = snapshot.data();
+      // const data = snapshot.data();
       const createdAt = FieldValue.serverTimestamp();
-      const orderText = JSON.stringify(data);
-      const result = await model.embedContent(orderText);
-      const embedding = result.embedding.values;
+      // const orderText = JSON.stringify(data);
+      // const result = await model.embedContent(orderText);
+      // const embedding = result.embedding.values;
       const orderRef = snapshot.ref;
-      await orderRef.update({ embedding, createdAt });
+      // await orderRef.update({ embedding, createdAt });
+      await orderRef.update({ createdAt });
     } catch (error) {
       console.error("Error updating order", error);
     }
