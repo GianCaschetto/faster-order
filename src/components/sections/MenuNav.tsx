@@ -71,8 +71,8 @@ function MenuNav({
               <a
                 href={`#${category.name}`}
                 style={{
-                  backgroundColor: adminData?.colors?.primary,
-                  color: adminData?.colors?.secondary,
+                  backgroundColor: adminData?.colors?.secondary,
+                  color: adminData?.colors?.primary,
                 }}
                 className="p-2 bg-blue-500 rounded-xl hover:bg-blue-700"
               >

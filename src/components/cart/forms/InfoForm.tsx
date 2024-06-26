@@ -46,7 +46,7 @@ function InfoForm({
 
   const handlePhone = () => {
     //Regex para validar el número de teléfono
-    const phoneRegex = /^[0-9]{0,11}$/;
+    const phoneRegex = /^[0-9]{0,10}$/;
     if (!phoneRegex.test(phoneRef.current.value)) {
       return;
     }
@@ -131,6 +131,7 @@ function InfoForm({
           type="text"
           id="phone"
           name="phone"
+          placeholder="Ej: 4121234567"
           value={customerInfo.phone}
           onChange={handlePhone}
           className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"

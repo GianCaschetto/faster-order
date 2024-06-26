@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CartContent from "../CartContent";
 import InfoForm from "./InfoForm";
 import PaymentForm from "./PaymentForm";
@@ -13,9 +13,10 @@ import {
 import OrderCreated from "../OrderCreated";
 import { toast } from "react-toastify";
 import confetti from "canvas-confetti";
-import { db } from "@/services/firebase";
+import { auth, db } from "@/services/firebase";
 import { Timestamp, addDoc, collection } from "firebase/firestore";
 import { useAdmin } from "@/contexts/AdminContext";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
 type CartStepperFormProps = {
   cart: ShoppingCart;
@@ -54,7 +55,7 @@ function CartStepperForm({
     total: 0,
     createdAt: Timestamp.now(),
   });
-
+  const recaptchaVerifierRef = useRef<RecaptchaVerifier | null>(null);
   const steps = [
     {
       label: "Carrito",
@@ -164,23 +165,45 @@ function CartStepperForm({
     confetti();
   };
 
-  // useEffect(() => {
-  //   const fetchCustomerInfo = async () => {
-  //     const customerInfoRef = doc(db, `users/${auth.currentUser?.uid}`);
-  //     const customerInfoSnap = await getDoc(customerInfoRef);
-  //     if (customerInfoSnap.exists()) {
-  //       setCustomerInfo(customerInfoSnap.data() as CustomerInfo);
-  //     } else {
-  //       setCustomerInfo({
-  //         name: "",
-  //         phone: "",
-  //         address: null,
-  //         neighborhood: null,
-  //       } as CustomerInfo);
-  //     }
-  //   };
-  //   fetchCustomerInfo();
-  // }, [auth.currentUser?.uid]);
+  const phoneVerifier = async () => {
+    if (auth.currentUser?.phoneNumber === `+58${order.customer?.phone}`) {
+      console.log(auth.currentUser)
+      setCurrentStep(currentStep + 1);
+      return;
+    } else {
+      try {
+        if (recaptchaVerifierRef.current) {
+          const confirmationResult = await signInWithPhoneNumber(
+            auth,
+            `+58${order.customer?.phone}`,
+            recaptchaVerifierRef.current
+          );
+          const code = window.prompt("Ingrese el código de verificación");
+          if (code) {
+            await confirmationResult.confirm(code);
+            console.log("Número verificado correctamente");
+            toast.success("Número verificado correctamente");
+            setCurrentStep(currentStep + 1);
+          }
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        toast.error("Error al verificar el número");
+        console.error(error.message);
+        if (recaptchaVerifierRef.current) {
+          recaptchaVerifierRef.current.clear(); // Limpiar Recaptcha en caso de error
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!recaptchaVerifierRef.current) {
+      recaptchaVerifierRef.current = new RecaptchaVerifier(auth, "next", {
+        size: "invisible",
+      });
+    }
+  }, []);
 
   useEffect(() => {
     setOrder({
@@ -197,36 +220,6 @@ function CartStepperForm({
   }, [cart, customerInfo.neighborhood?.price]);
 
   useEffect(() => {
-    // if (currentStep === 2) {
-    //   const storedUID = localStorage.getItem("firebaseUID");
-
-    //   if (storedUID) {
-    //     // If UID exists in local storage, fetch the user using the UID
-    //     signInWithCustomToken(auth, storedUID)
-    //       .then(() => {
-    //         // User signed in successfully
-    //         toast.success("Sesión iniciada correctamente");
-    //       })
-    //       .catch((error) => {
-    //         console.error(error);
-    //       });
-    //   } else {
-    //     // If no UID, sign in anonymously
-    //     signInAnonymously(auth)
-    //       .then((result) => {
-    //         // Store the UID in local storage
-    //         localStorage.setItem("firebaseUID", result.user.uid);
-    //         setCustomerInfo({
-    //           ...customerInfo,
-    //           uid: result.user.uid,
-    //         });
-    //         toast.success("Sesión iniciada correctamente por primera vez");
-    //       })
-    //       .catch((error) => {
-    //         console.error(error);
-    //       });
-    //   }
-
     if (currentStep === 3) {
       setOrder({
         ...order,
@@ -260,7 +253,8 @@ function CartStepperForm({
       <div className="flex flex-grow items-center w-full border border-slate-500 ">
         <button
           style={{
-            backgroundColor: adminData?.colors?.primary,
+            backgroundColor: adminData?.colors?.secondary,
+            color: adminData?.colors?.primary,
           }}
           onClick={() => setCurrentStep(currentStep - 1)}
           disabled={currentStep === 0 || currentStep === 3}
@@ -288,7 +282,10 @@ function CartStepperForm({
           <div
             style={{
               backgroundColor: adminData?.colors?.primary,
-              color: currentStep === index ? adminData?.colors?.secondary ?? "white" : `${adminData?.colors?.secondary}80` ?? "black",
+              color:
+                currentStep === index
+                  ? adminData?.colors?.secondary ?? "white"
+                  : `${adminData?.colors?.secondary}80` ?? "black",
             }}
             key={index}
             className={`${
@@ -338,7 +335,8 @@ function CartStepperForm({
             id="next"
             type="button"
             style={{
-              backgroundColor: adminData?.colors?.primary,
+              backgroundColor: adminData?.colors?.secondary,
+              color: adminData?.colors?.primary,
             }}
             onClick={() => {
               if (currentStep === 0 && cart.items.length === 0) {
@@ -349,19 +347,7 @@ function CartStepperForm({
                 toast.error("Por favor completa los campos");
                 return;
               } else if (currentStep === 1 && checkStep1()) {
-                // if (auth.currentUser?.phoneNumber === `+58${order.customer?.phone}`) {
-                //   console.log(auth.currentUser);
-                //   setCurrentStep(currentStep + 1);
-                // } else {
-                //   console.log(auth.currentUser);
-                //   signInUserPhone({ phone: order.customer?.phone }).then((user) => {
-                //     if(user){
-                //       setCurrentStep(currentStep + 1);
-                //     }
-                //   });
-                //   return;
-                // }
-                // return;
+                phoneVerifier();
               } else if (currentStep === 2 && !checkStep2()) {
                 toast.error("Por favor selecciona un metodo de pago");
                 return;
