@@ -2,18 +2,25 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { routes } from "./routes";
 import { useAuth } from "@/contexts/AuthContext";
+import Loader from "@/components/Loader";
 
 type ProtectedRouteProps = { children: React.ReactNode };
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const navigate = useNavigate();
-  const { user, userProfile } = useAuth();
+  const { user, userProfile, loadingUserProfile } = useAuth();
 
   useEffect(() => {
-    if (!userProfile?.roles?.admin && !user) {
-      navigate(routes.home);
+    if (!loadingUserProfile) {
+      if (user?.email !== "ujaptesis@gmail.com") {
+        navigate(routes.home);
+      }
     }
-  }, [user, navigate, userProfile?.roles?.admin]);
+  }, [userProfile, loadingUserProfile, navigate]);
+
+  if (loadingUserProfile) {
+    return <Loader />;
+  }
 
   return <>{children}</>;
 }

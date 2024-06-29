@@ -140,7 +140,7 @@ function CompanyChatAi() {
           placeholder="Escribe un mensaje aquí"
           value={inputValue}
           onChange={handleInputChange}
-          className="flex-grow py-2 px-4 rounded-full border text-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          className="flex-grow py-2 px-4 rounded-full border text-black border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         />
         <button
           type="submit"

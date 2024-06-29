@@ -34,21 +34,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   useEffect(() => {
-    if (!user) {
-      setUserProfile(null);
-      setLoadingUserProfile(false);
-      return;
-    }
-
-    const fetchUserProfile = async () => {
-      setLoadingUserProfile(true);
-      const userProfileDoc = doc(db, "users", user.uid);
-      const userProfileSnapshot = await getDoc(userProfileDoc);
-      setUserProfile(userProfileSnapshot.data() as DocumentData | null);
-      setLoadingUserProfile(false);
+    const getUserProfile = async () => {
+      if (authInitialized && user) {
+        try {
+          const docRef = doc(db, `users/${user.uid}`);
+          const docSnap = await getDoc(docRef);
+          setUserProfile(docSnap.exists() ? docSnap.data() : null);
+        } catch (error) {
+          console.error("Error getting document:", error);
+        } finally {
+          setLoadingUserProfile(false);
+        }
+      } else {
+        setUserProfile(null);
+        setLoadingUserProfile(false);
+      }
     };
 
-    fetchUserProfile
+    getUserProfile();
   }, [user, authInitialized]);
 
   if (!authInitialized || loadingUserProfile) {

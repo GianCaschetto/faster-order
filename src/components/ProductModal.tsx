@@ -43,10 +43,8 @@ function ProductModal({
   return (
     <div className="z-10 fixed h-screen top-0 left-0 right-0 bg-black bg-opacity-50 flex justify-center items-center py-6">
       <div
-        style={{
-          backgroundColor: adminData?.colors?.primary,
-        }}
-        className="dark:bg-white dark:text-black bg-slate-900 text-white p-4 flex flex-col lg:w-1/3 w-3/4 h-full relative rounded-xl"
+        style={{ backgroundColor: adminData?.colors?.secondary }}
+        className="  text-white p-4 flex flex-col lg:w-1/3 w-3/4 h-full relative rounded-xl"
       >
         <div className="flex justify-between items-center w-full">
           <button onClick={toggleShowModal}>
@@ -66,12 +64,18 @@ function ProductModal({
               <div key={extra.id} className="my-4">
                 <h3 className="text-lg font-bold">{extra.title}</h3>
                 {extra.items.map((item) => (
-                  <div key={item.id} className="flex justify-between items-center mt-1">
+                  <div
+                    key={item.id}
+                    className="flex justify-between items-center mt-1"
+                  >
                     <p>{item.name}</p>
                     {selectedExtras.some((extra) => extra.id === item.id) && (
                       <select
                         onChange={(e) =>
-                          handleExtraQuantityChange(item.id, Number(e.target.value))
+                          handleExtraQuantityChange(
+                            item.id,
+                            Number(e.target.value)
+                          )
                         }
                       >
                         <option value="1">1</option>
@@ -83,7 +87,9 @@ function ProductModal({
                     )}
                     <input
                       type="checkbox"
-                      checked={selectedExtras.some((extra) => extra.id === item.id)}
+                      checked={selectedExtras.some(
+                        (extra) => extra.id === item.id
+                      )}
                       onChange={() => handleExtraSelection(item)}
                     />
                   </div>
@@ -101,6 +107,7 @@ function ProductModal({
               addToCart(product, selectedExtras, counter);
               toggleShowModal();
             }}
+            style={{ backgroundColor: adminData?.colors?.primary, color: adminData?.colors?.secondary}}
             className="md:ml-4 bg-blue-600 text-white p-2 rounded-lg mt-2 w-full hover:bg-blue-800"
           >
             Agregar al carrito

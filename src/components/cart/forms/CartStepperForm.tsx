@@ -188,11 +188,10 @@ function CartStepperForm({
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
+        recaptchaVerifierRef.current?.clear();
         toast.error("Error al verificar el número");
         console.error(error.message);
-        if (recaptchaVerifierRef.current) {
-          recaptchaVerifierRef.current.clear(); // Limpiar Recaptcha en caso de error
-        }
+        
       }
     }
   };
@@ -348,6 +347,7 @@ function CartStepperForm({
                 return;
               } else if (currentStep === 1 && checkStep1()) {
                 phoneVerifier();
+                return;
               } else if (currentStep === 2 && !checkStep2()) {
                 toast.error("Por favor selecciona un metodo de pago");
                 return;
