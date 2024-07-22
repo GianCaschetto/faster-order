@@ -26,8 +26,16 @@ function CompanyPage() {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const data = Object.fromEntries(formData.entries());
-    const { companyName, whatsapp, email, categories, payments, address } = data;
-    if (!companyName || !whatsapp || !categories || !email || !payments || !address) {
+    const { companyName, whatsapp, email, categories, payments, address } =
+      data;
+    if (
+      !companyName ||
+      !whatsapp ||
+      !categories ||
+      !email ||
+      !payments ||
+      !address
+    ) {
       toast.error("Todos los campos son obligatorios");
       return;
     }
@@ -50,7 +58,7 @@ function CompanyPage() {
       .filter((payment: string) => payment.trim() !== "");
     saveAdminData({
       ...data,
-      address: address as string ?? admin?.address,
+      address: (address as string) ?? admin?.address,
       logo: logoSelected ?? admin?.logo,
       icon: iconSelected ?? admin?.icon,
       categories: categoriesFormatted,
@@ -144,7 +152,6 @@ function CompanyPage() {
               <span className="text-gray-500">
                 Este campo se muestra en la parte superior del catálogo
               </span>
-           
             </div>
             <div className="mb-5">
               <label
@@ -230,14 +237,13 @@ function CompanyPage() {
                     </svg>
                   </button>
                 </div>
-                {logoSelected ||
-                  (admin?.logo && (
-                    <img
-                      src={logoSelected ?? admin?.logo}
-                      alt="logo de la empresa"
-                      className="w-auto h-24 object-cover rounded-md"
-                    />
-                  ))}
+                {(admin?.logo && (
+                  <img
+                    src={logoSelected ?? admin?.logo}
+                    alt="logo de la empresa"
+                    className="w-auto h-24 object-cover rounded-md drop-shadow-md"
+                  />
+                ))}
 
                 <MediaModal
                   isOpen={isOpenLogo}

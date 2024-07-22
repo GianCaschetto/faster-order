@@ -6,11 +6,13 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import MediaModal from "../media/MediaModal";
+import { useImageUrl } from "@/hooks/useImage";
 
 function ProductEdit() {
   const [productData, setProductData] = useState<Product>({} as Product);
   const [isOpen, setIsOpen] = useState(false);
   const [imageSelected, setImageSelected] = useState<string | null>(null);
+  const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
   const navigate = useNavigate();
   const { adminData } = useAdmin();
   const { id } = useParams();
@@ -24,9 +26,20 @@ function ProductEdit() {
       const product = data?.products.find(
         (product: Product) => product.id === id
       );
-      setProductData(product);
+      if (product) {
+        setProductData(product);
+        setSelectedExtras(product.extras || []);
+      }
     })();
   }, [id]);
+
+  const handleExtrasChange = (extraId: string) => {
+    setSelectedExtras((prevSelected) =>
+      prevSelected.includes(extraId)
+        ? prevSelected.filter((id) => id !== extraId)
+        : [...prevSelected, extraId]
+    );
+  };
 
   const handleEdit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,44 +50,17 @@ function ProductEdit() {
       toast.error("Todos los campos son obligatorios");
       return;
     }
-    if (!imageSelected) {
-      const updatedProduct: Product = {
-        id: productData.id,
-        name: productName as string,
-        categoryId: categoryId as string,
-        description: description as string,
-        image: productData.image,
-        price: parseFloat(price as string),
-      };
-      const adminDataRef = doc(db, "admin", "data");
-      setDoc(
-        adminDataRef,
-        {
-          products: adminData?.products?.map((product) =>
-            product.id === productData?.id ? updatedProduct : product
-          ),
-        },
-        { merge: true }
-      )
-        .then(() => {
-          console.log("Producto actualizado correctamente");
-          navigate("/admin-panel/products");
-        })
-        .catch((error) => {
-          console.error("Error al actualizar el producto");
-          console.error(error);
-        });
-      return;
-    }
 
     const updatedProduct: Product = {
       id: productData.id,
       name: productName as string,
       categoryId: categoryId as string,
       description: description as string,
-      image: imageSelected,
+      image: imageSelected ? imageSelected : productData.image,
       price: parseFloat(price as string),
+      extras: selectedExtras, // Agregar los extras seleccionados
     };
+
     const adminDataRef = doc(db, "admin", "data");
     setDoc(
       adminDataRef,
@@ -86,11 +72,11 @@ function ProductEdit() {
       { merge: true }
     )
       .then(() => {
-        console.log("Producto actualizado correctamente");
+        toast.success("Producto actualizado correctamente");
         navigate("/admin-panel/products");
       })
       .catch((error) => {
-        console.error("Error al actualizar el producto");
+        toast.error("Error al actualizar el producto");
         console.error(error);
       });
   };
@@ -179,6 +165,41 @@ function ProductEdit() {
               className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
             />
           </div>
+
+          <div className="mb-5">
+            <label
+              htmlFor="extras"
+              className="mb-3 block text-base font-medium text-[#07074D]"
+            >
+              Agregados
+            </label>
+            {adminData?.extras?.map((extraGroup) => (
+              <div key={extraGroup.id} className={`mb-3 ${!extraGroup.available ? 'line-through text-gray-500' : ''}`}>
+                <h4 className="mb-2 font-semibold">{extraGroup.title}</h4>
+                {extraGroup.items.map((item) => (
+                  <div
+                    key={item.id}
+                    className={`flex items-center ${!item.available ? 'line-through text-gray-500' : ''}`}
+                  >
+                    <input
+                      type="checkbox"
+                      id={item.id}
+                      name="extras"
+                      value={item.id}
+                      checked={selectedExtras.includes(item.id)}
+                      onChange={() => handleExtrasChange(item.id)}
+                      className="mr-2"
+                      disabled={!item.available || !extraGroup.available}
+                    />
+                    <label htmlFor={item.id}>
+                      {item.name} - ${item.price}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+
           <div className="mb-5">
             <label
               htmlFor="photo"

@@ -1,4 +1,5 @@
 import { useAdmin } from "@/contexts/AdminContext";
+import { useImageUrl } from "@/hooks/useImage";
 import { db } from "@/services/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { useEffect } from "react";
@@ -65,13 +66,15 @@ function ProductsPage() {
         </thead>
         <tbody>
           {products?.map((product) => (
+            
             <tr key={product.id} className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
               <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
                 <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">
                   Imagen
                 </span>
                 <img
-                  src={product.image}
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
+                  src={useImageUrl(product.image).imageUrl}
                   alt="product"
                   className="h-20 w-20 object-cover mx-auto"
                 />

@@ -14,7 +14,8 @@ import {
 import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { AdminData, CustomerInfo } from "@/types/types";
 import { toast } from "react-toastify";
-import { getStorage } from "firebase/storage";
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -124,6 +125,18 @@ const saveAdminData = (data: AdminData) => {
     });
 };
 
+
+const checkImageExists = async (url) => {
+  try {
+    const imageRef = ref(storage, url);
+    await getDownloadURL(imageRef);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+
 export {
   auth,
   analytics,
@@ -135,4 +148,5 @@ export {
   saveAdminData,
   forgotPassword,
   signInUserPhone,
+  checkImageExists
 };

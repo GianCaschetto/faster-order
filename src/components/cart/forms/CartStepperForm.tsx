@@ -16,7 +16,7 @@ import confetti from "canvas-confetti";
 import { auth, db } from "@/services/firebase";
 import { Timestamp, addDoc, collection } from "firebase/firestore";
 import { useAdmin } from "@/contexts/AdminContext";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { RecaptchaVerifier } from "firebase/auth";
 
 type CartStepperFormProps = {
   cart: ShoppingCart;
@@ -165,36 +165,36 @@ function CartStepperForm({
     confetti();
   };
 
-  const phoneVerifier = async () => {
-    if (auth.currentUser?.phoneNumber === `+58${order.customer?.phone}`) {
-      console.log(auth.currentUser)
-      setCurrentStep(currentStep + 1);
-      return;
-    } else {
-      try {
-        if (recaptchaVerifierRef.current) {
-          const confirmationResult = await signInWithPhoneNumber(
-            auth,
-            `+58${order.customer?.phone}`,
-            recaptchaVerifierRef.current
-          );
-          const code = window.prompt("Ingrese el código de verificación");
-          if (code) {
-            await confirmationResult.confirm(code);
-            console.log("Número verificado correctamente");
-            toast.success("Número verificado correctamente");
-            setCurrentStep(currentStep + 1);
-          }
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        recaptchaVerifierRef.current?.clear();
-        toast.error("Error al verificar el número");
-        console.error(error.message);
+  // const phoneVerifier = async () => {
+  //   if (auth.currentUser?.phoneNumber === `+58${order.customer?.phone}`) {
+  //     console.log(auth.currentUser)
+  //     setCurrentStep(currentStep + 1);
+  //     return;
+  //   } else {
+  //     try {
+  //       if (recaptchaVerifierRef.current) {
+  //         const confirmationResult = await signInWithPhoneNumber(
+  //           auth,
+  //           `+58${order.customer?.phone}`,
+  //           recaptchaVerifierRef.current
+  //         );
+  //         const code = window.prompt("Ingrese el código de verificación");
+  //         if (code) {
+  //           await confirmationResult.confirm(code);
+  //           console.log("Número verificado correctamente");
+  //           toast.success("Número verificado correctamente");
+  //           setCurrentStep(currentStep + 1);
+  //         }
+  //       }
+  //       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //     } catch (error: any) {
+  //       recaptchaVerifierRef.current?.clear();
+  //       toast.error("Error al verificar el número");
+  //       console.error(error.message);
         
-      }
-    }
-  };
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
     if (!recaptchaVerifierRef.current) {
@@ -345,10 +345,12 @@ function CartStepperForm({
               } else if (currentStep === 1 && !checkStep1()) {
                 toast.error("Por favor completa los campos");
                 return;
-              } else if (currentStep === 1 && checkStep1()) {
-                phoneVerifier();
-                return;
-              } else if (currentStep === 2 && !checkStep2()) {
+              } 
+              // else if (currentStep === 1 && checkStep1()) {
+              //   phoneVerifier();
+              //   return;
+              // } 
+              else if (currentStep === 2 && !checkStep2()) {
                 toast.error("Por favor selecciona un metodo de pago");
                 return;
               }

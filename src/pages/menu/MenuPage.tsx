@@ -8,6 +8,7 @@ import CartSidebar from "@/components/cart/CartSidebar";
 import Footer from "@/components/footer/Footer";
 import { toast } from "react-toastify";
 import { useAdmin } from "@/contexts/AdminContext";
+import { NavLink } from "react-router-dom";
 
 function MenuPage() {
   const { adminData } = useAdmin();
@@ -132,6 +133,9 @@ function MenuPage() {
         </h1>
         <p>{adminData?.address ?? ""}</p>
       </div>
+      <NavLink
+        to="/admin-panel"
+      >Admin panel</NavLink>
       <div className="min-h-screen md:max-w-6xl max-w-sm  text-center p-4 mx-auto">
         {/* <Header /> */}
         <main className="mt-16 ">

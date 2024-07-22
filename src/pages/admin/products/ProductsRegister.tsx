@@ -9,24 +9,39 @@ import MediaModal from "../media/MediaModal";
 function ProductsRegister() {
   const [isOpen, setIsOpen] = useState(false);
   const [imageSelected, setImageSelected] = useState<string | null>(null);
+  const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
+  
   const { adminData } = useAdmin();
   const navigate = useNavigate();
   if (!adminData) return;
+
+  const handleExtrasChange = (extraId: string) => {
+    setSelectedExtras((prevSelected) =>
+      prevSelected.includes(extraId)
+        ? prevSelected.filter((id) => id !== extraId)
+        : [...prevSelected, extraId]
+    );
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const data = Object.fromEntries(formData.entries());
     const { productName, price, categoryId, description } = data;
-    if (
-      !productName ||
-      !price ||
-      !categoryId ||
-      !imageSelected
-    ) {
-      toast.error("Todos los campos son obligatorios");
+    if (!productName) {
+      toast.error("El nombre del producto es obligatorio");
+      return;
+    } else if (!price) {
+      toast.error("El precio del producto es obligatorio");
+      return;
+    } else if (!categoryId) {
+      toast.error("La categoría del producto es obligatoria");
+      return;
+    } else if (!imageSelected) {
+      toast.error("La imagen del producto es obligatoria");
       return;
     }
+
     const newProduct: Product = {
       id: crypto.randomUUID(),
       name: productName as string,
@@ -34,6 +49,7 @@ function ProductsRegister() {
       description: description as string,
       image: imageSelected,
       price: parseFloat(price as string),
+      extras: selectedExtras, // Agregar los extras seleccionados
     };
     if (adminData.products) {
       saveAdminData({
@@ -48,6 +64,7 @@ function ProductsRegister() {
       return;
     }
   };
+
   return (
     <div className="flex items-center justify-center p-12">
       <div className="mx-auto w-full max-w-[550px]">
@@ -124,6 +141,41 @@ function ProductsRegister() {
               className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
             />
           </div>
+
+          <div className="mb-5">
+            <label
+              htmlFor="extras"
+              className="mb-3 block text-base font-medium text-[#07074D]"
+            >
+              Agregados
+            </label>
+            {adminData.extras?.map((extraGroup) => (
+              <div key={extraGroup.id} className={`mb-3 ${!extraGroup.available ? 'line-through text-gray-500' : ''}`}>
+                <h4 className="mb-2 font-semibold">{extraGroup.title}</h4>
+                {extraGroup.items.map((item) => (
+                  <div
+                    key={item.id}
+                    className={`flex items-center ${!item.available ? 'line-through text-gray-500' : ''}`}
+                  >
+                    <input
+                      type="checkbox"
+                      id={item.id}
+                      name="extras"
+                      value={item.id}
+                      checked={selectedExtras.includes(item.id)}
+                      onChange={() => handleExtrasChange(item.id)}
+                      className="mr-2"
+                      disabled={!item.available || !extraGroup.available}
+                    />
+                    <label htmlFor={item.id}>
+                      {item.name} - ${item.price}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+
           <div className="mb-5">
             <label
               htmlFor="photo"
@@ -147,13 +199,14 @@ function ProductsRegister() {
             >
               Elegir foto
             </button>
-            
+
             <MediaModal
               isOpen={isOpen}
               onClose={() => setIsOpen(false)}
               setImageSelected={setImageSelected}
             />
           </div>
+
           <div>
             <button className="hover:shadow-form rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none">
               Guardar

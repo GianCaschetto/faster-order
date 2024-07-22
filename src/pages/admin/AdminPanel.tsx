@@ -15,9 +15,12 @@ function AdminPanel() {
       }[]
     | null
   >(null);
-  //Cantidad de productos vendidos
   const [productsSold, setProductsSold] = useState<number>(0);
   const { orders } = useAdmin();
+
+  const [dateFilter, setDateFilter] = useState<string>("last_30_days");
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
   const labels = Array.from(
     new Set(soldProducts?.map((product) => product.name))
@@ -60,6 +63,54 @@ function AdminPanel() {
     ],
   };
 
+  const filterOrdersByDate = (orders: Order[]): Order[] => {
+    const now = new Date();
+    let filteredOrders = orders;
+
+    switch (dateFilter) {
+      case "today":
+        filteredOrders = orders.filter((order) => {
+          const orderDate = order.createdAt.toDate();
+          return orderDate.toDateString() === now.toDateString();
+        });
+        break;
+      case "last_7_days":
+        filteredOrders = orders.filter((order) => {
+          const orderDate = order.createdAt.toDate();
+          return (
+            orderDate > new Date(now.setDate(now.getDate() - 7)) &&
+            orderDate <= new Date()
+          );
+        });
+        break;
+      case "last_30_days":
+        filteredOrders = orders.filter((order) => {
+          const orderDate = order.createdAt.toDate();
+          return (
+            orderDate > new Date(now.setDate(now.getDate() - 30)) &&
+            orderDate <= new Date()
+          );
+        });
+        break;
+      case "custom_range":
+        if (startDate && endDate) {
+          filteredOrders = orders.filter((order) => {
+            const orderDate = order.createdAt.toDate();
+            return orderDate >= startDate && orderDate <= endDate;
+          });
+        }
+        break;
+      case "all":
+        // No filtering needed for "all"
+        filteredOrders = orders;
+        break;
+      default:
+        break;
+    }
+
+    return filteredOrders;
+  };
+
   const getSalesPerDay = (orders: Order[]): Record<string, number> => {
     let salesPerDay: Record<string, number> = {};
 
@@ -82,7 +133,8 @@ function AdminPanel() {
     return salesPerDay;
   };
 
-  const salesPerMonth = getSalesPerDay(orders as Order[]);
+  const filteredOrders = filterOrdersByDate(orders as Order[]);
+  const salesPerMonth = getSalesPerDay(filteredOrders);
 
   const lineLabels = Object.keys(salesPerMonth);
   const lineData = Object.values(salesPerMonth);
@@ -110,10 +162,9 @@ function AdminPanel() {
 
   useEffect(() => {
     if (orders) {
-      const completedOrders = orders.filter(
+      const completedOrders = filteredOrders.filter(
         (order) => order.status === OrderStatus.finalizado
       );
-      //Array de productos vendidos
       const newSoldProducts = completedOrders?.flatMap((order) => {
         return order.items.map((item) => {
           return {
@@ -125,10 +176,67 @@ function AdminPanel() {
       setCompletedOrders(completedOrders);
       setSoldProducts(newSoldProducts);
     }
-  }, [orders]);
+  }, [orders, dateFilter, startDate, endDate]);
+
+  const handleStartDateChange = (e) => {
+    const newStartDate = e.target.value ? new Date(e.target.value) : null;
+    setStartDate(newStartDate);
+
+    if (newStartDate && endDate && newStartDate.getFullYear() !== endDate.getFullYear()) {
+      const newEndDate = new Date(newStartDate);
+      newEndDate.setMonth(11);
+      newEndDate.setDate(31);
+      setEndDate(newEndDate);
+    }
+  };
 
   return (
     <div className="text-gray-900 h-screen w-full">
+      <div className="mt-4 w-full flex justify-between items-center">
+        <div>
+         
+          <select
+            id="date-filter"
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+          >
+            <option value="today">Hoy</option>
+            <option value="last_7_days">Últimos 7 días</option>
+            <option value="last_30_days">Últimos 30 días</option>
+            <option value="custom_range">Rango personalizado</option>
+            <option value="all">Todo</option>
+          </select>
+        </div>
+        {dateFilter === "custom_range" && (
+          <div className="flex space-x-4">
+            <div>
+              <label htmlFor="start-date" className="block text-sm font-medium text-gray-700">
+                Fecha de inicio
+              </label>
+              <input
+                type="date"
+                id="start-date"
+                value={startDate ? startDate.toISOString().split("T")[0] : ""}
+                onChange={handleStartDateChange}
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              />
+            </div>
+            <div>
+              <label htmlFor="end-date" className="block text-sm font-medium text-gray-700">
+                Fecha de fin
+              </label>
+              <input
+                type="date"
+                id="end-date"
+                value={endDate ? endDate.toISOString().split("T")[0] : ""}
+                onChange={(e) => setEndDate(e.target.value ? new Date(e.target.value) : null)}
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              />
+            </div>
+          </div>
+        )}
+      </div>
       <div className="mt-4 w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 ">
           <div className="flex items-center">
@@ -146,7 +254,7 @@ function AdminPanel() {
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <span className="text-2xl sm:text-3xl leading-none font-bold text-gray-900">
-                {orders?.length}
+                {filteredOrders.length}
               </span>
               <h3 className="text-base font-normal text-gray-500">
                 Pedidos totales
@@ -262,7 +370,7 @@ function AdminPanel() {
                       </tr>
                     </thead>
                     <tbody className="bg-white">
-                      {orders?.slice(0, 3).map((order) => (
+                      {filteredOrders.slice(0, 3).map((order) => (
                         <tr key={order.id}>
                           <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
                             Pedido hecho por{" "}
@@ -278,7 +386,7 @@ function AdminPanel() {
                             ${order.subtotal}
                           </td>
                         </tr>
-                      )) ?? []}
+                      ))}
 
                       <tr>
                         <NavLink
@@ -313,8 +421,8 @@ function AdminPanel() {
             <div className="align-middle min-w-full">
               <div
                 style={{
-                  width: "50%",
-                  height: "50%",
+                  width: "100%",
+                  height: "400px",
                 }}
               >
                 <LineChart
@@ -324,9 +432,10 @@ function AdminPanel() {
                       {
                         label: "Ventas",
                         data: lineData,
-                        fill: false,
+                        fill: true,
+                        backgroundColor: "rgba(75, 192, 192, 0.2)",
                         borderColor: "rgba(75, 192, 192, 1)",
-                        tension: 0.1,
+                        tension: 0.4,
                       },
                     ],
                   }}

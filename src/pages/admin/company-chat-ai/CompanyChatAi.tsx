@@ -40,7 +40,7 @@ function CompanyChatAi() {
       Pregunta: ¿Cuál es el producto más vendido?
       Respuesta: El producto más vendido es x.
 
-  
+      No puedes responder preguntas que no tengan nada que ver con la empresa y sus ordenes.
 
     `,
     generationConfig: {
@@ -104,7 +104,7 @@ function CompanyChatAi() {
           </li>
         ))}
         {isLoadingAnswer && (
-          <li className="mb-6 flex justify-end">
+          <li className="mb-6 flex justify-start">
             <span className="bg-blue-200 text-blue-800 rounded-lg py-2 px-4 break-words inline-block max-w-80">
               ...
             </span>

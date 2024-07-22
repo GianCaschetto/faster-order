@@ -6,7 +6,7 @@ import OrderDetails from "@/pages/admin/orders/OrderDetails";
 import Lottie from "react-lottie";
 import searchAnimation from "@/assets/lotties/search.json";
 
-const orderStatusColors = {
+export const orderStatusColors = {
   nuevo: "bg-yellow-200",
   "en proceso": "bg-orange-200",
   enviado: "bg-blue-200",

@@ -25,7 +25,9 @@ function CartContent({ cart, deleteItem }: CartContentProps) {
                     <ul className="ml-4 text-start">
                       {item.extras?.map((extra) => (
                         <li key={extra.id}>
-                          {extra.qty} x {extra.name}
+                          {extra.qty} x {extra.name} = {" "}
+                          {(extra.price * (extra.qty ?? 0)).toFixed(2)}
+                          $
                         </li>
                       ))}
                     </ul>
@@ -55,12 +57,14 @@ function CartContent({ cart, deleteItem }: CartContentProps) {
                     </svg>
                   </div>
                   <div className="text-lg">
-                    {((item.product.price +
-                      (item.extras?.reduce(
-                        (acc, extra) => acc + extra.price * (extra.qty ?? 0),
-                        0
-                      ) ?? 0)) *
-                      item.quantity).toFixed(2)}
+                    {(
+                      (item.product.price +
+                        (item.extras?.reduce(
+                          (acc, extra) => acc + extra.price * (extra.qty ?? 0),
+                          0
+                        ) ?? 0)) *
+                      item.quantity
+                    ).toFixed(2)}
                     $
                   </div>
                 </div>
@@ -119,7 +123,9 @@ function CartContent({ cart, deleteItem }: CartContentProps) {
             <circle cx="304" cy="232" r="8"></circle>
             <circle cx="416" cy="232" r="8"></circle>
           </svg>
-          <p className="text-black">Carrito vacío, agrega productos para comenzar a comprar</p>
+          <p className="text-black">
+            Carrito vacío, agrega productos para comenzar a comprar
+          </p>
         </div>
       )}
     </div>

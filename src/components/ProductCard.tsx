@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Product } from "@/types/types";
 import ProductModal from "./ProductModal";
+import { useImageUrl } from "@/hooks/useImage";
 
 type ProductCardProps = {
   product: Product;
@@ -8,9 +9,9 @@ type ProductCardProps = {
 };
 
 function ProductCard({ product, addToCart }: ProductCardProps) {
+  const {imageUrl} = useImageUrl(product.image);
   const [showModal, setShowModal] = useState(false);
   const toggleShowModal = () => setShowModal(!showModal);
-  
   return (
     <>
     <article
@@ -30,7 +31,7 @@ function ProductCard({ product, addToCart }: ProductCardProps) {
       </div>
       <div className="w-full md:w-1/3 bg-white grid place-items-center ">
         <img
-          src={product.image}
+          src={imageUrl}
           alt={`${product.name} de faster order`}
           className="rounded-xl h-full w-full object-cover"
         />

@@ -68,8 +68,8 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                 to="/"
                 className="text-xl font-bold flex items-center lg:ml-2.5 active:text-black"
               >
-                <img src={adminData?.logo} className="h-10 mr-2" alt="Logo" />
-                <span className="self-center whitespace-nowrap">
+                <img src={adminData?.logo} className="h-12 mr-2 drop-shadow-md" alt="Logo" />
+                <span className="self-center whitespace-nowrap ">
                   {adminData?.companyName}
                 </span>
               </NavLink>

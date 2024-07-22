@@ -93,13 +93,13 @@ function SchedulesPage() {
       <h2 className="text-3xl font-semibold text-gray-800 text-center mb-4">
         Horarios
       </h2>
-      <div className="mt-6">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="mt-6 ">
+        <table className="min-w-full divide-y divide-gray-200 ">
+          <thead className="bg-gray-50 ">
             <tr>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className=" px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Día
               </th>
@@ -134,7 +134,7 @@ function SchedulesPage() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <DatePicker
-                    className="w-24 border border-gray-300 rounded-md p-1 text-white"
+                    className="w-24 border border-gray-300 rounded-md p-1 text-black "
                     selected={createDateFromTimeString(schedule.open)}
                     onChange={(date) => {
                       const updatedSchedules = [...schedules];
@@ -192,11 +192,11 @@ function SchedulesPage() {
         </table>
         <button
           onClick={handleSave}
-          className="group relative mt-4 h-12 w-48 overflow-hidden rounded-2xl bg-slate-600 text-lg font-bold text-white"
+          className=" group relative mt-4 h-12 w-48 overflow-hidden rounded-2xl bg-slate-600 text-lg font-bold text-white"
         >
           Guardar datos
           <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
-        </button>{" "}
+        </button>
       </div>
     </div>
   );

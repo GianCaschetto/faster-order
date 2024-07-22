@@ -36,6 +36,11 @@ export default function LineChart({ data }) {
             display: true,
           },
         },
+        elements: {
+          line: {
+            tension: 0.4,
+          },
+        },
       }}
     />
   );
