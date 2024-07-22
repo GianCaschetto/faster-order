@@ -10,7 +10,9 @@ function ImageModal({
   closeImageModal: () => void;
 }) {
   return (
-    <div className="z-20 fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center">
+    <div
+    onClick={closeImageModal}
+    className="z-20 fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center">
       <button
         onClick={closeImageModal}
         className="absolute top-4 right-4 text-white text-2xl"
