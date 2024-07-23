@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import MediaModal from "../media/MediaModal";
-import { useImageUrl } from "@/hooks/useImage";
 
 function ProductEdit() {
   const [productData, setProductData] = useState<Product>({} as Product);
