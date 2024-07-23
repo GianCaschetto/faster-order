@@ -146,6 +146,7 @@ function ExtrasRegister() {
                 onChange={(e) =>
                   handleItemChange(index, "available", e.target.checked)
                 }
+                disabled={!available} // Deshabilitar si el grupo no está disponible
               />
             </div>
             <button

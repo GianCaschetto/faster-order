@@ -20,7 +20,12 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div>
-      <nav className="bg-white border-b border-gray-200 fixed z-30 w-full">
+      <nav
+        className="bg-white border-b border-gray-200 fixed z-30 w-full"
+        style={{
+          backgroundColor: adminData?.colors?.primary,
+        }}
+      >
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start">
@@ -68,8 +73,14 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                 to="/"
                 className="text-xl font-bold flex items-center lg:ml-2.5 active:text-black"
               >
-                <img src={adminData?.logo} className="h-12 mr-2 drop-shadow-md" alt="Logo" />
-                <span className="self-center whitespace-nowrap ">
+                <img
+                  src={adminData?.logo}
+                  className="h-12 mr-2 drop-shadow-md"
+                  alt="Logo"
+                />
+                <span className="self-center whitespace-nowrap " 
+                style={{ color: adminData?.colors?.secondary }}
+                >
                   {adminData?.companyName}
                 </span>
               </NavLink>
@@ -94,7 +105,10 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                 </svg>
               </button>
               <div className="hidden lg:flex items-center">
-                <span className="text-base font-normal text-gray-500 mr-5">
+                <span className="text-base font-normal text-gray-500 mr-5"
+                style={{
+                  color: adminData?.colors?.secondary,
+                }}>
                   Universidad José Antonio Páez ❤️
                 </span>
               </div>
@@ -488,7 +502,9 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           id="main-content"
           className="h-full w-full bg-gray-50 relative p-2"
         >
-          <div className="h-full w-full bg-gray-50 relative overflow-y-auto ">{children}</div>
+          <div className="h-full w-full bg-gray-50 relative overflow-y-auto ">
+            {children}
+          </div>
         </div>
       </div>
     </div>

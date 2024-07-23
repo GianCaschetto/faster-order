@@ -84,7 +84,10 @@ function OrdersPage() {
 
   return (
     <div>
-      <nav className="bg-white border-b border-gray-200 fixed z-30 w-full">
+      <nav className="bg-white border-b border-gray-200 fixed z-30 w-full"
+      style={{
+        backgroundColor: adminData?.colors?.primary,
+      }}>
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start">
@@ -135,7 +138,7 @@ function OrdersPage() {
                 >
                   <img
                     src={adminData?.logo}
-                    className="h-10 mr-2"
+                    className="h-10 mr-2 drop-shadow-md"
                     alt={`${adminData?.companyName} logo`}
                   />
                   <span className="self-center whitespace-nowrap">

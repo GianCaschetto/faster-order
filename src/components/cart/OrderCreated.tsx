@@ -15,26 +15,26 @@ function OrderCreated({ order }: OrderCreatedProps) {
   const replaceTokens = (message: string) => {
     let newMessage = message;
     newMessage = newMessage.replace(
-      "##ORDER_NUMBER##",
+      "##NUMERO_DE_ORDEN##",
       order.orderNumber?.toString() ?? ""
     );
     newMessage = newMessage.replace(
-      "##ORDER_SUBTOTAL##",
+      "##SUBTOTAL_DE_LA_ORDEN##",
       order.subtotal.toString()
     );
     newMessage = newMessage.replace(
-      "##ORDER_DELIVERY_PRICE##",
+      "##PRECIO_DE_ENTREGA##",
       order.delivertyPrice?.toString() ?? ""
     );
-    newMessage = newMessage.replace("##ORDER_TOTAL##", order.total.toString());
-    newMessage = newMessage.replace("##CUSTOMER_NAME##", order.customer.name);
-    newMessage = newMessage.replace("##CUSTOMER_PHONE##", order.customer.phone);
+    newMessage = newMessage.replace("##TOTAL_DE_LA_ORDEN##", order.total.toString());
+    newMessage = newMessage.replace("##NOMBRE_DEL_CLIENTE##", order.customer.name);
+    newMessage = newMessage.replace("##TELEFONO_DEL_CLIENTE##", order.customer.phone);
     newMessage = newMessage.replace(
-      "##CUSTOMER_ADDRESS##",
+      "##DIRECCION_DEL_CLIENTE##",
       order.customer.address ?? ""
     );
     newMessage = newMessage.replace(
-      "##CUSTOMER_NEIGHBORHOOD##",
+      "##BARRIO_DEL_CLIENTE##",
       order.customer.neighborhood?.name ?? ""
     );
 
@@ -51,22 +51,22 @@ function OrderCreated({ order }: OrderCreatedProps) {
       })
       .join("\n");
 
-    newMessage = newMessage.replace("##PRODUCT_DETAILS##", productDetails);
+    newMessage = newMessage.replace("##DETALLES_DEL_PRODUCTO##", productDetails);
     newMessage = newMessage.replace(
-      "##TOTAL_PRICE_BS_BCV##",
+      "##PRECIO_TOTAL_BS_BCV##",
       (order.total * tasaBCV.price).toFixed(2)
     );
     newMessage = newMessage.replace(
-      "##TOTAL_PRICE_BS_PARALELO##",
+      "##PRECIO_TOTAL_BS_PARALELO##",
       (order.total * tasaEnParalelo).toFixed(2)
     );
     newMessage = newMessage.replace(
-      "##ORDER_PAYMENTMETHOD##",
+      "##METODO_DE_PAGO##",
       order.paymentMethod
     );
-    newMessage = newMessage.replace("##ORDER_ORDERTYPE##", order.orderType);
+    newMessage = newMessage.replace("##TIPO_DE_ORDEN##", order.orderType);
     newMessage = newMessage.replace(
-      "##TRACK_ORDER_PAGE##",
+      "##PAGINA_SEGUIMIENTO_ORDEN##",
       `${window.location.origin}/order/${order.orderNumber}`
     );
     return newMessage;

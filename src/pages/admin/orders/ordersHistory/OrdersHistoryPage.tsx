@@ -1,6 +1,6 @@
 import { useAdmin } from "@/contexts/AdminContext";
 import { db } from "@/services/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { NavLink } from "react-router-dom";
 
@@ -9,19 +9,13 @@ function OrdersHistoryPage() {
   const { orders } = useAdmin();
 
   const removeOrder = (id: string) => {
-    const adminDataRef = doc(db, "admin", "data");
-    setDoc(
-      adminDataRef,
-      {
-        orders: orders?.filter((order) => order.id !== id),
-      },
-      { merge: true }
-    )
+    const orderRef = doc(db, "orders", id);
+    deleteDoc(orderRef)
       .then(() => {
-        toast.success("Orden eliminado correctamente");
+        toast.success("Orden eliminada correctamente");
       })
       .catch((error) => {
-        toast.error("Error al eliminar el orden");
+        toast.error("Error al eliminar la orden");
         console.error(error);
       });
   };

@@ -6,7 +6,6 @@ import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { Extras, Extra } from "@/types/types"; // Ajusta la ruta según tu estructura de proyecto
 
-
 const ExtrasEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -36,7 +35,9 @@ const ExtrasEdit: React.FC = () => {
     setItems((items) =>
       items.map((item, i) => {
         if (i === index) {
-          return { ...item, [key]: value };
+          // Si el key es 'available', asegurarse de que el valor sea booleano
+          const updatedValue = key === 'available' ? value === true : value;
+          return { ...item, [key]: updatedValue };
         }
         return item;
       })
@@ -110,7 +111,6 @@ const ExtrasEdit: React.FC = () => {
             type="checkbox"
             checked={available}
             onChange={(e) => setAvailable(e.target.checked)}
-            
           />
         </div>
         <h3 className="text-xl font-bold mb-2 text-black">Items</h3>
@@ -155,7 +155,7 @@ const ExtrasEdit: React.FC = () => {
                   handleItemChange(index, "description", e.target.value)
                 }
                 className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                />
+              />
             </div>
             <div className="mb-2">
               <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -167,6 +167,7 @@ const ExtrasEdit: React.FC = () => {
                 onChange={(e) =>
                   handleItemChange(index, "available", e.target.checked)
                 }
+                disabled={!available} // Deshabilitar si el grupo no está disponible
               />
             </div>
             <button

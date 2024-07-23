@@ -383,7 +383,7 @@ function AdminPanel() {
                               ""}
                           </td>
                           <td className="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                            ${order.subtotal}
+                            ${order.total}
                           </td>
                         </tr>
                       ))}

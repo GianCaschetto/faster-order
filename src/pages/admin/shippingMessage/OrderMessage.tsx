@@ -4,20 +4,20 @@ import { OrderType } from "@/types/types";
 import { useState, useEffect } from "react";
 
 const tokens = {
-  "##ORDER_NUMBER##": "Número de orden",
-  "##ORDER_SUBTOTAL##": "Subtotal de la orden",
-  "##ORDER_ORDERTYPE##": "Tipo de orden",
-  "##ORDER_DELIVERY_PRICE##": "Precio de entrega",
-  "##ORDER_PAYMENTMETHOD##": "Método de pago",
-  "##ORDER_TOTAL##": "Total de la orden",
-  "##CUSTOMER_NAME##": "Nombre del cliente",
-  "##CUSTOMER_PHONE##": "Teléfono del cliente",
-  "##CUSTOMER_ADDRESS##": "Dirección del cliente",
-  "##CUSTOMER_NEIGHBORHOOD##": "Barrio del cliente",
-  "##PRODUCT_DETAILS##": "Detalles del producto",
-  "##TOTAL_PRICE_BS_BCV##": "Precio total en bolívares a tasa BCV",
-  "##TOTAL_PRICE_BS_PARALELO##": "Precio total en bolívares a tasa PARALELO",
-  "##TRACK_ORDER_PAGE##": "Página de seguimiento de orden (link)",
+  "##NUMERO_DE_ORDEN##": "Número de orden",
+  "##SUBTOTAL_DE_LA_ORDEN##": "Subtotal de la orden",
+  "##TIPO_DE_ORDEN##": "Tipo de orden",
+  "##PRECIO_DE_ENTREGA##": "Precio de entrega",
+  "##METODO_DE_PAGO##": "Método de pago",
+  "##TOTAL_DE_LA_ORDEN##": "Total de la orden",
+  "##NOMBRE_DEL_CLIENTE##": "Nombre del cliente",
+  "##TELEFONO_DEL_CLIENTE##": "Teléfono del cliente",
+  "##DIRECCION_DEL_CLIENTE##": "Dirección del cliente",
+  "##BARRIO_DEL_CLIENTE##": "Barrio del cliente",
+  "##DETALLES_DEL_PRODUCTO##": "Detalles del producto",
+  "##PRECIO_TOTAL_BS_BCV##": "Precio total en bolívares a tasa BCV",
+  "##PRECIO_TOTAL_BS_PARALELO##": "Precio total en bolívares a tasa PARALELO",
+  "##PAGINA_SEGUIMIENTO_ORDEN##": "Página de seguimiento de orden (enlace)",
 };
 
 function OrderMessage() {
@@ -29,6 +29,7 @@ function OrderMessage() {
   const [pickupMessage, setPickupMessage] = useState<string>(
     adminData?.whatsappPickupMessage ?? ""
   );
+  const [copiedToken, setCopiedToken] = useState<string | null>(null);
 
   useEffect(() => {
     setDeliveryMessage(adminData?.whatsappDeliveryMessage ?? "");
@@ -55,16 +56,23 @@ function OrderMessage() {
     }
   };
 
+  const handleCopyToken = (key: string) => {
+    navigator.clipboard.writeText(key).then(() => {
+      setCopiedToken(key);
+      setTimeout(() => setCopiedToken(null), 2000);
+    });
+  };
+
   return (
     <section className="text-black w-5/6 mx-auto">
       <div className="text-center">
         <h3 className="text-3xl font-semibold text-gray-800 text-start mb-4">
           Tokens disponibles
         </h3>
-        <ul className="flex flex-wrap gap-4">
+        <ul className="grid md:grid-cols-3 grid-cols-1 gap-4">
           {Object.entries(tokens).map(([key, value]) => (
             <li key={key}>
-              <div className="relative mt-6 flex w-80 flex-col text-center rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
+              <div className="relative mt-6 flex md:w-80 flex-col text-center rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
                 <div className="p-6">
                   <h5 className="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
                     {value}
@@ -78,11 +86,9 @@ function OrderMessage() {
                     className="flex hover:scale-105  select-none items-center gap-2 rounded-lg  px-4 text-center align-middle font-sans text-xs font-bold uppercase transition-all disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                     type="button"
                     data-ripple-dark="true"
-                    onClick={() => {
-                      navigator.clipboard.writeText(key);
-                    }}
+                    onClick={() => handleCopyToken(key)}
                   >
-                    Copiar
+                    {copiedToken === key ? "Copiado" : "Copiar"}
                     <svg
                       width="24"
                       height="24"
