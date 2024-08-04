@@ -16,11 +16,13 @@ function MenuSection({
         <>
           <div className="grid md:grid-cols-2 grid-cols-1 gap-4 pt-6">
             {filteredProducts.map((product: Product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  addToCart={addToCart}
-                />
+                 product.active && (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    addToCart={addToCart}
+                  />
+                )
             ))}
           </div>
         </>
@@ -37,12 +39,14 @@ function MenuSection({
               <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
                 {products
                   .filter((product) => product.categoryId === category.id)
-                  .map((product) => (
-                    <ProductCard
-                      key={product.id}
-                      product={product}
-                      addToCart={addToCart}
-                    />
+                  .map((product: Product) => (
+                    product.active && (
+                      <ProductCard
+                        key={product.id}
+                        product={product}
+                        addToCart={addToCart}
+                      />
+                    )
                   ))}
               </div>
             </div>

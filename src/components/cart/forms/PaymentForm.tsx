@@ -8,6 +8,7 @@ type PaymentProps = {
 };
 
 function PaymentForm({ order, setOrder }: PaymentProps) {
+  
   const { adminData } = useAdmin();
   const [paymentMethods, setPaymentMethods] = useState<string[]>([]);
   const [paymentMethodSelected, setPaymentMethodSelected] =

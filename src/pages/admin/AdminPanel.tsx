@@ -1,4 +1,4 @@
-import LineChart from "@/components/LineChart";
+import OrdersStatusChart from "@/components/OrdersStatusChart";
 import PieChart from "@/components/PieChart";
 import { useAdmin } from "@/contexts/AdminContext";
 import { DataChartType, Order, OrderStatus } from "@/types/types";
@@ -111,33 +111,42 @@ function AdminPanel() {
     return filteredOrders;
   };
 
-  const getSalesPerDay = (orders: Order[]): Record<string, number> => {
-    let salesPerDay: Record<string, number> = {};
+  // const getSalesPerDay = (orders: Order[]): Record<string, number> => {
+  //   let salesPerDay: Record<string, number> = {};
 
-    orders.forEach((order) => {
-      const day = order.createdAt.toDate().toLocaleDateString();
+  //   orders.forEach((order) => {
+  //     const day = order.createdAt.toDate().toLocaleDateString();
 
-      if (!salesPerDay[day]) {
-        salesPerDay[day] = order.total;
-      } else {
-        salesPerDay[day] += order.total;
-      }
-    });
+  //     if (!salesPerDay[day]) {
+  //       salesPerDay[day] = order.total;
+  //     } else {
+  //       salesPerDay[day] += order.total;
+  //     }
+  //   });
 
-    salesPerDay = Object.fromEntries(
-      Object.entries(salesPerDay).sort(
-        (a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime()
-      )
-    );
+  //   salesPerDay = Object.fromEntries(
+  //     Object.entries(salesPerDay).sort(
+  //       (a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime()
+  //     )
+  //   );
 
-    return salesPerDay;
-  };
+  //   return salesPerDay;
+  // };
 
   const filteredOrders = filterOrdersByDate(orders as Order[]);
-  const salesPerMonth = getSalesPerDay(filteredOrders);
+  // const salesPerMonth = getSalesPerDay(filteredOrders);
 
-  const lineLabels = Object.keys(salesPerMonth);
-  const lineData = Object.values(salesPerMonth);
+  // const lineLabels = Object.keys(salesPerMonth);
+  // const lineData = Object.values(salesPerMonth);
+
+  const finishedOrders = filteredOrders.filter(order => order.finishedAt);
+  const averageTimeInMillis = finishedOrders.length > 0 ? finishedOrders.reduce((total, order) => {
+    const timeDifference = order.finishedAt && order.createdAt ? order.finishedAt.toDate().getTime() - order.createdAt.toDate().getTime() : 0;
+    return total + timeDifference;
+  }, 0) / finishedOrders.length : 0;
+
+  // Convertir el tiempo promedio de milisegundos a horas, minutos y segundos
+  const averageTimeInHours = new Date(averageTimeInMillis).toISOString().substr(11, 8);
 
   useEffect(() => {
     if (soldProducts) {
@@ -182,7 +191,11 @@ function AdminPanel() {
     const newStartDate = e.target.value ? new Date(e.target.value) : null;
     setStartDate(newStartDate);
 
-    if (newStartDate && endDate && newStartDate.getFullYear() !== endDate.getFullYear()) {
+    if (
+      newStartDate &&
+      endDate &&
+      newStartDate.getFullYear() !== endDate.getFullYear()
+    ) {
       const newEndDate = new Date(newStartDate);
       newEndDate.setMonth(11);
       newEndDate.setDate(31);
@@ -194,7 +207,6 @@ function AdminPanel() {
     <div className="text-gray-900 h-screen w-full">
       <div className="mt-4 w-full flex justify-between items-center">
         <div>
-         
           <select
             id="date-filter"
             value={dateFilter}
@@ -211,7 +223,10 @@ function AdminPanel() {
         {dateFilter === "custom_range" && (
           <div className="flex space-x-4">
             <div>
-              <label htmlFor="start-date" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="start-date"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Fecha de inicio
               </label>
               <input
@@ -223,21 +238,26 @@ function AdminPanel() {
               />
             </div>
             <div>
-              <label htmlFor="end-date" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="end-date"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Fecha de fin
               </label>
               <input
                 type="date"
                 id="end-date"
                 value={endDate ? endDate.toISOString().split("T")[0] : ""}
-                onChange={(e) => setEndDate(e.target.value ? new Date(e.target.value) : null)}
+                onChange={(e) =>
+                  setEndDate(e.target.value ? new Date(e.target.value) : null)
+                }
                 className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               />
             </div>
           </div>
         )}
       </div>
-      <div className="mt-4 w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="mt-4 w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
         <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 ">
           <div className="flex items-center">
             <div className="flex-shrink-0">
@@ -286,10 +306,43 @@ function AdminPanel() {
             </div>
           </div>
         </div>
+        <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 ">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <span className="text-2xl sm:text-3xl leading-none font-bold text-gray-900">
+                ${" "}
+                {filteredOrders.length > 0
+                  ? Number(
+                      filteredOrders.reduce(
+                        (acc, order) => acc + order.total,
+                        0
+                      ) / filteredOrders.length
+                    ).toFixed(2)
+                  : 0}
+              </span>
+              <h3 className="text-base font-normal text-gray-500">
+                Ticket Promedio
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 ">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <span className="text-2xl sm:text-3xl leading-none font-bold text-gray-900">
+                {averageTimeInHours.split(":")[0]}h {averageTimeInHours.split(":")[1]}m {averageTimeInHours.split(":")[2]}s
+              </span>
+              <h3 className="text-base font-normal text-gray-500">
+                Tiempo promedio de venta
+              </h3>
+            </div>
+          </div>
+        </div>
+        
       </div>
-      <div className="flex mt-4 justify-around ">
-        <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 w-1/3 ">
-          <div className="mb-4 flex items-center justify-between">
+      <div className="flex flex-col lg:flex-row mt-4 gap-4">
+        <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 flex-grow w-full lg:w-3/5 text-center mx-auto">
+          <div className="mb-4 mx-auto">
             <div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 Productos vendidos
@@ -299,47 +352,35 @@ function AdminPanel() {
               </span>
             </div>
           </div>
-          <div className="flex flex-col mt-8 ">
-            <div className="overflow-x-auto rounded-lg">
-              <div className="align-middle inline-block min-w-full">
-                <div
-                  style={{
-                    width: "450px",
-                    height: "225px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                    }}
-                  >
-                    <PieChart data={data} />
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              maxWidth: "450px",
+              maxHeight: "225px",
+              margin: "0 auto",
+            }}
+          >
+            <PieChart data={data} />
           </div>
         </div>
-        <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 w-2/3 mx-8">
+        <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 flex-grow w-full lg:w-2/5">
           <div className="mb-4 flex items-center justify-between">
-            <div className="mb-4 flex items-center justify-between w-full">
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  Últimos pedidos
-                </h3>
-                <span className="text-base font-normal text-gray-500">
-                  Aquí se muestran los últimos pedidos realizados
-                </span>
-              </div>
-              <div className="flex-shrink-0">
-                <NavLink
-                  to="/admin-panel/orders-history"
-                  className="text-sm font-medium text-cyan-600 hover:bg-gray-100 rounded-lg p-2"
-                >
-                  Ver todas las ordenes
-                </NavLink>
-              </div>
+            <div className="w-full">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Últimos pedidos
+              </h3>
+              <span className="text-base font-normal text-gray-500">
+                Aquí se muestran los últimos pedidos realizados
+              </span>
+            </div>
+            <div className="flex-shrink-0">
+              <NavLink
+                to="/admin-panel/orders-history"
+                className="text-sm font-medium text-cyan-600 hover:bg-gray-100 rounded-lg p-2"
+              >
+                Ver todas las ordenes
+              </NavLink>
             </div>
           </div>
           <div className="flex flex-col mt-8">
@@ -387,14 +428,15 @@ function AdminPanel() {
                           </td>
                         </tr>
                       ))}
-
                       <tr>
-                        <NavLink
-                          to="/admin-panel/orders-history"
-                          className="px-4 py-2 text-sm font-medium text-cyan-600 hover:bg-gray-100 rounded-lg"
-                        >
-                          Ver todas las ordenes
-                        </NavLink>
+                        <td>
+                          <NavLink
+                            to="/admin-panel/orders-history"
+                            className="text-sm font-medium text-cyan-600 hover:bg-gray-100 rounded-lg p-2"
+                          >
+                            Ver todas las ordenes
+                          </NavLink>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -408,14 +450,14 @@ function AdminPanel() {
         <div className="mb-4 flex">
           <div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">
-              Período de ventas
+              Estado actual de las ordenes
             </h3>
             <span className="text-base font-normal text-gray-500">
-              En esta gráfica se muestra el comportamiento de las ventas en el
-              año
+              Aquí se muestra el estado actual de las ordenes
             </span>
           </div>
         </div>
+
         <div className="flex flex-col">
           <div className="overflow-x-auto rounded-lg">
             <div className="align-middle min-w-full">
@@ -425,21 +467,7 @@ function AdminPanel() {
                   height: "400px",
                 }}
               >
-                <LineChart
-                  data={{
-                    labels: lineLabels,
-                    datasets: [
-                      {
-                        label: "Ventas",
-                        data: lineData,
-                        fill: true,
-                        backgroundColor: "rgba(75, 192, 192, 0.2)",
-                        borderColor: "rgba(75, 192, 192, 1)",
-                        tension: 0.4,
-                      },
-                    ],
-                  }}
-                />
+                <OrdersStatusChart orders={filteredOrders} />
               </div>
             </div>
           </div>

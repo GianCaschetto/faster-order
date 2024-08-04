@@ -89,7 +89,7 @@ function MediaPage() {
               className="absolute top-2 left-2 z-10"
             />
             <img
-              className="h-auto max-w-full rounded-lg shadow-md object-cover"
+              className="object-fit rounded-lg shadow-md h-36 w-full"
               src={media.url}
               alt={media.name}
             />

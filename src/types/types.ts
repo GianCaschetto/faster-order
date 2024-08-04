@@ -15,6 +15,7 @@ export type Product = {
   categoryId: string;
   description?: string;
   extras?: string[];
+  active: boolean;
 };
 
 //Extras Product Type
@@ -23,6 +24,7 @@ export type Extras = {
   available: boolean;
   title: string;
   items: Extra[];
+  active: boolean;
 };
 
 //Extra type
@@ -40,8 +42,9 @@ export interface ShoppingCartItem {
   id: string;
   product: Product;
   quantity: number;
-  extras?: Extra[];
   price: number;
+  extras?: Extra[];
+  note?: string;
 }
 
 //ShoppingCart interface
@@ -77,6 +80,7 @@ export type Order = {
   orderNumber?: number;
   total: number;
   createdAt: Timestamp;
+  finishedAt?: Timestamp;
 };
 
 //Customer Info type
@@ -93,6 +97,7 @@ export type Neighborhood = {
   id: string;
   name: string;
   price: number;
+  active: boolean;
 };
 
 //TasaBCV type
@@ -116,6 +121,13 @@ export type Colors = {
   secondary: string;
 };
 
+export type Garbage = {
+  products: Product[];
+  extras: Extras[];
+  neighborhoods: Neighborhood[];
+};
+
+
 //AdminData type
 export type AdminData = Partial<{
   address: string;
@@ -124,6 +136,7 @@ export type AdminData = Partial<{
   companyName: string;
   email: string;
   extras: Extras[];
+  garbage: Garbage;
   icon: string;
   logo: string;
   neighborhoods: Neighborhood[];
@@ -133,6 +146,7 @@ export type AdminData = Partial<{
   whatsapp: string;
   whatsappDeliveryMessage: string;
   whatsappPickupMessage: string;
+
 }>;
 
 export type ValidMimeTypes = {

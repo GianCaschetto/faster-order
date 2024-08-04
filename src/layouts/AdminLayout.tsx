@@ -78,8 +78,9 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                   className="h-12 mr-2 drop-shadow-md"
                   alt="Logo"
                 />
-                <span className="self-center whitespace-nowrap " 
-                style={{ color: adminData?.colors?.secondary }}
+                <span
+                  className="self-center whitespace-nowrap "
+                  style={{ color: adminData?.colors?.secondary }}
                 >
                   {adminData?.companyName}
                 </span>
@@ -105,11 +106,13 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                 </svg>
               </button>
               <div className="hidden lg:flex items-center">
-                <span className="text-base font-normal text-gray-500 mr-5"
-                style={{
-                  color: adminData?.colors?.secondary,
-                }}>
-                  Universidad José Antonio Páez ❤️
+                <span
+                  className="text-base font-normal text-gray-500 mr-5"
+                  style={{
+                    color: adminData?.colors?.secondary,
+                  }}
+                >
+                  ❤️
                 </span>
               </div>
             </div>
@@ -466,6 +469,33 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                     </svg>
                     <span className="ml-3 flex-1 whitespace-nowrap">
                       Chatea con tu empresa
+                    </span>
+                  </NavLink>
+                  <NavLink
+                    to={routes.garbage}
+                    className={`text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ${
+                      isActive === routes.garbage && "bg-gray-100"
+                    }`}
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M4 7l16 0" />
+                      <path d="M10 11l0 6" />
+                      <path d="M14 11l0 6" />
+                      <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                      <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                    </svg>
+                    <span className="ml-3 flex-1 whitespace-nowrap">
+                      Papelera de reciclaje
                     </span>
                   </NavLink>
                   <button

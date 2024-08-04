@@ -10,7 +10,8 @@ function ProductsRegister() {
   const [isOpen, setIsOpen] = useState(false);
   const [imageSelected, setImageSelected] = useState<string | null>(null);
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
-  
+  const [available, setAvailable] = useState(true);
+
   const { adminData } = useAdmin();
   const navigate = useNavigate();
   if (!adminData) return;
@@ -49,7 +50,8 @@ function ProductsRegister() {
       description: description as string,
       image: imageSelected,
       price: parseFloat(price as string),
-      extras: selectedExtras, // Agregar los extras seleccionados
+      extras: selectedExtras,
+      active: available,
     };
     if (adminData.products) {
       saveAdminData({
@@ -67,7 +69,10 @@ function ProductsRegister() {
 
   return (
     <div className="flex items-center justify-center p-12">
-      <div className="mx-auto w-full max-w-[550px]">
+      <div className="mx-auto w-full max-w-[550px] bg-white sm:p-6 xl:p-8">
+        <h2 className="text-2xl font-semibold text-[#07074D] mb-6">
+          Registrar producto
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="-mx-3 flex flex-wrap">
             <div className="w-full px-3 sm:w-1/2">
@@ -144,18 +149,42 @@ function ProductsRegister() {
 
           <div className="mb-5">
             <label
+              htmlFor="available"
+              className="mb-3 block text-base font-medium text-[#07074D]"
+            >
+              Disponible
+            </label>
+            <input
+              type="checkbox"
+              name="available"
+              id="available"
+              checked={available}
+              onChange={() => setAvailable(!available)}
+              className="mr-2"
+            />
+          </div>
+
+          <div className="mb-5">
+            <label
               htmlFor="extras"
               className="mb-3 block text-base font-medium text-[#07074D]"
             >
               Agregados
             </label>
             {adminData.extras?.map((extraGroup) => (
-              <div key={extraGroup.id} className={`mb-3 ${!extraGroup.available ? 'line-through text-gray-500' : ''}`}>
+              <div
+                key={extraGroup.id}
+                className={`mb-3 ${
+                  !extraGroup.available ? "line-through text-gray-500" : ""
+                }`}
+              >
                 <h4 className="mb-2 font-semibold">{extraGroup.title}</h4>
                 {extraGroup.items.map((item) => (
                   <div
                     key={item.id}
-                    className={`flex items-center ${!item.available ? 'line-through text-gray-500' : ''}`}
+                    className={`flex items-center ${
+                      !item.available ? "line-through text-gray-500" : ""
+                    }`}
                   >
                     <input
                       type="checkbox"

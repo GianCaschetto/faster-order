@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAdmin } from "@/contexts/AdminContext";
 import {
   CustomerInfo,
@@ -18,7 +17,6 @@ type InfoFormProps = {
 };
 
 function InfoForm({
-  // cart,
   customerInfo,
   order,
   setCustomerInfo,
@@ -31,42 +29,40 @@ function InfoForm({
   );
   const [orderType, setOrderType] = useState<OrderType>("delivery");
 
-  const nameRef = useRef<any>(null);
-  const phoneRef = useRef<any>(null);
-  const addressRef = useRef<any>(null);
-  const neighborhoodRef = useRef<any>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const addressRef = useRef<HTMLInputElement>(null);
+  const neighborhoodRef = useRef<HTMLSelectElement>(null);
 
   const handleName = () => {
     setCustomerInfo({
       ...customerInfo,
-      name: nameRef.current.value,
-      
+      name: nameRef.current?.value ?? "",
     });
   };
 
   const handlePhone = () => {
-    //Regex para validar el número de teléfono
     const phoneRegex = /^[0-9]{0,10}$/;
-    if (!phoneRegex.test(phoneRef.current.value)) {
+    if (!phoneRegex.test(phoneRef.current?.value ?? "")) {
       return;
     }
     setCustomerInfo({
       ...customerInfo,
-      phone: phoneRef.current.value,
+      phone: phoneRef.current?.value ?? "",
     });
   };
 
   const handleAddress = () => {
     setCustomerInfo({
       ...customerInfo,
-      address: addressRef.current.value,
+      address: addressRef.current?.value ?? "",
     });
   };
 
   const handleNeighborhood = () => {
     const neighborhoodSelected = neighborhoods?.find(
       (neighborhood: Neighborhood) =>
-        neighborhood.name === neighborhoodRef.current.value
+        neighborhood.name === neighborhoodRef.current?.value
     );
     setCustomerInfo({
       ...customerInfo,
@@ -74,16 +70,15 @@ function InfoForm({
     });
   };
 
-
   useEffect(() => {
     setOrder({
       ...order,
       customer: customerInfo,
       orderType,
       delivertyPrice:
-        orderType === "delivery" ? customerInfo.neighborhood?.price : 0,
+        orderType === "delivery" ? customerInfo.neighborhood?.price ?? 0 : 0,
     });
-  }, [orderType, customerInfo]);
+  }, [orderType, customerInfo, setOrder]);
 
   useEffect(() => {
     window.localStorage.setItem("customerInfo", JSON.stringify(customerInfo));
@@ -104,7 +99,7 @@ function InfoForm({
           onClick={() => setOrderType("pickup")}
           className="flex justify-center items-center group cursor-pointer relative h-12 w-32 overflow-hidden rounded-2xl bg-slate-600 text-lg font-bold text-white"
         >
-          Pickup{" "}
+          Pickup
           <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
         </div>
       </div>
@@ -165,7 +160,7 @@ function InfoForm({
               onChange={handleNeighborhood}
               className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
             >
-              <option value="">Seleccione un barrio</option>
+              <option value="">Seleccione una zona</option>
               {neighborhoods?.map((neighborhood) => (
                 <option key={neighborhood.name} value={neighborhood.name}>
                   {neighborhood.name}

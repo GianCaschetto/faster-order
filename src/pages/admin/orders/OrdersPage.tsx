@@ -45,7 +45,7 @@ function OrdersPage() {
   useEffect(() => {
     //Filter the orders that are not cancelled or finished
     const owc = orders?.filter((order) => {
-      return order.status !== "cancelado" && order.status !== "finalizado";
+      return order.status !== "finalizado";
     });
 
     //Sort by status
@@ -141,7 +141,11 @@ function OrdersPage() {
                     className="h-10 mr-2 drop-shadow-md"
                     alt={`${adminData?.companyName} logo`}
                   />
-                  <span className="self-center whitespace-nowrap">
+                  <span className="self-center whitespace-nowrap"
+                    style={{
+                      color: adminData?.colors?.secondary,
+                    }}
+                  >
                     {adminData?.companyName}
                   </span>
                 </NavLink>
@@ -232,10 +236,7 @@ function OrdersPage() {
                         <div
                           className={`text-xs ${
                             orderStatusColors[order.status]
-                          } px-2 py-1 rounded-lg font-bold uppercase ${
-                            order.status.toLowerCase() === "cancelado" &&
-                            "line-through"
-                          } ${
+                          } px-2 py-1 rounded-lg font-bold uppercase  ${
                             order.status.toLowerCase() === "finalizado" &&
                             "line-through"
                           }`}

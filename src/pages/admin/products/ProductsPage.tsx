@@ -5,8 +5,10 @@ import { useAdmin } from "@/contexts/AdminContext";
 import { db } from "@/services/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { useImageUrl } from "@/hooks/useImage";
+import ConfirmationModal from "@/components/ConfirmationModal";
+import { Product } from "@/types/types";
 
-const ProductRow = ({ product, adminData, removeProduct, navigate }) => {
+const ProductRow = ({ product, adminData, handleDeleteClick, navigate }) => {
   const { imageUrl } = useImageUrl(product.image);
 
   return (
@@ -41,6 +43,12 @@ const ProductRow = ({ product, adminData, removeProduct, navigate }) => {
       </td>
       <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static">
         <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">
+          Disponible
+        </span>
+        {product.active ? "✅" : "❌"}
+      </td>
+      <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static">
+        <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">
           Acciones
         </span>
         <button
@@ -49,7 +57,7 @@ const ProductRow = ({ product, adminData, removeProduct, navigate }) => {
         >
           Editar
         </button>
-        <button className="text-blue-400 hover:text-blue-600 underline pl-6" onClick={()=> removeProduct(product.id)}>
+        <button className="text-blue-400 hover:text-blue-600 underline pl-6" onClick={()=> handleDeleteClick(product)}>
           Eliminar
         </button>
       </td>
@@ -65,6 +73,8 @@ function ProductsPage() {
   const [sortedProducts, setSortedProducts] = useState(products || []);
   const [sortColumn, setSortColumn] = useState("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
   const sortProducts = (column: string) => {
     const sorted = [...(products || [])];
@@ -87,19 +97,39 @@ function ProductsPage() {
     setSortedProducts(sorted);
   }
 
-  const removeProduct = (id: string) => {
+  const handleDeleteClick = (product: Product) => {
+    setProductToDelete(product);
+    setShowConfirmationModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (!productToDelete) return;
+    const updatedProducts = adminData?.products?.filter((product) => product.id !== productToDelete.id);
+    const updatedGarbage = {
+      ...adminData?.garbage,
+      products: [...(adminData?.garbage?.products || []), productToDelete]
+    };
+
     const adminDataRef = doc(db, "admin", "data");
     setDoc(adminDataRef, {
-      products: adminData?.products?.filter((product) => product.id !== id),
+      products: updatedProducts,
+      garbage: updatedGarbage,
     }, { merge: true })
       .then(() => {
-        toast.success("Producto eliminado correctamente");
+        toast.success("Producto removido correctamente");
+        setShowConfirmationModal(false);
+        setProductToDelete(null);
       })
       .catch((error) => {
-        toast.error("Error al eliminar el producto");
+        toast.error("Error al remover el producto");
         console.error(error);
       });
-  }
+  };
+
+  const cancelDelete = () => {
+    setShowConfirmationModal(false);
+    setProductToDelete(null);
+  };
 
   useEffect(() => {
     setSortedProducts(products || []);
@@ -148,6 +178,13 @@ function ProductsPage() {
             >
               Categoría {sortColumn === "category" && (sortDirection === "asc" ? "▲" : "▼")}
             </th>
+            <th 
+              className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell cursor-pointer"
+              
+            >
+              Disponible 
+            </th>
+            
             <th className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
               Acciones
             </th>
@@ -159,12 +196,20 @@ function ProductsPage() {
               key={product.id}
               product={product}
               adminData={adminData}
-              removeProduct={removeProduct}
+              handleDeleteClick={handleDeleteClick}
               navigate={navigate}
             />
           ))}
         </tbody>
       </table>
+
+      {showConfirmationModal && (
+        <ConfirmationModal
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+          text="Si eliminas este producto, puedes recuperarlo en la papelera de reciclaje"
+        />
+      )}
     </div>
   );
 }

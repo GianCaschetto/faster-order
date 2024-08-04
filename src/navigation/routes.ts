@@ -19,4 +19,5 @@ export const routes = {
   ordersHistoryEdit: "/admin-panel/orders-history/edit/:id",
   ordersHistoryRegister: "/admin-panel/orders-history/register",
   companyChatAi: "/admin-panel/company-chat-ai",
+  garbage: "/admin-panel/garbage",
 };

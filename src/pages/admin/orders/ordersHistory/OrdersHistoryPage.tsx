@@ -1,36 +1,33 @@
+import { useState } from "react";
 import { useAdmin } from "@/contexts/AdminContext";
-import { db } from "@/services/firebase";
-import { deleteDoc, doc } from "firebase/firestore";
-import { toast } from "react-toastify";
 import { NavLink } from "react-router-dom";
 
 function OrdersHistoryPage() {
-  //const navigate = useNavigate();
   const { orders } = useAdmin();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; 
+  // const removeOrder = (id: string) => {
+  //   const orderRef = doc(db, "orders", id);
+  //   deleteDoc(orderRef)
+  //     .then(() => {
+  //       toast.success("Orden eliminada correctamente");
+  //     })
+  //     .catch((error) => {
+  //       toast.error("Error al eliminar la orden");
+  //       console.error(error);
+  //     });
+  // };
 
-  const removeOrder = (id: string) => {
-    const orderRef = doc(db, "orders", id);
-    deleteDoc(orderRef)
-      .then(() => {
-        toast.success("Orden eliminada correctamente");
-      })
-      .catch((error) => {
-        toast.error("Error al eliminar la orden");
-        console.error(error);
-      });
-  };
+  // Calcular los índices de los elementos de la página actual
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentOrders = orders?.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Calcular el número total de páginas
+  const totalPages = Math.ceil((orders?.length || 0) / itemsPerPage);
 
   return (
     <div className="p-4">
-      {/* Add order button */}
-      {/* <div className="flex justify-end py-2">
-        <button
-          onClick={() => navigate(routes.ordersHistoryRegister)}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Agregar Orden
-        </button>
-      </div> */}
       {/* Orders Table */}
       <table className="border-collapse w-full">
         <thead>
@@ -50,13 +47,11 @@ function OrdersHistoryPage() {
             <th className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
               Número de orden
             </th>
-            <th className="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
-              Acciones
-            </th>
+          
           </tr>
         </thead>
         <tbody>
-          {orders?.map((order) => (
+          {currentOrders?.map((order) => (
             <tr
               key={order.orderNumber}
               className="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0"
@@ -98,47 +93,31 @@ function OrdersHistoryPage() {
                 </NavLink>
               </td>
 
-              <td className="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
-                <span className="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">
-                  Acciones
-                </span>
-                {/* <button
-                  onClick={() =>
-                    navigate(`/admin-panel/orders-history/edit/${order.id}`)
-                  }
-                  className="text-blue-400 hover:text-blue-600 underline"
-                >
-                  Edit
-                </button> */}
-                <button
-                  className="text-red-400 hover:text-red-600"
-                  onClick={() => removeOrder(order.id as string)}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    className="icon icon-tabler icons-tabler-outline icon-tabler-trash"
-                  >
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M4 7l16 0" />
-                    <path d="M10 11l0 6" />
-                    <path d="M14 11l0 6" />
-                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                  </svg>
-                </button>
-              </td>
+         
             </tr>
           ))}
         </tbody>
       </table>
+      {/* Pagination controls */}
+      <div className="flex justify-center mt-4">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 mx-1 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 disabled:opacity-50"
+        >
+          Anterior
+        </button>
+        <span className="px-4 py-2 mx-1">
+          Página {currentPage} de {totalPages}
+        </span>
+        <button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 mx-1 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 disabled:opacity-50"
+        >
+          Siguiente
+        </button>
+      </div>
     </div>
   );
 }

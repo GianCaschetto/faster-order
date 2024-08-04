@@ -89,6 +89,11 @@ function TrackOrder() {
                       {extra.qty} x {extra.name}
                     </p>
                   ))}
+
+                  {item.note && (
+                    <p className="text-gray-600 ml-2">Nota: {item.note}</p>
+                  )}
+
                   <p className="text-gray-600">${item.price}</p>
                 </div>
               ))}
@@ -105,6 +110,10 @@ function TrackOrder() {
                   {orderSelected.orderType === "delivery" && (
                     <span>$ {orderSelected.delivertyPrice}</span>
                   )}
+                </div>
+                <div className="flex justify-between items-center font-bold">
+                  <span>Subtotal</span>
+                  <span>$ {orderSelected.subtotal}</span>
                 </div>
                 <div className="flex justify-between items-center font-bold">
                   <span>Total</span>

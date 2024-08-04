@@ -1,36 +1,35 @@
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAdmin } from "@/contexts/AdminContext";
 import { db } from "@/services/firebase";
-import { Product } from "@/types/types";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import MediaModal from "../media/MediaModal";
+import { Product } from "@/types/types";
 
 function ProductEdit() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { adminData } = useAdmin();
   const [productData, setProductData] = useState<Product>({} as Product);
   const [isOpen, setIsOpen] = useState(false);
   const [imageSelected, setImageSelected] = useState<string | null>(null);
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
-  const navigate = useNavigate();
-  const { adminData } = useAdmin();
-  const { id } = useParams();
+  const [active, setActive] = useState(true);
 
-  // Fetch product data
   useEffect(() => {
-    (async () => {
-      const docRef = doc(db, "admin", "data");
-      const docSnap = await getDoc(docRef);
-      const data = docSnap.data();
-      const product = data?.products.find(
-        (product: Product) => product.id === id
-      );
-      if (product) {
-        setProductData(product);
-        setSelectedExtras(product.extras || []);
+    if (id && adminData) {
+      const currentProduct = adminData.products?.find((product) => product.id === id);
+      if (currentProduct) {
+        setProductData(currentProduct);
+        setSelectedExtras(currentProduct.extras || []);
+        setActive(currentProduct.active ?? true);
+      } else {
+        toast.error("Producto no encontrado");
+        navigate("/admin-panel/products");
       }
-    })();
-  }, [id]);
+    }
+  }, [id, adminData, navigate]);
 
   const handleExtrasChange = (extraId: string) => {
     setSelectedExtras((prevSelected) =>
@@ -40,11 +39,12 @@ function ProductEdit() {
     );
   };
 
-  const handleEdit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const formData = new FormData(event.target as HTMLFormElement);
     const data = Object.fromEntries(formData.entries());
     const { productName, price, categoryId, description } = data;
+
     if (!productName || !price || !categoryId) {
       toast.error("Todos los campos son obligatorios");
       return;
@@ -57,19 +57,16 @@ function ProductEdit() {
       description: description as string,
       image: imageSelected ? imageSelected : productData.image,
       price: parseFloat(price as string),
-      extras: selectedExtras, // Agregar los extras seleccionados
+      extras: selectedExtras,
+      active, // Agregar la disponibilidad
     };
 
     const adminDataRef = doc(db, "admin", "data");
-    setDoc(
-      adminDataRef,
-      {
-        products: adminData?.products?.map((product) =>
-          product.id === productData?.id ? updatedProduct : product
-        ),
-      },
-      { merge: true }
-    )
+    const updatedProducts = adminData?.products?.map((product) =>
+      product.id === updatedProduct.id ? updatedProduct : product
+    );
+
+    setDoc(adminDataRef, { products: updatedProducts }, { merge: true })
       .then(() => {
         toast.success("Producto actualizado correctamente");
         navigate("/admin-panel/products");
@@ -80,11 +77,19 @@ function ProductEdit() {
       });
   };
 
+  useEffect(() => {
+    setActive(productData.active);
+  }, [productData]);
+
+  if (!productData) {
+    return <div>Cargando...</div>;
+  }
+
   return (
     <div className="flex items-center justify-center p-12">
-      <div className="mx-auto w-full max-w-[550px]">
-        <button onClick={() => navigate(-1)}>Atras</button>
-        <form onSubmit={handleEdit}>
+      <div className="mx-auto w-full max-w-[550px] bg-white sm:p-6 xl:p-8 ">
+        <h2 className="text-2xl font-semibold text-[#07074D] mb-5">Editar producto</h2>
+        <form onSubmit={handleSubmit}>
           <div className="-mx-3 flex flex-wrap">
             <div className="w-full px-3 sm:w-1/2">
               <div className="mb-5">
@@ -133,13 +138,10 @@ function ProductEdit() {
             </label>
             <select
               name="categoryId"
-              defaultValue={
-                adminData?.categories?.find(
-                  (category) => category.id === productData?.categoryId
-                )?.id
-              }
               id="categoryId"
               className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+              value={productData.categoryId} // Aquí configuramos el valor actual
+              onChange={(e) => setProductData((prevData) => ({ ...prevData, categoryId: e.target.value }))}
             >
               {adminData?.categories?.map((category) => (
                 <option key={category.id} value={category.id}>
@@ -163,6 +165,19 @@ function ProductEdit() {
               defaultValue={productData?.description}
               className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
             />
+          </div>
+
+          <div className="mb-5">
+           
+            <input
+              type="checkbox"
+              name="active"
+              id="active"
+              checked={active}
+              onChange={() => setActive(!active)}
+              className="mr-2"
+            />
+            <span>¿Disponible? {active ? "✅":"❌"}</span>
           </div>
 
           <div className="mb-5">
@@ -233,7 +248,7 @@ function ProductEdit() {
           <div>
             <button
               type="submit"
-              className="hover:shadow-form rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none"
+              className="w-full hover:shadow-form rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none"
             >
               Actualizar
             </button>

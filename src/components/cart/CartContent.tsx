@@ -21,17 +21,22 @@ function CartContent({ cart, deleteItem }: CartContentProps) {
                   <div className="font-bold">
                     {item.quantity} x {item.product.name}
                   </div>
+
                   <div className="truncate">
-                    <ul className="ml-4 text-start">
+                    <ul className="ml-4 text-start text-sm">
                       {item.extras?.map((extra) => (
                         <li key={extra.id}>
-                          {extra.qty} x {extra.name} = {" "}
-                          {(extra.price * (extra.qty ?? 0)).toFixed(2)}
-                          $
+                          {extra.qty} x {extra.name} ={" "}
+                          {(extra.price * (extra.qty ?? 0)).toFixed(2)}$
                         </li>
                       ))}
                     </ul>
                   </div>
+                  {item.note && (
+                    <div className="text-xs text-gray-600 truncate mr-4">
+                      Nota: {item.note}
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-col w-18 font-medium items-end">
                   <div
@@ -71,42 +76,6 @@ function CartContent({ cart, deleteItem }: CartContentProps) {
               </div>
               <polyline points="3 6 5 6 21 6"></polyline>
             </li>
-            // <li
-            //   key={item.id}
-            //   className="flex justify-between items-center mt-4 text-white p-2 border-y"
-            // >
-            //   <span>
-            //     <img src={item.product.image} alt="" className="w-28" />
-            //   </span>
-            //   <div className="flex flex-col w-1/4 justify-start text-start">
-            //     <span>
-            //       {item.quantity} x {item.product.name}
-            //     </span>
-            //     <ul className="text-end">
-            //       {item.extras?.map((extra) => (
-            //         <li key={extra.id}>
-            //           {extra.qty} x {extra.name}
-            //         </li>
-            //       ))}
-            //     </ul>
-            //     <span>
-            //       {(item.product.price +
-            //         (item.extras?.reduce(
-            //           (acc, extra) => acc + extra.price * (extra.qty ?? 0),
-            //           0
-            //         ) ?? 0)) *
-            //         item.quantity}
-            //       $
-            //     </span>
-            //   </div>
-            //   {/* Delete button */}
-            //   <button
-            //     onClick={() => deleteItem(item)}
-            //     className="bg-red-500 text-white p-2 rounded-lg"
-            //   >
-            //     <X />
-            //   </button>
-            // </li>
           ))}
         </ul>
       ) : (

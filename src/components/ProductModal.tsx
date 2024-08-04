@@ -8,10 +8,9 @@ import ImageModal from "./ImageModal";
 
 type ProductModalProps = {
   product: Product;
-  addToCart: (product: Product, extras: Extra[], counter: number) => void;
+  addToCart: (product: Product, extras: Extra[], counter: number, note: string) => void;
   toggleShowModal: () => void;
 };
-
 
 function ProductModal({
   product,
@@ -27,6 +26,7 @@ function ProductModal({
   const [selectedExtras, setSelectedExtras] = useState<Extra[]>([]);
   const [counter, setCounter] = useState<number>(1);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [note, setNote] = useState<string>("");
 
   // Manejar cambios en la cantidad de extras
   const handleExtraQuantityChange = (id: string, quantity: number) => {
@@ -90,7 +90,7 @@ function ProductModal({
         <img
           src={imageUrl}
           alt={product.name}
-          className="w-full h-64 object-cover rounded-lg mx-auto mb-4 cursor-pointer"
+          className="object-fit h-64 rounded-lg mx-auto mb-4 cursor-pointer"
           onClick={() => setIsImageModalOpen(true)}
         />
         <h2 className="font-black text-gray-800 md:text-3xl text-xl text-start">
@@ -105,7 +105,7 @@ function ProductModal({
               <div
                 key={extraGroup.id}
                 className={`mt-6 text-black ${
-                  !extraGroup.available ? "line-through text-gray-500" : ""
+                  extraGroup.available ? "" : "hidden line-through text-gray-500"
                 }`}
               >
                 <h4 className="text-lg font-bold my-2 bg-gray-200 text-gray-700">
@@ -117,7 +117,7 @@ function ProductModal({
                     <div
                       key={extra.id}
                       className={`grid grid-cols-5 gap-4 py-2 ${
-                        !extra.available ? "line-through text-gray-500" : ""
+                        !extra.available ? "hidden line-through text-gray-500" : ""
                       }`}
                     >
                       <div className="col-span-3 flex flex-col text-start">
@@ -169,6 +169,12 @@ function ProductModal({
                 </div>
               </div>
             ))}
+            <textarea
+              placeholder="Agrega una nota de observación para el producto"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+            />
           </div>
         </div>
         <div className="border-t bg-white sticky bottom-0 left-0 right-0 py-4 flex flex-col sm:flex-row justify-center items-center p-4 mt-4">
@@ -177,7 +183,7 @@ function ProductModal({
           </div>
           <button
             onClick={() => {
-              addToCart(product, selectedExtras, counter);
+              addToCart(product, selectedExtras, counter, note);
               toggleShowModal();
             }}
             style={{

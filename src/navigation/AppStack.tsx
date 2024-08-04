@@ -23,6 +23,7 @@ import OrdersHistoryEdit from "@/pages/admin/orders/ordersHistory/OrdersHistoryE
 import ExtrasPage from "@/pages/admin/products/extras/ExtrasPage";
 import ExtrasRegister from "@/pages/admin/products/extras/ExtrasRegister";
 import ExtrasEdit from "@/pages/admin/products/extras/ExtrasEdit";
+import GarbagePage from "@/pages/admin/garbage/GarbagePage";
 
 const router = createBrowserRouter([
   {
@@ -128,6 +129,14 @@ const router = createBrowserRouter([
         element: (
           <AdminLayout>
             <OrderMessage />
+          </AdminLayout>
+        ),
+      },
+      {
+        path: routes.garbage,
+        element: (
+          <AdminLayout>
+            <GarbagePage />
           </AdminLayout>
         ),
       },

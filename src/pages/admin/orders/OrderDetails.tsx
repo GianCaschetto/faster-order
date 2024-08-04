@@ -1,6 +1,6 @@
 import { db } from "@/services/firebase";
 import { Order, OrderStatus } from "@/types/types";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, Timestamp, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import OrderToPrint from "./OrderToPrint";
 import ConfirmationModal from "@/components/ConfirmationModal";
@@ -9,7 +9,6 @@ type OrderDetailsProps = {
   orderSelected: Order;
 };
 
-// Status is an enum, so we need to filter the values that are not numbers
 const status = Object.values(OrderStatus).filter((status) =>
   isNaN(Number(status))
 );
@@ -51,12 +50,16 @@ function OrderDetails({ orderSelected }: OrderDetailsProps) {
     }
   };
 
-  const handleConfirmStatusChange = () => {
+  const handleConfirmStatusChange = async () => {
     if (pendingStatus) {
-      setStatusSelected(pendingStatus);
-      updateDoc(doc(db, `orders/${orderSelected.id}`), {
+      const updateData: { status: OrderStatus; finishedAt?: Date } = {
         status: pendingStatus,
-      });
+      };
+      if (pendingStatus === OrderStatus.finalizado) {
+        updateData.finishedAt = Timestamp.now().toDate();
+      }
+      await updateDoc(doc(db, `orders/${orderSelected.id}`), updateData);
+      setStatusSelected(pendingStatus);
       setShowConfirmationModal(false);
     }
   };
@@ -69,7 +72,7 @@ function OrderDetails({ orderSelected }: OrderDetailsProps) {
   return (
     <div className="bg-gray-100 h-full w-full relative">
       <OrderToPrint orderSelected={orderSelected} />
-      <div className="fixed right-0 top-48 bg-gray-100 border-y border-l  border-gray-600 bottom-48 text-white text-sm h-auto rounded-lg shadow-lg shadow-gray-600 p-4">
+      <div className="fixed right-0 top-48 bg-gray-100 border-y border-l  border-gray-600 text-white text-sm h-auto rounded-lg shadow-lg shadow-gray-600 p-4">
         <ul className="flex flex-col justify-around items-center space-y-2 h-full">
           {status.map((status) => (
             <li key={status} className="w-full">
@@ -86,6 +89,7 @@ function OrderDetails({ orderSelected }: OrderDetailsProps) {
 
       {showConfirmationModal && (
         <ConfirmationModal
+          text="¿Estás seguro de que quieres cambiar el estado a 'Finalizado' o 'Cancelado'?"
           onConfirm={handleConfirmStatusChange}
           onCancel={handleCancelStatusChange}
         />

@@ -48,6 +48,7 @@ function ExtrasRegister() {
       title,
       available,
       items,
+      active: true,
     };
 
     const adminDataRef = doc(db, "admin", "data");

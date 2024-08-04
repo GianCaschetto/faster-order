@@ -19,8 +19,6 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({
   const [adminData, setAdminData] = useState<AdminData | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
 
-  
-
   useEffect(() => {
     const adminDataRef = doc(db, "admin", "data");
     const unsubscribe = onSnapshot(adminDataRef, (doc) => {
@@ -33,7 +31,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const ordersRef = collection(db, "orders");
     const unOrdersLenghtSuscribe = onSnapshot(ordersRef, (snapshot) => {
-      setOrders(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id} as Order)));
+      setOrders(
+        snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Order))
+      );
     });
     return () => unOrdersLenghtSuscribe();
   }, []);

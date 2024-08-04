@@ -32,7 +32,10 @@ function OrderToPrint({ orderSelected }: { orderSelected: Order }) {
           }
         }
       `}</style>
-      <div className="printable w-72 p-3 bg-white rounded-md shadow-2xl" ref={componentRef}>
+      <div
+        className="printable w-72 p-3 bg-white rounded-md shadow-2xl"
+        ref={componentRef}
+      >
         <div className="py-2">
           <div className="text-center text-xl font-bold">
             ORDEN {orderSelected?.orderNumber}
@@ -79,10 +82,23 @@ function OrderToPrint({ orderSelected }: { orderSelected: Order }) {
           </div>
           <div className="border-dashed border-t border-b border-l-0 border-r-0 border-gray-900 mt-1 my-2 py-2 px-1">
             {orderSelected.items.map((item) => (
-              <div key={item.id} className="flex text-sm">
-                <span className="w-2/6">{item.product.name}</span>
-                <span className="w-2/6 text-right">{item.price}</span>
-                <span className="w-2/6 text-right">{item.quantity}</span>
+              <div>
+                <div key={item.id} className="flex text-sm">
+                  <span className="w-2/6">{item.product.name}</span>
+                  <span className="w-2/6 text-right">{item.price}</span>
+                  <span className="w-2/6 text-right">{item.quantity}</span>
+                </div>
+                {/*Extras*/}
+                {item.extras?.map((extra) => (
+                  <div className="text-xs text-gray-600">
+                    {extra.qty} x {extra.name} ={" "}
+                    {(extra.price * (extra.qty ?? 0)).toFixed(2)}
+                  </div>
+                ))}
+                {/*Item note*/}
+                {item.note && (
+                  <div className="text-xs text-gray-600">Nota: {item.note}</div>
+                )}
               </div>
             ))}
           </div>

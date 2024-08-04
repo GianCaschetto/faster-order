@@ -8,6 +8,7 @@ type OrderCreatedProps = {
 };
 
 function OrderCreated({ order }: OrderCreatedProps) {
+  console.log(order);
   const { adminData } = useAdmin();
   const { tasaBCV, tasaEnParalelo } = useCurrency();
   const navigate = useNavigate();
@@ -26,9 +27,18 @@ function OrderCreated({ order }: OrderCreatedProps) {
       "##PRECIO_DE_ENTREGA##",
       order.delivertyPrice?.toString() ?? ""
     );
-    newMessage = newMessage.replace("##TOTAL_DE_LA_ORDEN##", order.total.toString());
-    newMessage = newMessage.replace("##NOMBRE_DEL_CLIENTE##", order.customer.name);
-    newMessage = newMessage.replace("##TELEFONO_DEL_CLIENTE##", order.customer.phone);
+    newMessage = newMessage.replace(
+      "##TOTAL_DE_LA_ORDEN##",
+      order.total.toString()
+    );
+    newMessage = newMessage.replace(
+      "##NOMBRE_DEL_CLIENTE##",
+      order.customer.name
+    );
+    newMessage = newMessage.replace(
+      "##TELEFONO_DEL_CLIENTE##",
+      order.customer.phone
+    );
     newMessage = newMessage.replace(
       "##DIRECCION_DEL_CLIENTE##",
       order.customer.address ?? ""
@@ -46,12 +56,16 @@ function OrderCreated({ order }: OrderCreatedProps) {
     ${item.extras
       ?.map((extra) => `Extra: ${extra.qty} x ${extra.name}`)
       .join("\n")}
+    Nota: ${item.note}  
     `;
         return productMessage.trim();
       })
       .join("\n");
 
-    newMessage = newMessage.replace("##DETALLES_DEL_PRODUCTO##", productDetails);
+    newMessage = newMessage.replace(
+      "##DETALLES_DEL_PRODUCTO##",
+      productDetails
+    );
     newMessage = newMessage.replace(
       "##PRECIO_TOTAL_BS_BCV##",
       (order.total * tasaBCV.price).toFixed(2)
@@ -60,10 +74,7 @@ function OrderCreated({ order }: OrderCreatedProps) {
       "##PRECIO_TOTAL_BS_PARALELO##",
       (order.total * tasaEnParalelo).toFixed(2)
     );
-    newMessage = newMessage.replace(
-      "##METODO_DE_PAGO##",
-      order.paymentMethod
-    );
+    newMessage = newMessage.replace("##METODO_DE_PAGO##", order.paymentMethod);
     newMessage = newMessage.replace("##TIPO_DE_ORDEN##", order.orderType);
     newMessage = newMessage.replace(
       "##PAGINA_SEGUIMIENTO_ORDEN##",
@@ -124,11 +135,14 @@ function OrderCreated({ order }: OrderCreatedProps) {
         Orden creada
       </h2>
       <p className="text-center text-lg text-gray-800">
-        Tu número de orden es: <span className="font-semibold">{order.orderNumber}</span>
+        Tu número de orden es:{" "}
+        <span className="font-semibold">{order.orderNumber}</span>
       </p>
       <div className="flex flex-col justify-center gap-4 mt-4">
         <button
-          onClick={() => navigate("/order/" + order.orderNumber, { replace: true })}
+          onClick={() =>
+            navigate("/order/" + order.orderNumber, { replace: true })
+          }
           className="bg-gray-200 text-gray-800 text-lg font-semibold px-4 py-2 rounded-lg"
         >
           Rastrear Orden

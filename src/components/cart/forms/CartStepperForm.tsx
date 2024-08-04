@@ -67,9 +67,9 @@ function CartStepperForm({
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           className="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart"
         >
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -94,9 +94,9 @@ function CartStepperForm({
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           className="icon icon-tabler icons-tabler-outline icon-tabler-user"
         >
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -124,9 +124,9 @@ function CartStepperForm({
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           className="icon icon-tabler icons-tabler-outline icon-tabler-circle-check"
         >
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -165,36 +165,21 @@ function CartStepperForm({
     confetti();
   };
 
-  // const phoneVerifier = async () => {
-  //   if (auth.currentUser?.phoneNumber === `+58${order.customer?.phone}`) {
-  //     console.log(auth.currentUser)
-  //     setCurrentStep(currentStep + 1);
-  //     return;
-  //   } else {
-  //     try {
-  //       if (recaptchaVerifierRef.current) {
-  //         const confirmationResult = await signInWithPhoneNumber(
-  //           auth,
-  //           `+58${order.customer?.phone}`,
-  //           recaptchaVerifierRef.current
-  //         );
-  //         const code = window.prompt("Ingrese el código de verificación");
-  //         if (code) {
-  //           await confirmationResult.confirm(code);
-  //           console.log("Número verificado correctamente");
-  //           toast.success("Número verificado correctamente");
-  //           setCurrentStep(currentStep + 1);
-  //         }
-  //       }
-  //       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //     } catch (error: any) {
-  //       recaptchaVerifierRef.current?.clear();
-  //       toast.error("Error al verificar el número");
-  //       console.error(error.message);
-        
-  //     }
-  //   }
-  // };
+  const resetCart = () => {
+    setCart({
+      items: [],
+      totalItems: 0,
+      totalPrice: 0,
+    });
+    window.localStorage.setItem(
+      "cart",
+      JSON.stringify({
+        items: [],
+        totalItems: 0,
+        totalPrice: 0,
+      })
+    );
+  };
 
   useEffect(() => {
     if (!recaptchaVerifierRef.current) {
@@ -205,44 +190,31 @@ function CartStepperForm({
   }, []);
 
   useEffect(() => {
-    setOrder({
-      ...order,
+    setOrder((prevOrder) => ({
+      ...prevOrder,
       items: cart.items,
       subtotal: parseFloat(cart.totalPrice.toFixed(2)),
       total: parseFloat(
         (
           parseFloat(cart.totalPrice.toFixed(2)) +
-          (order.delivertyPrice ?? customerInfo.neighborhood?.price ?? 0)
+          (prevOrder.delivertyPrice ?? customerInfo.neighborhood?.price ?? 0)
         ).toFixed(2)
       ),
-    });
+    }));
   }, [cart, customerInfo.neighborhood?.price]);
 
   useEffect(() => {
     if (currentStep === 3) {
-      setOrder({
-        ...order,
+      setOrder((prevOrder) => ({
+        ...prevOrder,
         orderNumber: Math.round(Date.now() * Math.random()),
-      });
+      }));
     }
   }, [currentStep]);
 
   useEffect(() => {
     if (order.orderNumber) {
       addOrder();
-      setCart({
-        items: [],
-        totalItems: 0,
-        totalPrice: 0,
-      });
-      window.localStorage.setItem(
-        "cart",
-        JSON.stringify({
-          items: [],
-          totalItems: 0,
-          totalPrice: 0,
-        })
-      );
     }
   }, [order.orderNumber]);
 
@@ -265,9 +237,9 @@ function CartStepperForm({
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left"
           >
             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -304,19 +276,7 @@ function CartStepperForm({
             setShowSidebar(false);
             setCurrentStep(0);
             if (currentStep === 3) {
-              setCart({
-                items: [],
-                totalItems: 0,
-                totalPrice: 0,
-              });
-              window.localStorage.setItem(
-                "cart",
-                JSON.stringify({
-                  items: [],
-                  totalItems: 0,
-                  totalPrice: 0,
-                })
-              );
+              resetCart();
             }
           }}
           className=" flex justify-center py-6 px-4 bg-red-600 hover:bg-red-800"
@@ -345,12 +305,7 @@ function CartStepperForm({
               } else if (currentStep === 1 && !checkStep1()) {
                 toast.error("Por favor completa los campos");
                 return;
-              } 
-              // else if (currentStep === 1 && checkStep1()) {
-              //   phoneVerifier();
-              //   return;
-              // } 
-              else if (currentStep === 2 && !checkStep2()) {
+              } else if (currentStep === 2 && !checkStep2()) {
                 toast.error("Por favor selecciona un metodo de pago");
                 return;
               }
@@ -358,7 +313,7 @@ function CartStepperForm({
             }}
             className={`bg-blue-500 text-white px-4 py-2 rounded-lg w-full border cursor-pointer`}
           >
-            Siguiente
+            {currentStep === 2 ? "Finalizar pedido" : "Siguiente"}
           </button>
         </div>
       )}

@@ -1,6 +1,7 @@
+import ConfirmationModal from "@/components/ConfirmationModal";
 import { useAdmin } from "@/contexts/AdminContext";
 import { saveAdminData } from "@/services/firebase";
-import { Neighborhood } from "@/types/types";
+import { Neighborhood, Garbage } from "@/types/types";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -11,13 +12,18 @@ const NeighborhoodsPage = () => {
       id: crypto.randomUUID(),
       name: "",
       price: 0,
+      active: true,
     },
   ]);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [neighborhoodToDelete, setNeighborhoodToDelete] = useState<Neighborhood | null>(null);
+
   const addRow = () => {
     const newRow: Neighborhood = {
       id: crypto.randomUUID(),
       name: "",
       price: 0,
+      active: true,
     };
     setNeighborhoods([...neighborhoods, newRow]);
   };
@@ -33,15 +39,40 @@ const NeighborhoodsPage = () => {
     setNeighborhoods(updatedRows);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (neighborhood: Neighborhood) => {
+    setShowConfirmationModal(true);
+    setNeighborhoodToDelete(neighborhood);
+  };
+
+  const confirmDelete = () => {
     if (neighborhoods.length === 1) {
       toast.error("Debe haber al menos una zona");
+      setShowConfirmationModal(false);
       return;
     }
+
     const updatedRows = neighborhoods.filter(
-      (neighborhood) => neighborhood.id !== id
+      (neighborhood) => neighborhood.id !== neighborhoodToDelete?.id
     );
+
+    const updatedGarbage: Garbage = {
+      ...adminData?.garbage,
+      neighborhoods: [
+        ...(adminData?.garbage?.neighborhoods ?? []),
+        neighborhoodToDelete!,
+      ],
+      products: adminData?.garbage?.products ?? [],
+      extras: adminData?.garbage?.extras ?? [],
+    };
+
     setNeighborhoods(updatedRows);
+    saveAdminData({ ...adminData, neighborhoods: updatedRows, garbage: updatedGarbage });
+    setShowConfirmationModal(false);
+  };
+
+  const cancelDelete = () => {
+    setShowConfirmationModal(false);
+    setNeighborhoodToDelete(null);
   };
 
   const handleEnterKey = (e, index, fieldName) => {
@@ -122,7 +153,7 @@ const NeighborhoodsPage = () => {
               <td>
                 <button
                   type="button"
-                  onClick={() => handleDelete(neighborhood.id)}
+                  onClick={() => handleDelete(neighborhood)}
                   className=" hover:bg-red-200 rounded-full cursor-pointer text-red-700"
                 >
                   <svg
@@ -170,6 +201,14 @@ const NeighborhoodsPage = () => {
           </tr>
         </tbody>
       </table>
+
+      {showConfirmationModal && (
+        <ConfirmationModal
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+          text="¿Estás seguro de que quieres eliminar esta zona? Si eliminas esta zona, puedes recuperarla en el apartado de papelera de reciclaje."
+        />
+      )}
     </div>
   );
 };
